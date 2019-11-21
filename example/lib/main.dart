@@ -333,6 +333,21 @@ class HlsPlaylistParser {
         ));
       }
     }
+
+    // TODO: Don't deduplicate variants by URL.
+    List<Variant> deduplicatedVariants = []; // ignore: always_specify_types
+    List<Uri> urlsInDeduplicatedVariants = [];// ignore: always_specify_types
+    for (int i = 0; i < variants.length; i++) {
+      Variant variant = variants[i];
+      urlsInDeduplicatedVariants.add(variant.url);
+      assert(variant.format.metadata == null);
+        HlsTrackMetadataEntry hlsMetadataEntry =
+        new HlsTrackMetadataEntry(
+          /* groupId= */ null, /* name= */ null, urlToVariantInfos.get(variant.url));
+        deduplicatedVariants.add(
+            variant.copyWithFormat(
+                variant.format.copyWithMetadata(new Metadata(hlsMetadataEntry))));
+    }
   }
 
   static String parseStringAttr({

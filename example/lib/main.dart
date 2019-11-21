@@ -3,13 +3,14 @@ import 'dart:async';
 
 import 'package:flutter/services.dart';
 import 'package:flutter_hls_parser/flutter_hls_parser.dart';
-import 'unrecognized_inputformat_exception.dart';
+import 'exception.dart';
 import 'dart:io';
 import 'dart:convert';
 import 'dart:async';
 import 'dart:collection';
 import 'package:quiver/strings.dart';
 import 'util.dart';
+import 'play_list.dart';
 
 class HlsPlaylistParser {
   HlsPlaylistParser(this.masterPlaylist);
@@ -106,7 +107,7 @@ class HlsPlaylistParser {
     HlsPlaylist hlsPlaylist;
     bool isFirstLine = false;
 
-    Queue<String> extraLines = Queue(); // ignore: always_specify_types
+    List<String> extraLines = []; // ignore: always_specify_types
     stream.transform(utf8.decoder).transform(const LineSplitter()).listen(
         (String line) {
       if (line.trim().isNotEmpty && hlsPlaylist != null) {
@@ -150,17 +151,58 @@ class HlsPlaylistParser {
       '$attribute=($BOOLEAN_FALSE|$BOOLEAN_TRUE)';
 
   static bool checkPlaylistHeader(String string) {
-    List<int> codeUnits = Util.excludeWhiteSpace(string: string, skipLinebreaks: true).codeUnits;
+    List<int> codeUnits =
+        Util.excludeWhiteSpace(string: string, skipLinebreaks: true).codeUnits;
 
     if (codeUnits[0] == 0xEF) {
-      if (Util.startsWith(codeUnits, [0xEF, 0xBB, 0xBF])) // ignore: always_specify_types
+      if (Util.startsWith(
+          codeUnits, [0xEF, 0xBB, 0xBF])) // ignore: always_specify_types
         return false;
-      codeUnits = codeUnits.getRange(5, codeUnits.length-1).toList();//不要な文字が含まれている
+      codeUnits =
+          codeUnits.getRange(5, codeUnits.length - 1).toList(); //不要な文字が含まれている
     }
 
     if (!Util.startsWith(codeUnits, PLAYLIST_HEADER.runes.toList()))
       return false;
 
     return Util.isLineBreak(codeUnits[PLAYLIST_HEADER.length]);
+  }
+
+  MasterPlaylist parseMasterPlaylist(List<String> extraLines) {
+    List<String> tags = []; // ignore: always_specify_types
+    Map<String, String> variableDefinitions =
+        {}; // ignore: always_specify_types
+    for (String line in extraLines) {
+      if (line.startsWith(TAG_PREFIX)) {
+        // We expose all tags through the playlist.
+        tags.add(line);
+      }
+
+      if (line.startsWith(TAG_DEFINE)) {
+        String key = parseStringAttr(source: line, pattern: REGEX_NAME, variableDefinitions: variableDefinitions);
+        String val = parseStringAttr(source: line, pattern: REGEX_VALUE, variableDefinitions: variableDefinitions);
+        if (key == null) {
+          throw ParserException("Couldn't match $REGEX_NAME in $line");
+        }
+        if (val == null) {
+          throw ParserException("Couldn't match $REGEX_VALUE in $line");
+        }
+        variableDefinitions[key] = val;
+      }
+    }
+  }
+
+  static String parseStringAttr({
+    @required String source,
+    @required String pattern,
+    String defaultValue,
+    Map<String, String> variableDefinitions,
+  }) {
+    String value = RegExp(pattern).firstMatch(source)?.group(1);
+    value ??= defaultValue;
+    return value?.replaceAllMapped(REGEX_VARIABLE_REFERENCE, (Match match) {
+      String key = match.group(1);
+      return variableDefinitions[key] ??= key;
+    });
   }
 }

@@ -19,6 +19,9 @@ import 'variant.dart';
 import 'variant_info.dart';
 import 'hls_track_metadata_entry.dart';
 import 'metadata.dart';
+import 'rendition.dart';
+import 'variant.dart';
+import 'hls_master_playlist.dart';
 
 class HlsPlaylistParser {
   HlsPlaylistParser(this.masterPlaylist);
@@ -129,8 +132,7 @@ class HlsPlaylistParser {
 
         if (line.startsWith(TAG_STREAM_INF)) {
           extraLines.add(line);
-          hlsPlaylist = parseMasterPlaylist(
-              LineIterator(extraLines, reader), uri.toString());
+          hlsPlaylist = parseMasterPlaylist(extraLines, uri.toString());
         } else {
           if (line.startsWith(TAG_TARGET_DURATION) ||
               line.startsWith(TAG_MEDIA_SEQUENCE) ||
@@ -176,7 +178,8 @@ class HlsPlaylistParser {
     return Util.isLineBreak(codeUnits[PLAYLIST_HEADER.length]);
   }
 
-  MasterPlaylist parseMasterPlaylist(List<String> extraLines) {
+  HlsMasterPlaylist parseMasterPlaylist(
+      List<String> extraLines, String baseUri) {
     List<String> tags = []; // ignore: always_specify_types
     List<String> mediaTags = []; // ignore: always_specify_types
     List<DrmInitData> sessionKeyDrmInitData =
@@ -188,8 +191,10 @@ class HlsPlaylistParser {
     List<Rendition> closedCaptions = [];
     Map<Uri, List<VariantInfo>> urlToVariantInfos =
         {}; // ignore: always_specify_types
+    Format muxedAudioFormat;
     bool noClosedCaptions = false;
     bool hasIndependentSegmentsTag = false;
+    List<Format> muxedCaptionFormats;
 
     Map<String, String> variableDefinitions =
         {}; // ignore: always_specify_types
@@ -354,7 +359,8 @@ class HlsPlaylistParser {
           variant.copyWithFormat(variant.format.copyWithMetadata(metadata)));
     }
 
-    mediaTags.forEach((line) { // ignore: always_specify_types
+    mediaTags.forEach((line) {
+      // ignore: always_specify_types
       String groupId = parseStringAttr(
           source: line,
           pattern: REGEX_GROUP_ID,
@@ -377,44 +383,131 @@ class HlsPlaylistParser {
       int roleFlags = parseRoleFlags(line, variableDefinitions);
       String formatId = '$groupId:$name';
       Format format;
-      HlsTrackMetadataEntry entry = HlsTrackMetadataEntry(groupId: groupId, name: name, variantInfos: <VariantInfo>[]);
+      HlsTrackMetadataEntry entry = HlsTrackMetadataEntry(
+          groupId: groupId, name: name, variantInfos: <VariantInfo>[]);
       Metadata metadata = Metadata(<dynamic>[entry]);
 
-      switch (parseStringAttr(source: line, pattern: REGEX_TYPE, variableDefinitions: variableDefinitions)) {
-        case TYPE_VIDEO: {
-          Variant variant = variants.firstWhere((it) => it.videoGroupId == groupId, orElse: ()=> null); // ignore: always_specify_types
-          String codecs;
-          int width = Format.NO_VALUE;
-          int height = Format.NO_VALUE;
-          double frameRate = Format.NO_VALUE_D;
-          if (variant != null) {
-            Format variantFormat = variant.format;
-            codecs = Util.getCodecsOfType(variantFormat.codecs, Util.TRACK_TYPE_VIDEO);
-            width = variantFormat.width;
-            height = variantFormat.height;
-            frameRate = variantFormat.frameRate;
+      switch (parseStringAttr(
+          source: line,
+          pattern: REGEX_TYPE,
+          variableDefinitions: variableDefinitions)) {
+        case TYPE_VIDEO:
+          {
+            Variant variant = variants.firstWhere(
+                (it) => it.videoGroupId == groupId,
+                orElse: () => null); // ignore: always_specify_types
+            String codecs;
+            int width = Format.NO_VALUE;
+            int height = Format.NO_VALUE;
+            double frameRate = Format.NO_VALUE_D;
+            if (variant != null) {
+              Format variantFormat = variant.format;
+              codecs = Util.getCodecsOfType(
+                  variantFormat.codecs, Util.TRACK_TYPE_VIDEO);
+              width = variantFormat.width;
+              height = variantFormat.height;
+              frameRate = variantFormat.frameRate;
+            }
+            String sampleMimeType =
+                codecs != null ? MimeTypes.getMediaMimeType(codecs) : null;
+
+            format = Format.createVideoContainerFormat(
+                    id: formatId,
+                    label: name,
+                    containerMimeType: MimeTypes.APPLICATION_M3U8,
+                    sampleMimeType: sampleMimeType,
+                    codecs: codecs,
+                    bitrate: Format.NO_VALUE,
+                    width: width,
+                    height: height,
+                    frameRate: frameRate,
+                    selectionFlags: selectionFlags,
+                    roleFlags: roleFlags)
+                .copyWithMetadata(metadata);
+
+            videos.add(Rendition(
+              url: uri,
+              format: format,
+              groupId: groupId,
+              name: name,
+            ));
+            break;
           }
-          String sampleMimeType = codecs != null ? MimeTypes.getMediaMimeType(codecs) : null;
+        case TYPE_AUDIO:
+          {
+            Variant variant = getVariantWithAudioGroup(variants, groupId);
+            String codecs = variant != null
+                ? Util.getCodecsOfType(
+                    variant.format.codecs, Util.TRACK_TYPE_AUDIO)
+                : null;
+            int channelCount =
+                parseChannelsAttribute(line, variableDefinitions);
+            String sampleMimeType =
+                codecs != null ? MimeTypes.getMediaMimeType(codecs) : null;
+            Format format = Format.create(
+              id: formatId,
+              label: name,
+              containerMimeType: MimeTypes.APPLICATION_M3U8,
+              sampleMimeType: sampleMimeType,
+              codecs: codecs,
+              bitrate: Format.NO_VALUE,
+              channelCount: channelCount,
+              selectionFlags: selectionFlags,
+              roleFlags: roleFlags,
+              language: language,
+            );
 
-          format =
-              Format.createVideoContainerFormat(id: formatId,
-                  label: name,
-                  containerMimeType: MimeTypes.APPLICATION_M3U8,
-                  sampleMimeType: sampleMimeType,
-                  codecs: codecs,
-                  bitrate:  Format.NO_VALUE,
-                  width: width,
-                  height: height,
-                  frameRate: frameRate,
-                  selectionFlags: selectionFlags,
-                  roleFlags: roleFlags)
-                  .copyWithMetadata(metadata);
-
-          videos.add(Rendition(uri, format, groupId, name));
+            if (uri == null)
+              muxedAudioFormat = format;
+            else
+              audios.add(Rendition(
+                url: uri,
+                format: format.copyWithMetadata(metadata),
+                groupId: groupId,
+                name: name,
+              ));
+            break;
+          }
+        case TYPE_SUBTITLES:
+          {
+            Format format = Format.create(
+                    id: formatId,
+                    label: name,
+                    containerMimeType: MimeTypes.APPLICATION_M3U8,
+                    sampleMimeType: MimeTypes.TEXT_VTT,
+                    selectionFlags: selectionFlags,
+                    roleFlags: roleFlags,
+                    language: language)
+                .copyWithMetadata(metadata);
+            subtitles.add(Rendition(
+              url: uri,
+              format: format,
+              groupId: groupId,
+              name: name,
+            ));
+            break;
+          }
+        default:
           break;
-        }
       }
     });
+
+    if (noClosedCaptions)
+      muxedCaptionFormats = []; // ignore: always_specify_types
+
+    return HlsMasterPlaylist(
+        baseUri: baseUri,
+        tags: tags,
+        variants: deduplicatedVariants,
+        videos: videos,
+        audios: audios,
+        subtitles: subtitles,
+        closedCaptions: closedCaptions,
+        muxedAudioFormat: muxedAudioFormat,
+        muxedCaptionFormats: muxedCaptionFormats,
+        hasIndependentSegments: hasIndependentSegmentsTag,
+        variableDefinitions: variableDefinitions,
+        sessionKeyDrmInitData: sessionKeyDrmInitData);
   }
 
   static String parseStringAttr({
@@ -473,12 +566,18 @@ class HlsPlaylistParser {
 
   static int parseSelectionFlags(String line) {
     int flags = 0;
-    if (parseOptionalBooleanAttribute(line: line, pattern: REGEX_DEFAULT, defaultValue: false))
-      flags |= Util.SELECTION_FLAG_DEFAULT;
-    if (parseOptionalBooleanAttribute(line: line, pattern: REGEX_FORCED, defaultValue: false))
-      flags |= Util.SELECTION_FLAG_FORCED;
-    if (parseOptionalBooleanAttribute(line: line, pattern: REGEX_AUTOSELECT, defaultValue: false))
-      flags |= Util.SELECTION_FLAG_AUTOSELECT;
+    if (parseOptionalBooleanAttribute(
+        line: line,
+        pattern: REGEX_DEFAULT,
+        defaultValue: false)) flags |= Util.SELECTION_FLAG_DEFAULT;
+    if (parseOptionalBooleanAttribute(
+        line: line,
+        pattern: REGEX_FORCED,
+        defaultValue: false)) flags |= Util.SELECTION_FLAG_FORCED;
+    if (parseOptionalBooleanAttribute(
+        line: line,
+        pattern: REGEX_AUTOSELECT,
+        defaultValue: false)) flags |= Util.SELECTION_FLAG_AUTOSELECT;
     return flags;
   }
 
@@ -491,25 +590,48 @@ class HlsPlaylistParser {
     return list.isEmpty ? defaultValue : list.first.pattern == BOOLEAN_TRUE;
   }
 
-  static int parseRoleFlags(String line, Map<String, String> variableDefinitions) {
-    String concatenatedCharacteristics = parseStringAttr(source: line, pattern: REGEX_CHARACTERISTICS, variableDefinitions: variableDefinitions);
-    if (concatenatedCharacteristics?.isNotEmpty == false)
-      return 0;
+  static int parseRoleFlags(
+      String line, Map<String, String> variableDefinitions) {
+    String concatenatedCharacteristics = parseStringAttr(
+        source: line,
+        pattern: REGEX_CHARACTERISTICS,
+        variableDefinitions: variableDefinitions);
+    if (concatenatedCharacteristics?.isNotEmpty == false) return 0;
     List<String> characteristics = concatenatedCharacteristics.split(',');
     int roleFlags = 0;
     if (characteristics.contains('public.accessibility.describes-video'))
       roleFlags |= Util.ROLE_FLAG_DESCRIBES_VIDEO;
 
-    if (characteristics.contains('public.accessibility.transcribes-spoken-dialog'))
+    if (characteristics
+        .contains('public.accessibility.transcribes-spoken-dialog'))
       roleFlags |= Util.ROLE_FLAG_TRANSCRIBES_DIALOG;
 
-    if (characteristics.contains('public.accessibility.describes-music-and-sound'))
+    if (characteristics
+        .contains('public.accessibility.describes-music-and-sound'))
       roleFlags |= Util.ROLE_FLAG_DESCRIBES_MUSIC_AND_SOUND;
 
     if (characteristics.contains('public.easy-to-read'))
       roleFlags |= Util.ROLE_FLAG_EASY_TO_READ;
 
     return roleFlags;
+  }
+
+  static int parseChannelsAttribute(
+      String line, Map<String, String> variableDefinitions) {
+    String channelsString = parseStringAttr(
+        source: line,
+        pattern: REGEX_CHANNELS,
+        variableDefinitions: variableDefinitions);
+    return channelsString != null
+        ? int.parse(channelsString.split('/')[0])
+        : Format.NO_VALUE;
+  }
+
+  static Variant getVariantWithAudioGroup(
+      List<Variant> variants, String groupId) {
+    for (var variant in variants)
+      if (variant.audioGroupId == groupId) return variant;
+    return null;
   }
 
   static String parseEncryptionScheme(String method) =>

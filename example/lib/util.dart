@@ -27,7 +27,3 @@ class CencType {
   static const String CENC = 'TYPE_CENC';
   static const String CBCS = 'TYPE_CBCS';
 }
-
-class Format {
-  static const int NO_VALUE = -1;
-}

@@ -2,7 +2,6 @@ import 'format.dart';
 import 'package:meta/meta.dart';
 
 class Variant {
-
   Variant({
     @required this.url,
     @required this.format,
@@ -15,18 +14,28 @@ class Variant {
   /// The variant's url.
   final Uri url;
 
-  /// Format information associated with this variant. */
+  /// Format information associated with this variant.
   final Format format;
 
-  /// The video rendition group referenced by this variant, or {@code null}. */
+  /// The video rendition group referenced by this variant, or {@code null}.
   final String videoGroupId;
 
-  /// The audio rendition group referenced by this variant, or {@code null}. */
+  /// The audio rendition group referenced by this variant, or {@code null}.
   final String audioGroupId;
 
-  /// The subtitle rendition group referenced by this variant, or {@code null}. */
+  /// The subtitle rendition group referenced by this variant, or {@code null}.
   final String subtitleGroupId;
 
-  /// The caption rendition group referenced by this variant, or {@code null}. */
+  /// The caption rendition group referenced by this variant, or {@code null}.
   final String captionGroupId;
+
+  /// Returns a copy of this instance with the given {@link Format}.
+  Variant copyWithFormat(Format format) => Variant(
+      url: url,
+      format: format,
+      videoGroupId: videoGroupId,
+      audioGroupId: audioGroupId,
+      subtitleGroupId: subtitleGroupId,
+      captionGroupId: captionGroupId,
+    );
 }

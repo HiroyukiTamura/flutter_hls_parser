@@ -1,4 +1,5 @@
 import 'dart:typed_data';
+import 'package:meta/meta.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'drm_init_data.dart';
@@ -8,34 +9,34 @@ import 'util.dart';
 
 class Format {
   Format({
-    this.id,
-    this.label,
-    this.selectionFlags,
-    this.roleFlags,
-    this.bitrate,
-    this.codecs,
-    this.metadata,
-    this.containerMimeType,
-    this.sampleMimeType,
-    this.maxInputSize,
-    this.initializationData,
-    this.drmInitData,
-    this.subsampleOffsetUs,
-    this.width,
-    this.height,
-    this.frameRate,
-    this.rotationDegrees,
-    this.pixelWidthHeightRatio,
-    this.projectionData,
-    this.stereoMode,
-    this.colorInfo,
-    this.channelCount,
-    this.sampleRate,
-    this.pcmEncoding,
-    this.encoderDelay,
-    this.encoderPadding,
-    this.language,
-    this.accessibilityChannel,
+    @required this.id,
+    @required this.label,
+    @required this.selectionFlags,
+    @required this.roleFlags,
+    @required this.bitrate,
+    @required this.codecs,
+    @required this.metadata,
+    @required this.containerMimeType,
+    @required this.sampleMimeType,
+    @required this.maxInputSize,
+    @required this.initializationData,
+    @required this.drmInitData,
+    @required this.subsampleOffsetUs,
+    @required this.width,
+    @required this.height,
+    @required this.frameRate,
+    @required this.rotationDegrees,
+    @required this.pixelWidthHeightRatio,
+    @required this.projectionData,
+    @required this.stereoMode,
+    @required this.colorInfo,
+    @required this.channelCount,
+    @required this.sampleRate,
+    @required this.pcmEncoding,
+    @required this.encoderDelay,
+    @required this.encoderPadding,
+    @required this.language,
+    @required this.accessibilityChannel,
   });
 
   factory Format.create({
@@ -117,19 +118,22 @@ class Format {
     @required double frameRate,
     List<Uint8List> initializationData,
     int selectionFlags = 0,
-  }) => Format(
-      id: id,
-      label: label,
-      selectionFlags: selectionFlags,
-      bitrate: bitrate,
-      codecs: codecs,
-      containerMimeType: containerMimeType,
-      sampleMimeType: sampleMimeType,
-      initializationData: initializationData,
-      width: width,
-      height: height,
-      frameRate: frameRate,
-    );
+    int roleFlags
+  }) =>
+      Format.create(
+        id: id,
+        label: label,
+        selectionFlags: selectionFlags,
+        bitrate: bitrate,
+        codecs: codecs,
+        containerMimeType: containerMimeType,
+        sampleMimeType: sampleMimeType,
+        initializationData: initializationData,
+        width: width,
+        height: height,
+        frameRate: frameRate,
+        roleFlags: roleFlags,
+      );
 
   String id;
   String label;
@@ -167,4 +171,34 @@ class Format {
   static const int NO_VALUE = -1;
   static const double NO_VALUE_D = -1;
   static const int _OFFSET_SAMPLE_RELATIVE = NO_VALUE; //todo 要検討
+
+  Format copyWithMetadata(Metadata metadata) => Format(
+      id: id,
+      label: label,
+      selectionFlags: selectionFlags,
+      roleFlags: roleFlags,
+      bitrate: bitrate,
+      codecs: codecs,
+      metadata: metadata,
+      containerMimeType: containerMimeType,
+      sampleMimeType: sampleMimeType,
+      maxInputSize: maxInputSize,
+      initializationData: initializationData,
+      drmInitData: drmInitData,
+      subsampleOffsetUs: subsampleOffsetUs,
+      width: width,
+      height: height,
+      frameRate: frameRate,
+      rotationDegrees: rotationDegrees,
+      pixelWidthHeightRatio: pixelWidthHeightRatio,
+      projectionData: projectionData,
+      stereoMode: stereoMode,
+      colorInfo: colorInfo,
+      channelCount: channelCount,
+      sampleRate: sampleRate,
+      pcmEncoding: pcmEncoding,
+      encoderDelay: encoderDelay,
+      encoderPadding: encoderPadding,
+      language: language,
+      accessibilityChannel: accessibilityChannel,);
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
+import 'dart:typed_data';
 
 import 'package:flutter/services.dart';
 import 'package:flutter_hls_parser/flutter_hls_parser.dart';
@@ -11,6 +12,8 @@ import 'dart:collection';
 import 'package:quiver/strings.dart';
 import 'util.dart';
 import 'play_list.dart';
+import 'mime_types.dart';
+import 'scheme_data.dart';
 
 class HlsPlaylistParser {
   HlsPlaylistParser(this.masterPlaylist);
@@ -170,6 +173,10 @@ class HlsPlaylistParser {
 
   MasterPlaylist parseMasterPlaylist(List<String> extraLines) {
     List<String> tags = []; // ignore: always_specify_types
+    List<String> mediaTags = []; // ignore: always_specify_types
+    bool noClosedCaptions = false;
+    bool hasIndependentSegmentsTag = false;
+
     Map<String, String> variableDefinitions =
         {}; // ignore: always_specify_types
     for (String line in extraLines) {
@@ -179,8 +186,14 @@ class HlsPlaylistParser {
       }
 
       if (line.startsWith(TAG_DEFINE)) {
-        String key = parseStringAttr(source: line, pattern: REGEX_NAME, variableDefinitions: variableDefinitions);
-        String val = parseStringAttr(source: line, pattern: REGEX_VALUE, variableDefinitions: variableDefinitions);
+        String key = parseStringAttr(
+            source: line,
+            pattern: REGEX_NAME,
+            variableDefinitions: variableDefinitions);
+        String val = parseStringAttr(
+            source: line,
+            pattern: REGEX_VALUE,
+            variableDefinitions: variableDefinitions);
         if (key == null) {
           throw ParserException("Couldn't match $REGEX_NAME in $line");
         }
@@ -188,6 +201,23 @@ class HlsPlaylistParser {
           throw ParserException("Couldn't match $REGEX_VALUE in $line");
         }
         variableDefinitions[key] = val;
+      } else if (line == TAG_INDEPENDENT_SEGMENTS) {
+        hasIndependentSegmentsTag = true;
+      } else if (line.startsWith(TAG_MEDIA)) {
+        mediaTags.add(line);
+      } else {
+        String keyFormat = parseStringAttr(
+            source: line,
+            pattern: REGEX_KEYFORMAT,
+            defaultValue: KEYFORMAT_IDENTITY,
+            variableDefinitions: variableDefinitions);
+        SchemeData schemeData =
+            parseDrmSchemeData(line: line, keyFormat: keyFormat, variableDefinitions: variableDefinitions);
+        if (schemeData != null) {
+          String method = parseStringAttr(source: line, pattern: REGEX_METHOD, variableDefinitions: variableDefinitions);
+          String scheme = parseEncryptionScheme(method);
+          sessionKeyDrmInitData.add(new DrmInitData(scheme, schemeData));
+        }
       }
     }
   }
@@ -204,5 +234,54 @@ class HlsPlaylistParser {
       String key = match.group(1);
       return variableDefinitions[key] ??= key;
     });
+  }
+
+  static SchemeData parseDrmSchemeData(
+      {String line,
+      String keyFormat,
+      Map<String, String> variableDefinitions}) {
+    String keyFormatVersions = parseStringAttr(
+      source: line,
+      pattern: REGEX_KEYFORMATVERSIONS,
+      defaultValue: '1',
+      variableDefinitions: variableDefinitions,
+    );
+
+    if (KEYFORMAT_WIDEVINE_PSSH_BINARY == keyFormat) {
+      String uriString = parseStringAttr(
+          source: line,
+          pattern: REGEX_URI,
+          variableDefinitions: variableDefinitions);
+      Uint8List data = getBase64FromUri(uriString);
+      return SchemeData(
+          uuid: '', //todo 保留
+          mimeType: MimeTypes.VIDEO_MP4,
+          data: data);
+    } else if (KEYFORMAT_WIDEVINE_PSSH_JSON == keyFormat) {
+      return SchemeData(
+          uuid: '', //todo 保留
+          mimeType: MimeTypes.HLS,
+          data: const Utf8Encoder().convert(line));
+    } else if (KEYFORMAT_PLAYREADY == keyFormat && '1' == keyFormatVersions) {
+      String uriString = parseStringAttr(
+          source: line,
+          pattern: REGEX_URI,
+          variableDefinitions: variableDefinitions);
+      Uint8List data = getBase64FromUri(uriString);
+      Uint8List psshData; //todo 保留
+      return SchemeData(
+          uuid: '' /*保留*/, mimeType: MimeTypes.VIDEO_MP4, data: psshData);
+    }
+
+    return null;
+  }
+
+  static String parseEncryptionScheme(String method) => METHOD_SAMPLE_AES_CENC == method || METHOD_SAMPLE_AES_CTR == method
+        ? CencType.CENC
+        : CencType.CBCS;
+
+  static Uint8List getBase64FromUri(String uriString) {
+    String uriPre = uriString.substring(uriString.indexOf(','));
+    return const Base64Decoder().convert(uriPre);
   }
 }

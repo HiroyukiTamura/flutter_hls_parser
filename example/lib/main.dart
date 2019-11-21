@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:typed_data';
-
+import 'drm_init_data.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hls_parser/flutter_hls_parser.dart';
 import 'exception.dart';
@@ -174,12 +174,12 @@ class HlsPlaylistParser {
   MasterPlaylist parseMasterPlaylist(List<String> extraLines) {
     List<String> tags = []; // ignore: always_specify_types
     List<String> mediaTags = []; // ignore: always_specify_types
+    List<DrmInitData> sessionKeyDrmInitData = [];// ignore: always_specify_types
     bool noClosedCaptions = false;
     bool hasIndependentSegmentsTag = false;
 
-    Map<String, String> variableDefinitions =
-        {}; // ignore: always_specify_types
-    for (String line in extraLines) {
+    Map<String, String> variableDefinitions = {}; // ignore: always_specify_types
+    for (final String line in extraLines) {
       if (line.startsWith(TAG_PREFIX)) {
         // We expose all tags through the playlist.
         tags.add(line);
@@ -205,7 +205,7 @@ class HlsPlaylistParser {
         hasIndependentSegmentsTag = true;
       } else if (line.startsWith(TAG_MEDIA)) {
         mediaTags.add(line);
-      } else {
+      } else if (line.startsWith(TAG_STREAM_INF)) {
         String keyFormat = parseStringAttr(
             source: line,
             pattern: REGEX_KEYFORMAT,
@@ -213,11 +213,47 @@ class HlsPlaylistParser {
             variableDefinitions: variableDefinitions);
         SchemeData schemeData =
             parseDrmSchemeData(line: line, keyFormat: keyFormat, variableDefinitions: variableDefinitions);
+
         if (schemeData != null) {
           String method = parseStringAttr(source: line, pattern: REGEX_METHOD, variableDefinitions: variableDefinitions);
           String scheme = parseEncryptionScheme(method);
-          sessionKeyDrmInitData.add(new DrmInitData(scheme, schemeData));
+          DrmInitData drmInitData = DrmInitData(schemeType: scheme, schemeData: [schemeData]); // ignore: always_specify_types
+          sessionKeyDrmInitData.add(drmInitData);
         }
+      } else if (line.startsWith(TAG_STREAM_INF)) {
+        noClosedCaptions |= line.contains(ATTR_CLOSED_CAPTIONS_NONE);//todo 再検討
+        int bitrate = parseIntAttr(line, REGEX_BANDWIDTH);
+        String averageBandwidthString = parseStringAttr(source: line, pattern: REGEX_AVERAGE_BANDWIDTH, variableDefinitions: variableDefinitions);
+        if (averageBandwidthString != null)
+          // If available, the average bandwidth attribute is used as the variant's bitrate.
+          bitrate = int.parse(averageBandwidthString);
+        String codecs = parseStringAttr(source: line, pattern: REGEX_CODECS, variableDefinitions: variableDefinitions);
+        String resolutionString = parseStringAttr(source: line, pattern: REGEX_RESOLUTION, variableDefinitions: variableDefinitions);
+        int width;
+        int height;
+        if (resolutionString != null) {
+          List<String> widthAndHeight = resolutionString.split('x');
+          width = int.parse(widthAndHeight[0]);
+          height = int.parse(widthAndHeight[1]);
+          if (width <= 0 || height <= 0) {
+            // Resolution string is invalid.
+            width = Format.NO_VALUE;
+            height = Format.NO_VALUE;
+          }
+        }
+
+        double frameRate = Format.NO_VALUE.toDouble();
+        String frameRateString = parseStringAttr(source: line, pattern: REGEX_FRAME_RATE, variableDefinitions: variableDefinitions);
+        if (frameRateString != null) {
+          frameRate = double.parse(frameRateString);
+        }
+        String videoGroupId = parseStringAttr(source: line, pattern: REGEX_VIDEO, variableDefinitions: variableDefinitions);
+        String audioGroupId = parseStringAttr(source: line, pattern: REGEX_AUDIO, variableDefinitions: variableDefinitions);
+        String subtitlesGroupId = parseStringAttr(source: line, pattern: REGEX_SUBTITLES, variableDefinitions: variableDefinitions);
+        String closedCaptionsGroupId = parseStringAttr(source: line, pattern: REGEX_CLOSED_CAPTIONS, variableDefinitions: variableDefinitions);
+
+        String parsedLine = parseStringAttr(source: line, pattern: REGEX_VARIABLE_REFERENCE, variableDefinitions: variableDefinitions);// #EXT-X-STREAM-INF's URI.
+
       }
     }
   }
@@ -283,5 +319,9 @@ class HlsPlaylistParser {
   static Uint8List getBase64FromUri(String uriString) {
     String uriPre = uriString.substring(uriString.indexOf(','));
     return const Base64Decoder().convert(uriPre);
+  }
+
+  static int parseIntAttr(String line, String pattern) {
+    return int.parse(parseStringAttr(source: line, pattern: pattern, variableDefinitions: {}); // ignore: always_specify_types
   }
 }

@@ -254,6 +254,8 @@ class HlsPlaylistParser {
 
         String parsedLine = parseStringAttr(source: line, pattern: REGEX_VARIABLE_REFERENCE, variableDefinitions: variableDefinitions);// #EXT-X-STREAM-INF's URI.
 
+        Uri uri = UriUtil.resolveToUri(baseUri, parsedLine;//todo 実装
+
       }
     }
   }

@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_hls_parser_example/util.dart';
+import 'util.dart';
 
 class MimeTypes {
   static const String BASE_TYPE_VIDEO = 'video';

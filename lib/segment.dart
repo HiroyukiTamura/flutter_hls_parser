@@ -1,4 +1,4 @@
-import 'package:flutter_hls_parser_example/util.dart';
+import 'util.dart';
 
 import 'drm_init_data.dart';
 import 'package:meta/meta.dart';

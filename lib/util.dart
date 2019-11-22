@@ -1,4 +1,4 @@
-import 'package:flutter_hls_parser_example/mime_types.dart';
+import 'mime_types.dart';
 import 'package:meta/meta.dart';
 import 'package:quiver/strings.dart';
 import 'exception.dart';

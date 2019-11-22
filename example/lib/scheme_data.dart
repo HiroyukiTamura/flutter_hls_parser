@@ -16,4 +16,12 @@ class SchemeData {
   final String mimeType;
   final Uint8List data;
   final bool requiresSecureDecryption;
+
+  SchemeData copyWithData(Uint8List data) => SchemeData(
+      uuid: uuid,
+      licenseServerUrl: licenseServerUrl,
+      mimeType: mimeType,
+      data: data,
+      requiresSecureDecryption: requiresSecureDecryption,
+    );
 }

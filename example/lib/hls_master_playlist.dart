@@ -6,18 +6,18 @@ import 'play_list.dart';
 
 class HlsMasterPlaylist extends HlsPlaylist {
   HlsMasterPlaylist({
-    String baseUri,
-    List<String> tags,
-    this.variants,
-    this.videos,
-    this.audios,
-    this.subtitles,
-    this.closedCaptions,
+    String baseUri = '',
+    List<String> tags = const [],
+    this.variants = const [],
+    this.videos = const [],
+    this.audios = const [],
+    this.subtitles = const [],
+    this.closedCaptions = const [],
     this.muxedAudioFormat,
-    this.muxedCaptionFormats,
-    bool hasIndependentSegments,
-    this.variableDefinitions,
-    this.sessionKeyDrmInitData,
+    this.muxedCaptionFormats = const [],
+    bool hasIndependentSegments = false,
+    this.variableDefinitions = const {},
+    this.sessionKeyDrmInitData = const [],
   })  : mediaPlaylistUrls = getMediaPlaylistUrls(
             variants, videos, audios, subtitles, closedCaptions),
         super(

@@ -197,7 +197,7 @@ class MimeTypes {
     return null;
   }
 
-  int getTrackType(String mimeType) {
+  static int getTrackType(String mimeType) {
     if (mimeType?.isNotEmpty == false) return Util.TRACK_TYPE_UNKNOWN;
 
     if (isAudio(mimeType)) return Util.TRACK_TYPE_AUDIO;
@@ -225,7 +225,7 @@ class MimeTypes {
       return getTrackTypeForCustomMimeType(mimeType);
   }
 
-  int getTrackTypeForCustomMimeType(String mimeType) {
+  static int getTrackTypeForCustomMimeType(String mimeType) {
     for (var it in _customMimeTypes)
       if (it.mimeType == mimeType) return it.trackType;
 
@@ -247,6 +247,8 @@ class MimeTypes {
 
   static bool isText(String mimeType) =>
       BASE_TYPE_TEXT == getTopLevelType(mimeType);
+
+  static int getTrackTypeOfCodec(String codec) => getTrackType(getMediaMimeType(codec));
 }
 
 class CustomMimeType {

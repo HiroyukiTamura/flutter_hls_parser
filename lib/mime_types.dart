@@ -7,78 +7,78 @@ class MimeTypes {
   static const String BASE_TYPE_TEXT = 'text';
   static const String BASE_TYPE_APPLICATION = 'application';
   static const String VIDEO_MP4 = '$BASE_TYPE_VIDEO/mp4';
-  static const String VIDEO_WEBM = (BASE_TYPE_VIDEO + '/webm');
-  static const String VIDEO_H263 = (BASE_TYPE_VIDEO + '/3gpp');
-  static const String VIDEO_H264 = (BASE_TYPE_VIDEO + '/avc');
-  static const String VIDEO_H265 = (BASE_TYPE_VIDEO + '/hevc');
-  static const String VIDEO_VP8 = (BASE_TYPE_VIDEO + '/x-vnd.on2.vp8');
-  static const String VIDEO_VP9 = (BASE_TYPE_VIDEO + '/x-vnd.on2.vp9');
-  static const String VIDEO_AV1 = (BASE_TYPE_VIDEO + '/av01');
-  static const String VIDEO_MP4V = (BASE_TYPE_VIDEO + '/mp4v-es');
-  static const String VIDEO_MPEG = (BASE_TYPE_VIDEO + '/mpeg');
-  static const String VIDEO_MPEG2 = (BASE_TYPE_VIDEO + '/mpeg2');
-  static const String VIDEO_VC1 = (BASE_TYPE_VIDEO + '/wvc1');
-  static const String VIDEO_DIVX = (BASE_TYPE_VIDEO + '/divx');
-  static const String VIDEO_DOLBY_VISION = (BASE_TYPE_VIDEO + '/dolby-vision');
-  static const String VIDEO_UNKNOWN = (BASE_TYPE_VIDEO + '/x-unknown');
-  static const String AUDIO_MP4 = (BASE_TYPE_AUDIO + '/mp4');
-  static const String AUDIO_AAC = (BASE_TYPE_AUDIO + '/mp4a-latm');
-  static const String AUDIO_WEBM = (BASE_TYPE_AUDIO + '/webm');
-  static const String AUDIO_MPEG = (BASE_TYPE_AUDIO + '/mpeg');
-  static const String AUDIO_MPEG_L1 = (BASE_TYPE_AUDIO + '/mpeg-L1');
-  static const String AUDIO_MPEG_L2 = (BASE_TYPE_AUDIO + '/mpeg-L2');
-  static const String AUDIO_RAW = (BASE_TYPE_AUDIO + '/raw');
-  static const String AUDIO_ALAW = (BASE_TYPE_AUDIO + '/g711-alaw');
-  static const String AUDIO_MLAW = (BASE_TYPE_AUDIO + '/g711-mlaw');
-  static const String AUDIO_AC3 = (BASE_TYPE_AUDIO + '/ac3');
-  static const String AUDIO_E_AC3 = (BASE_TYPE_AUDIO + '/eac3');
-  static const String AUDIO_E_AC3_JOC = (BASE_TYPE_AUDIO + '/eac3-joc');
-  static const String AUDIO_AC4 = (BASE_TYPE_AUDIO + '/ac4');
-  static const String AUDIO_TRUEHD = (BASE_TYPE_AUDIO + '/true-hd');
-  static const String AUDIO_DTS = (BASE_TYPE_AUDIO + '/vnd.dts');
-  static const String AUDIO_DTS_HD = (BASE_TYPE_AUDIO + '/vnd.dts.hd');
+  static const String VIDEO_WEBM = '$BASE_TYPE_VIDEO/webm';
+  static const String VIDEO_H263 = '$BASE_TYPE_VIDEO/3gpp';
+  static const String VIDEO_H264 = '$BASE_TYPE_VIDEO/avc';
+  static const String VIDEO_H265 = '$BASE_TYPE_VIDEO/hevc';
+  static const String VIDEO_VP8 = '$BASE_TYPE_VIDEO/x-vnd.on2.vp8';
+  static const String VIDEO_VP9 = '$BASE_TYPE_VIDEO/x-vnd.on2.vp9';
+  static const String VIDEO_AV1 = '$BASE_TYPE_VIDEO/av01';
+  static const String VIDEO_MP4V = '$BASE_TYPE_VIDEO/mp4v-es';
+  static const String VIDEO_MPEG = '$BASE_TYPE_VIDEO/mpeg';
+  static const String VIDEO_MPEG2 = '$BASE_TYPE_VIDEO/mpeg2';
+  static const String VIDEO_VC1 = '$BASE_TYPE_VIDEO/wvc1';
+  static const String VIDEO_DIVX = '$BASE_TYPE_VIDEO/divx';
+  static const String VIDEO_DOLBY_VISION = '$BASE_TYPE_VIDEO/dolby-vision';
+  static const String VIDEO_UNKNOWN = '$BASE_TYPE_VIDEO/x-unknown';
+  static const String AUDIO_MP4 = '$BASE_TYPE_AUDIO/mp4';
+  static const String AUDIO_AAC = '$BASE_TYPE_AUDIO/mp4a-latm';
+  static const String AUDIO_WEBM = '$BASE_TYPE_AUDIO/webm';
+  static const String AUDIO_MPEG = '$BASE_TYPE_AUDIO/mpeg';
+  static const String AUDIO_MPEG_L1 = '$BASE_TYPE_AUDIO/mpeg-L1';
+  static const String AUDIO_MPEG_L2 = '$BASE_TYPE_AUDIO/mpeg-L2';
+  static const String AUDIO_RAW = '$BASE_TYPE_AUDIO/raw';
+  static const String AUDIO_ALAW = '$BASE_TYPE_AUDIO/g711-alaw';
+  static const String AUDIO_MLAW = '$BASE_TYPE_AUDIO/g711-mlaw';
+  static const String AUDIO_AC3 = '$BASE_TYPE_AUDIO/ac3';
+  static const String AUDIO_E_AC3 = '$BASE_TYPE_AUDIO/eac3';
+  static const String AUDIO_E_AC3_JOC = '$BASE_TYPE_AUDIO/eac3-joc';
+  static const String AUDIO_AC4 = '$BASE_TYPE_AUDIO/ac4';
+  static const String AUDIO_TRUEHD = '$BASE_TYPE_AUDIO/true-hd';
+  static const String AUDIO_DTS = '$BASE_TYPE_AUDIO/vnd.dts';
+  static const String AUDIO_DTS_HD = '$BASE_TYPE_AUDIO/vnd.dts.hd';
   static const String AUDIO_DTS_EXPRESS =
-      (BASE_TYPE_AUDIO + '/vnd.dts.hd;profile=lbr');
-  static const String AUDIO_VORBIS = (BASE_TYPE_AUDIO + '/vorbis');
-  static const String AUDIO_OPUS = (BASE_TYPE_AUDIO + '/opus');
-  static const String AUDIO_AMR_NB = (BASE_TYPE_AUDIO + '/3gpp');
-  static const String AUDIO_AMR_WB = (BASE_TYPE_AUDIO + '/amr-wb');
-  static const String AUDIO_FLAC = (BASE_TYPE_AUDIO + '/flac');
-  static const String AUDIO_ALAC = (BASE_TYPE_AUDIO + '/alac');
-  static const String AUDIO_MSGSM = (BASE_TYPE_AUDIO + '/gsm');
-  static const String AUDIO_UNKNOWN = (BASE_TYPE_AUDIO + '/x-unknown');
-  static const String TEXT_VTT = (BASE_TYPE_TEXT + '/vtt');
-  static const String TEXT_SSA = (BASE_TYPE_TEXT + '/x-ssa');
-  static const String APPLICATION_MP4 = (BASE_TYPE_APPLICATION + '/mp4');
-  static const String APPLICATION_WEBM = (BASE_TYPE_APPLICATION + '/webm');
-  static const String APPLICATION_MPD = (BASE_TYPE_APPLICATION + '/dash+xml');
-  static const String APPLICATION_M3U8 = (BASE_TYPE_APPLICATION + '/x-mpegURL');
+      '$BASE_TYPE_AUDIO/vnd.dts.hd;profile=lbr';
+  static const String AUDIO_VORBIS = '$BASE_TYPE_AUDIO/vorbis';
+  static const String AUDIO_OPUS = '$BASE_TYPE_AUDIO/opus';
+  static const String AUDIO_AMR_NB = '$BASE_TYPE_AUDIO/3gpp';
+  static const String AUDIO_AMR_WB = '$BASE_TYPE_AUDIO/amr-wb';
+  static const String AUDIO_FLAC = '$BASE_TYPE_AUDIO/flac';
+  static const String AUDIO_ALAC = '$BASE_TYPE_AUDIO/alac';
+  static const String AUDIO_MSGSM = '$BASE_TYPE_AUDIO/gsm';
+  static const String AUDIO_UNKNOWN = '$BASE_TYPE_AUDIO/x-unknown';
+  static const String TEXT_VTT = '$BASE_TYPE_TEXT/vtt';
+  static const String TEXT_SSA = '$BASE_TYPE_TEXT/x-ssa';
+  static const String APPLICATION_MP4 = '$BASE_TYPE_APPLICATION/mp4';
+  static const String APPLICATION_WEBM = '$BASE_TYPE_APPLICATION/webm';
+  static const String APPLICATION_MPD = '$BASE_TYPE_APPLICATION/dash+xml';
+  static const String APPLICATION_M3U8 = '$BASE_TYPE_APPLICATION/x-mpegURL';
   static const String APPLICATION_SS =
-      (BASE_TYPE_APPLICATION + '/vnd.ms-sstr+xml');
-  static const String APPLICATION_ID3 = (BASE_TYPE_APPLICATION + '/id3');
-  static const String APPLICATION_CEA608 = (BASE_TYPE_APPLICATION + '/cea-608');
-  static const String APPLICATION_CEA708 = (BASE_TYPE_APPLICATION + '/cea-708');
+      '$BASE_TYPE_APPLICATION/vnd.ms-sstr+xml';
+  static const String APPLICATION_ID3 = '$BASE_TYPE_APPLICATION/id3';
+  static const String APPLICATION_CEA608 = '$BASE_TYPE_APPLICATION/cea-608';
+  static const String APPLICATION_CEA708 = '$BASE_TYPE_APPLICATION/cea-708';
   static const String APPLICATION_SUBRIP =
-      (BASE_TYPE_APPLICATION + '/x-subrip');
-  static const String APPLICATION_TTML = (BASE_TYPE_APPLICATION + '/ttml+xml');
+      '$BASE_TYPE_APPLICATION/x-subrip';
+  static const String APPLICATION_TTML = '$BASE_TYPE_APPLICATION/ttml+xml';
   static const String APPLICATION_TX3G =
-      (BASE_TYPE_APPLICATION + '/x-quicktime-tx3g');
+      '$BASE_TYPE_APPLICATION/x-quicktime-tx3g';
   static const String APPLICATION_MP4VTT =
-      (BASE_TYPE_APPLICATION + '/x-mp4-vtt');
+      '$BASE_TYPE_APPLICATION/x-mp4-vtt';
   static const String APPLICATION_MP4CEA608 =
-      (BASE_TYPE_APPLICATION + '/x-mp4-cea-608');
-  static const String APPLICATION_RAWCC = (BASE_TYPE_APPLICATION + '/x-rawcc');
-  static const String APPLICATION_VOBSUB = (BASE_TYPE_APPLICATION + '/vobsub');
-  static const String APPLICATION_PGS = (BASE_TYPE_APPLICATION + '/pgs');
+      '$BASE_TYPE_APPLICATION/x-mp4-cea-608';
+  static const String APPLICATION_RAWCC = '$BASE_TYPE_APPLICATION/x-rawcc';
+  static const String APPLICATION_VOBSUB = '$BASE_TYPE_APPLICATION/vobsub';
+  static const String APPLICATION_PGS = '$BASE_TYPE_APPLICATION/pgs';
   static const String APPLICATION_SCTE35 =
-      (BASE_TYPE_APPLICATION + '/x-scte35');
+      '$BASE_TYPE_APPLICATION/x-scte35';
   static const String APPLICATION_CAMERA_MOTION =
-      (BASE_TYPE_APPLICATION + '/x-camera-motion');
-  static const String APPLICATION_EMSG = (BASE_TYPE_APPLICATION + '/x-emsg');
+      '$BASE_TYPE_APPLICATION/x-camera-motion';
+  static const String APPLICATION_EMSG = '$BASE_TYPE_APPLICATION/x-emsg';
   static const String APPLICATION_DVBSUBS =
-      (BASE_TYPE_APPLICATION + '/dvbsubs');
-  static const String APPLICATION_EXIF = (BASE_TYPE_APPLICATION + '/x-exif');
-  static const String APPLICATION_ICY = (BASE_TYPE_APPLICATION + '/x-icy');
+      '$BASE_TYPE_APPLICATION/dvbsubs';
+  static const String APPLICATION_EXIF = '$BASE_TYPE_APPLICATION/x-exif';
+  static const String APPLICATION_ICY = '$BASE_TYPE_APPLICATION/x-icy';
 
   static const String HLS = 'hls';
 
@@ -190,7 +190,7 @@ class MimeTypes {
   }
 
   static String getCustomMimeTypeForCodec(String codec) {
-    for (var customMimeType in _customMimeTypes)
+    for (final customMimeType in _customMimeTypes)
       if (codec.startsWith(customMimeType.codecPrefix))
         return customMimeType.mimeType;
 
@@ -226,7 +226,7 @@ class MimeTypes {
   }
 
   static int getTrackTypeForCustomMimeType(String mimeType) {
-    for (var it in _customMimeTypes)
+    for (final it in _customMimeTypes)
       if (it.mimeType == mimeType) return it.trackType;
 
     return Util.TRACK_TYPE_UNKNOWN;

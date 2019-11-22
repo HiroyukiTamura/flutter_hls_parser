@@ -2,14 +2,8 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:typed_data';
 import 'drm_init_data.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_hls_parser/flutter_hls_parser.dart';
 import 'exception.dart';
-import 'dart:io';
 import 'dart:convert';
-import 'dart:async';
-import 'dart:collection';
-import 'package:quiver/strings.dart';
 import 'util.dart';
 import 'play_list.dart';
 import 'mime_types.dart';
@@ -20,7 +14,6 @@ import 'variant_info.dart';
 import 'hls_track_metadata_entry.dart';
 import 'metadata.dart';
 import 'rendition.dart';
-import 'variant.dart';
 import 'hls_master_playlist.dart';
 import 'hls_media_playlist.dart';
 import 'segment.dart';
@@ -106,10 +99,15 @@ class HlsPlaylistParser {
   static const String REGEX_GROUP_ID = 'GROUP-ID="(.+?)"';
   static const String REGEX_CHARACTERISTICS = 'CHARACTERISTICS="(.+?)"';
   static const String REGEX_INSTREAM_ID = 'INSTREAM-ID="((?:CC|SERVICE)\\d+)"';
-  static final String REGEX_AUTOSELECT =
+  static final String
+      REGEX_AUTOSELECT = // ignore: non_constant_identifier_names
       _compileBooleanAttrPattern('AUTOSELECT');
-  static final String REGEX_DEFAULT = _compileBooleanAttrPattern('DEFAULT');
-  static final String REGEX_FORCED = _compileBooleanAttrPattern('FORCED');
+  // ignore: non_constant_identifier_names
+  static final String REGEX_DEFAULT = _compileBooleanAttrPattern(
+      'DEFAULT');
+  // ignore: non_constant_identifier_names
+  static final String REGEX_FORCED = _compileBooleanAttrPattern(
+      'FORCED');
   static const String REGEX_VALUE = 'VALUE="(.+?)"';
   static const String REGEX_IMPORT = 'IMPORT="(.+?)"';
   static const String REGEX_VARIABLE_REFERENCE = '\\{\\\$([a-zA-Z0-9\\-_]+)\\}';
@@ -163,10 +161,10 @@ class HlsPlaylistParser {
     List<DrmInitData> sessionKeyDrmInitData =
         []; // ignore: always_specify_types
     List<Variant> variants = []; // ignore: always_specify_types
-    List<Rendition> videos = [];
-    List<Rendition> audios = [];
-    List<Rendition> subtitles = [];
-    List<Rendition> closedCaptions = [];
+    List<Rendition> videos = []; // ignore: always_specify_types
+    List<Rendition> audios = []; // ignore: always_specify_types
+    List<Rendition> subtitles = []; // ignore: always_specify_types
+    List<Rendition> closedCaptions = []; // ignore: always_specify_types
     Map<Uri, List<VariantInfo>> urlToVariantInfos =
         {}; // ignore: always_specify_types
     Format muxedAudioFormat;
@@ -337,8 +335,8 @@ class HlsPlaylistParser {
           variant.copyWithFormat(variant.format.copyWithMetadata(metadata)));
     }
 
+    // ignore: always_specify_types
     mediaTags.forEach((line) {
-      // ignore: always_specify_types
       String groupId = parseStringAttr(
           source: line,
           pattern: REGEX_GROUP_ID,
@@ -373,7 +371,7 @@ class HlsPlaylistParser {
           {
             Variant variant = variants.firstWhere(
                 (it) => it.videoGroupId == groupId,
-                orElse: () => null); // ignore: always_specify_types
+                orElse: () => null);
             String codecs;
             int width = Format.NO_VALUE;
             int height = Format.NO_VALUE;

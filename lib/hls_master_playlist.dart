@@ -20,7 +20,7 @@ class HlsMasterPlaylist extends HlsPlaylist {
     this.variableDefinitions = const {}, // ignore: always_specify_types
     this.sessionKeyDrmInitData = const [], // ignore: always_specify_types
   })  : mediaPlaylistUrls = getMediaPlaylistUrls(
-            variants, [videos, audios, subtitles, closedCaptions]),
+            variants, [videos, audios, subtitles, closedCaptions]), // ignore: always_specify_types
         super(
             baseUri: baseUri,
             tags: tags,
@@ -58,10 +58,10 @@ class HlsMasterPlaylist extends HlsPlaylist {
   /// DRM initialization data derived from #EXT-X-SESSION-KEY tags.
   final List<DrmInitData> sessionKeyDrmInitData;
 
-  static List<Uri> getMediaPlaylistUrls(List<Variant> variants, List<List<Rendition>> renditionList) => [...variants.map((it) => it.url), ...concat(renditionList).map((it) => it.url)].toSet().toList();
+  static List<Uri> getMediaPlaylistUrls(List<Variant> variants, List<List<Rendition>> renditionList) => {...variants.map((it) => it.url), ...concat(renditionList).map((it) => it.url)}.toList(); // ignore: always_specify_types
 
   static void addMediaPlaylistUrls(List<Rendition> renditions, List<Uri> out) {
-    for (var rendition in renditions)
+    for (final rendition in renditions) // ignore: always_specify_types
       if (rendition.url != null && !out.contains(rendition.url))
         out.add(rendition.url);
   }

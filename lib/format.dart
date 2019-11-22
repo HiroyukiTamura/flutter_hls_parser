@@ -5,7 +5,6 @@ import 'package:flutter/cupertino.dart';
 import 'drm_init_data.dart';
 import 'color_info.dart';
 import 'metadata.dart';
-import 'util.dart';
 
 class Format {
   Format({
@@ -69,10 +68,10 @@ class Format {
     String language,
     int accessibilityChannel,
   }) {
-    if (rotationDegrees == NO_VALUE) rotationDegrees = 0;
-    if (pixelWidthHeightRatio == NO_VALUE) pixelWidthHeightRatio = 0;
-    if (encoderDelay == NO_VALUE) encoderDelay = 0;
-    if (encoderPadding == NO_VALUE) encoderPadding = 0;
+    if (rotationDegrees == NO_VALUE) rotationDegrees = 0; // ignore: always_put_control_body_on_new_line
+    if (pixelWidthHeightRatio == NO_VALUE) pixelWidthHeightRatio = 0; // ignore: always_put_control_body_on_new_line
+    if (encoderDelay == NO_VALUE) encoderDelay = 0; // ignore: always_put_control_body_on_new_line
+    if (encoderPadding == NO_VALUE) encoderPadding = 0; // ignore: always_put_control_body_on_new_line
     language = language.toLowerCase(); //todo再検討
     return Format(
         id: id,

@@ -173,6 +173,9 @@ class MimeTypes {
     if (codec.startsWith('ac-3') || codec.startsWith('dac3'))
       return MimeTypes.AUDIO_AC3;
 
+    if (codec.startsWith('ec-3') || codec.startsWith('dec3'))
+      return MimeTypes.AUDIO_E_AC3;
+
     if (codec.startsWith('ec+3')) return MimeTypes.AUDIO_E_AC3_JOC;
 
     if (codec.startsWith('ac-4') || codec.startsWith('dac4'))

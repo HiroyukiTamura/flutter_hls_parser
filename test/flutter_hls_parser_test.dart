@@ -7,6 +7,7 @@ import 'main_test.dart';
 import 'package:flutter_hls_parser/exception.dart';
 import 'package:flutter_hls_parser/mime_types.dart';
 import 'package:flutter_hls_parser/rendition.dart';
+import 'mime_types_test.dart';
 
 void main() {
   const MethodChannel channel = MethodChannel('flutter_hls_parser');
@@ -297,5 +298,11 @@ uri2.m3u8
 //    expect(masterPlaylist.muxedCaptionFormats[0].sampleMimeType, MimeTypes.APPLICATION_CEA708);
 //    expect(masterPlaylist.muxedCaptionFormats[0].accessibilityChannel, 4);
 //    expect(masterPlaylist.muxedCaptionFormats[0].language, 'spa');
+  });
+
+  test('testMimeType', () async {
+    MimeTypesTest.testGetMediaMimeType_fromValidCodecs_returnsCorrectMimeType();
+    MimeTypesTest.testGetMimeTypeFromMp4ObjectType_forValidObjectType_returnsCorrectMimeType();
+    MimeTypesTest.testGetMimeTypeFromMp4ObjectType_forInvalidObjectType_returnsNull();
   });
 }

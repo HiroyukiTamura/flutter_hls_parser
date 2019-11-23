@@ -32,7 +32,7 @@ http://example.com/mid.m3u8
 http://example.com/hi.m3u8
 
 #EXT-X-STREAM-INF:BANDWIDTH=65000,CODECS="mp4a.40.5"
-http://example.com/audio-only.m3u8"
+http://example.com/audio-only.m3u8
 ''';
      
 
@@ -191,45 +191,45 @@ http://example.com/audio-only.m3u8"
     List<Variant> variants = masterPlaylist.variants;
 
     expect(variants.length, 5);
-    expect(masterPlaylist.muxedCaptionFormats, null);
+    expect(masterPlaylist.muxedCaptionFormats, isNull);
 
     for (var i=0; i<variants.length; i++) {
       switch (i) {
         case 0:
-          expect(variants[0].format.bitrate == 1280000, true);
-          expect(variants[0].format.codecs == 'mp4a.40.2,avc1.66.30', true);
-          expect(variants[0].format.width == 304, true);
-          expect(variants[0].format.height == 128, true);
-          expect(variants[0].url == Uri.parse('http://example.com/low.m3u8'), true);
+          expect(variants[0].format.bitrate, 1280000);
+          expect(variants[0].format.codecs, 'mp4a.40.2,avc1.66.30');
+          expect(variants[0].format.width, 304);
+          expect(variants[0].format.height, 128);
+          expect(variants[0].url, Uri.parse('http://example.com/low.m3u8'));
           break;
         case 1:
-          expect(variants[1].format.bitrate == 1280000, true);
-          expect(variants[1].format.codecs == 'mp4a.40.2 , avc1.66.30 ', true);
-          expect(variants[1].url == Uri.parse('http://example.com/spaces_in_codecs.m3u8'), true);
+          expect(variants[1].format.bitrate, 1280000);
+          expect(variants[1].format.codecs, 'mp4a.40.2 , avc1.66.30');
+          expect(variants[1].url, Uri.parse('http://example.com/spaces_in_codecs.m3u8'));
           break;
         case 2:
-          expect(variants[2].format.bitrate == 2560000, true);
-          expect(variants[2].format.codecs == null, false);
+          expect(variants[2].format.bitrate, 2560000);
+          expect(variants[2].format.codecs, isNull);
           expect(variants[2].format.width, 384);
           expect(variants[2].format.height, 160);
           expect(variants[2].format.frameRate, 25);
-          expect(variants[2].url, 'http://example.com/mid.m3u8');
+          expect(variants[2].url, Uri.parse('http://example.com/mid.m3u8'));
           break;
         case 3:
-          expect(variants[3].format.bitrate == 7680000, true);
-          expect(variants[3].format.codecs == null, false);
-          expect(variants[3].format.width, Format.NO_VALUE);
-          expect(variants[3].format.height, Format.NO_VALUE);
+          expect(variants[3].format.bitrate, 7680000);
+          expect(variants[3].format.codecs, isNull);
+          expect(variants[3].format.width, isNull);
+          expect(variants[3].format.height, isNull);
           expect(variants[3].format.frameRate, 29.997);
-          expect(variants[3].url, 'http://example.com/hi.m3u8');
+          expect(variants[3].url, Uri.parse('http://example.com/hi.m3u8'));
           break;
         case 4:
-          expect(variants[4].format.bitrate == 65000, true);
+          expect(variants[4].format.bitrate, 65000);
           expect(variants[4].format.codecs, 'mp4a.40.5');
-          expect(variants[4].format.width, Format.NO_VALUE);
-          expect(variants[4].format.height, Format.NO_VALUE);
-          expect(variants[4].format.frameRate, Format.NO_VALUE);
-          expect(variants[4].url, 'http://example.com/audio-only.m3u8');
+          expect(variants[4].format.width, isNull);
+          expect(variants[4].format.height, isNull);
+          expect(variants[4].format.frameRate, isNull);
+          expect(variants[4].url, Uri.parse('http://example.com/audio-only.m3u8'));
           break;
       }
     }

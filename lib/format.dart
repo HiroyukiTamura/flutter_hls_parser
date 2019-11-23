@@ -8,101 +8,35 @@ import 'metadata.dart';
 
 class Format {
   Format({
-    @required this.id,
-    @required this.label,
-    @required this.selectionFlags,
-    @required this.roleFlags,
-    @required this.bitrate,
-    @required this.codecs,
-    @required this.metadata,
-    @required this.containerMimeType,
-    @required this.sampleMimeType,
-    @required this.maxInputSize,
-    @required this.initializationData,
-    @required this.drmInitData,
-    @required this.subsampleOffsetUs,
-    @required this.width,
-    @required this.height,
-    @required this.frameRate,
-    @required this.rotationDegrees,
-    @required this.pixelWidthHeightRatio,
-    @required this.projectionData,
-    @required this.stereoMode,
-    @required this.colorInfo,
-    @required this.channelCount,
-    @required this.sampleRate,
-    @required this.pcmEncoding,
-    @required this.encoderDelay,
-    @required this.encoderPadding,
-    @required this.language,
-    @required this.accessibilityChannel,
-  });
-
-  factory Format.create({
-    String id,
-    String label,
-    int selectionFlags = 0,
-    int roleFlags = 0,
-    int bitrate,
-    String codecs,
-    Metadata metadata,
-    String containerMimeType,
-    String sampleMimeType,
-    int maxInputSize = NO_VALUE,
-    List<Uint8List> initializationData = const [],// ignore: always_specify_types
-    DrmInitData drmInitData,
-    int subsampleOffsetUs = _OFFSET_SAMPLE_RELATIVE,
-    int width,
-    int height,
-    double frameRate,
-    int rotationDegrees = NO_VALUE,
-    double pixelWidthHeightRatio = NO_VALUE_D,
-    Uint8List projectionData,
-    int stereoMode,
-    ColorInfo colorInfo,
-    int channelCount,
-    int sampleRate,
-    int pcmEncoding,
-    int encoderDelay = NO_VALUE,
-    int encoderPadding = NO_VALUE,
+    this.id,
+    this.label,
+    this.selectionFlags,
+    this.roleFlags,
+    this.bitrate,
+    this.codecs,
+    this.metadata,
+    this.containerMimeType,
+    this.sampleMimeType,
+    this.maxInputSize,
+    this.initializationData = const [],
+    this.drmInitData,
+    this.subsampleOffsetUs,
+    this.width,
+    this.height,
+    this.frameRate,
+    this.rotationDegrees,
+    this.pixelWidthHeightRatio,
+    this.projectionData,
+    this.stereoMode,
+    this.colorInfo,
+    this.channelCount,
+    this.sampleRate,
+    this.pcmEncoding,
+    this.encoderDelay,
+    this.encoderPadding,
     String language,
-    int accessibilityChannel,
-  }) {
-    if (rotationDegrees == NO_VALUE) rotationDegrees = 0; // ignore: always_put_control_body_on_new_line
-    if (pixelWidthHeightRatio == NO_VALUE) pixelWidthHeightRatio = 0; // ignore: always_put_control_body_on_new_line
-    if (encoderDelay == NO_VALUE) encoderDelay = 0; // ignore: always_put_control_body_on_new_line
-    if (encoderPadding == NO_VALUE) encoderPadding = 0; // ignore: always_put_control_body_on_new_line
-    language = language?.toLowerCase(); //todo再検討
-    return Format(
-        id: id,
-        label: label,
-        selectionFlags: selectionFlags,
-        roleFlags: roleFlags,
-        bitrate: bitrate,
-        codecs: codecs,
-        metadata: metadata,
-        containerMimeType: containerMimeType,
-        sampleMimeType: sampleMimeType,
-        maxInputSize: maxInputSize,
-        initializationData: initializationData,
-        drmInitData: drmInitData,
-        subsampleOffsetUs: subsampleOffsetUs,
-        width: width,
-        height: height,
-        frameRate: frameRate,
-        rotationDegrees: rotationDegrees,
-        pixelWidthHeightRatio: pixelWidthHeightRatio,
-        projectionData: projectionData,
-        stereoMode: stereoMode,
-        colorInfo: colorInfo,
-        channelCount: channelCount,
-        sampleRate: sampleRate,
-        pcmEncoding: pcmEncoding,
-        encoderDelay: encoderDelay,
-        encoderPadding: encoderPadding,
-        language: language,
-        accessibilityChannel: accessibilityChannel);
-  }
+    this.accessibilityChannel,
+  }): language = language?.toLowerCase();
 
   factory Format.createVideoContainerFormat({
     String id,
@@ -110,7 +44,7 @@ class Format {
     String containerMimeType,
     String sampleMimeType,
     @required String codecs,
-    @required int bitrate,
+    int bitrate,
     @required int width,
     @required int height,
     @required double frameRate,
@@ -118,7 +52,7 @@ class Format {
     int selectionFlags = 0,
     int roleFlags
   }) =>
-      Format.create(
+      Format(
         id: id,
         label: label,
         selectionFlags: selectionFlags,
@@ -165,10 +99,6 @@ class Format {
   // Audio and text specific.
   String language;
   int accessibilityChannel;
-
-  static const int NO_VALUE = -1;
-  static const double NO_VALUE_D = -1;
-  static const int _OFFSET_SAMPLE_RELATIVE = NO_VALUE; //todo 要検討
 
   Format copyWithMetadata(Metadata metadata) => Format(
       id: id,

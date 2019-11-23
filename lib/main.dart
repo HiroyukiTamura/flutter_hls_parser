@@ -255,12 +255,12 @@ class HlsPlaylistParser {
           height = int.parse(widthAndHeight[1]);
           if (width <= 0 || height <= 0) {
             // Resolution string is invalid.
-            width = Format.NO_VALUE;
-            height = Format.NO_VALUE;
+            width = null;
+            height = null;
           }
         }
 
-        double frameRate = Format.NO_VALUE.toDouble();
+        double frameRate;
         String frameRateString = parseStringAttr(
             source: line,
             pattern: REGEX_FRAME_RATE,
@@ -375,9 +375,9 @@ class HlsPlaylistParser {
                 (it) => it.videoGroupId == groupId,
                 orElse: () => null);
             String codecs;
-            int width = Format.NO_VALUE;
-            int height = Format.NO_VALUE;
-            double frameRate = Format.NO_VALUE_D;
+            int width;
+            int height;
+            double frameRate;
             if (variant != null) {
               Format variantFormat = variant.format;
               codecs = Util.getCodecsOfType(
@@ -395,7 +395,6 @@ class HlsPlaylistParser {
                     containerMimeType: MimeTypes.APPLICATION_M3U8,
                     sampleMimeType: sampleMimeType,
                     codecs: codecs,
-                    bitrate: Format.NO_VALUE,
                     width: width,
                     height: height,
                     frameRate: frameRate,
@@ -422,13 +421,12 @@ class HlsPlaylistParser {
                 parseChannelsAttribute(line, variableDefinitions);
             String sampleMimeType =
                 codecs != null ? MimeTypes.getMediaMimeType(codecs) : null;
-            Format format = Format.create(
+            Format format = Format(
               id: formatId,
               label: name,
               containerMimeType: MimeTypes.APPLICATION_M3U8,
               sampleMimeType: sampleMimeType,
               codecs: codecs,
-              bitrate: Format.NO_VALUE,
               channelCount: channelCount,
               selectionFlags: selectionFlags,
               roleFlags: roleFlags,
@@ -448,7 +446,7 @@ class HlsPlaylistParser {
           }
         case TYPE_SUBTITLES:
           {
-            Format format = Format.create(
+            Format format = Format(
                     id: formatId,
                     label: name,
                     containerMimeType: MimeTypes.APPLICATION_M3U8,
@@ -602,7 +600,7 @@ class HlsPlaylistParser {
         variableDefinitions: variableDefinitions);
     return channelsString != null
         ? int.parse(channelsString.split('/')[0])
-        : Format.NO_VALUE;
+        : null;
   }
 
   static Variant getVariantWithAudioGroup(

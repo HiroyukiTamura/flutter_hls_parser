@@ -22,7 +22,7 @@ void main() {
 #EXT-X-STREAM-INF:BANDWIDTH=1280000,CODECS="mp4a.40.2,avc1.66.30",RESOLUTION=304x128
 http://example.com/low.m3u8
 
-#EXT-X-STREAM-INF:BANDWIDTH=1280000,CODECS="mp4a.40.2 , avc1.66.30"
+#EXT-X-STREAM-INF:BANDWIDTH=1280000,CODECS="mp4a.40.2 , avc1.66.30 "
 http://example.com/spaces_in_codecs.m3u8
 
 #EXT-X-STREAM-INF:BANDWIDTH=2560000,FRAME-RATE=25,RESOLUTION=384x160
@@ -36,17 +36,22 @@ http://example.com/audio-only.m3u8
 ''';
      
 
-//  const String PLAYLIST_WITH_AVG_BANDWIDTH =
-//      " #EXTM3U \n"
-//          + "\n"
-//          + "#EXT-X-STREAM-INF:BANDWIDTH=1280000,"
-//          + "CODECS=\"mp4a.40.2,avc1.66.30\",RESOLUTION=304x128\n"
-//          + "http://example.com/low.m3u8\n"
-//          + "\n"
-//          + "#EXT-X-STREAM-INF:BANDWIDTH=1280000,AVERAGE-BANDWIDTH=1270000,"
-//          + "CODECS=\"mp4a.40.2 , avc1.66.30 \"\n"
-//          + "http://example.com/spaces_in_codecs.m3u8\n";
-//
+  const String PLAYLIST_WITH_AVG_BANDWIDTH =
+'''
+#EXTM3U
+
+#EXT-X-STREAM-INF:BANDWIDTH=1280000,
+CODECS="mp4a.40.2,avc1.66.30",RESOLUTION=304x128
+http://example.com/low.m3u8
+
+#EXT-X-STREAM-INF:BANDWIDTH=1280000,AVERAGE-BANDWIDTH=1270000,
+
+CODECS="mp4a.40.2 , avc1.66.30 "
+http://example.com/spaces_in_codecs.m3u8
+''';
+
+
+
 //  const String PLAYLIST_WITH_INVALID_HEADER =
 //      "#EXTMU3\n"
 //          + "#EXT-X-STREAM-INF:BANDWIDTH=1280000,"
@@ -204,7 +209,7 @@ http://example.com/audio-only.m3u8
           break;
         case 1:
           expect(variants[1].format.bitrate, 1280000);
-          expect(variants[1].format.codecs, 'mp4a.40.2 , avc1.66.30');
+          expect(variants[1].format.codecs, 'mp4a.40.2 , avc1.66.30 ');
           expect(variants[1].url, Uri.parse('http://example.com/spaces_in_codecs.m3u8'));
           break;
         case 2:
@@ -233,5 +238,14 @@ http://example.com/audio-only.m3u8
           break;
       }
     }
+  });
+
+  test('parseHls2nd', () async {
+    HlsMasterPlaylist masterPlaylist = await HlsPlaylistParserTest.parseMasterPlaylist(PLAYLIST_WITH_AVG_BANDWIDTH.split('\n'), PLAYLIST_URI);
+
+    List<Variant> variants = masterPlaylist.variants;
+
+    expect(variants[0].format.bitrate, 1280000);
+    expect(variants[1].format.bitrate, 1270000);
   });
 }

@@ -51,13 +51,8 @@ class Util {
     return true;
   }
 
-  static String excludeWhiteSpace(
-      {@required String string, @required bool skipLinebreaks}) =>
-      string.split('').where((it) { // ignore: always_specify_types
-        int unitCode = it.codeUnitAt(0);
-        return !(isWhitespace(unitCode) ||
-            (skipLinebreaks && isLineBreak(unitCode)));
-      }).join();
+  static String excludeWhiteSpace(String string) =>
+      string.split('').where((it) => !isWhitespace(it.codeUnitAt(0))).join();
 
   static bool isLineBreak(int codeUnit) =>
       (codeUnit == '\n'.codeUnitAt(0)) || (codeUnit == '\r'.codeUnitAt(0));

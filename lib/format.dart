@@ -72,7 +72,7 @@ class Format {
     if (pixelWidthHeightRatio == NO_VALUE) pixelWidthHeightRatio = 0; // ignore: always_put_control_body_on_new_line
     if (encoderDelay == NO_VALUE) encoderDelay = 0; // ignore: always_put_control_body_on_new_line
     if (encoderPadding == NO_VALUE) encoderPadding = 0; // ignore: always_put_control_body_on_new_line
-    language = language.toLowerCase(); //todo再検討
+    language = language?.toLowerCase(); //todo再検討
     return Format(
         id: id,
         label: label,

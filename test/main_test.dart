@@ -1,6 +1,5 @@
 import 'package:flutter_hls_parser/hls_master_playlist.dart';
 import 'package:flutter_hls_parser/main.dart';
-import 'package:flutter_hls_parser/play_list.dart';
 
 ///@[HlsPlaylistParser]
 class HlsPlaylistParserTest {

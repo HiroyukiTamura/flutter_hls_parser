@@ -18,8 +18,7 @@ void main() {
 '''
 #EXTM3U
 
-#EXT-X-STREAM-INF:BANDWIDTH=1280000,
-CODECS="mp4a.40.2,avc1.66.30",RESOLUTION=304x128
+#EXT-X-STREAM-INF:BANDWIDTH=1280000,CODECS="mp4a.40.2,avc1.66.30",RESOLUTION=304x128
 http://example.com/low.m3u8
 
 #EXT-X-STREAM-INF:BANDWIDTH=1280000,CODECS="mp4a.40.2 , avc1.66.30"
@@ -186,11 +185,7 @@ http://example.com/audio-only.m3u8";
 
   test('parseHls1st', () async {
     HlsMasterPlaylist masterPlaylist;
-    try {
-      masterPlaylist = await HlsPlaylistParserTest.parseMasterPlaylist(PLAYLIST_SIMPLE.split('\n'), PLAYLIST_URI);
-    } catch (e) {
-      print(e);
-    }
+    masterPlaylist = await HlsPlaylistParserTest.parseMasterPlaylist(PLAYLIST_SIMPLE.split('\n'), PLAYLIST_URI);
 
     List<Variant> variants = masterPlaylist.variants;
 

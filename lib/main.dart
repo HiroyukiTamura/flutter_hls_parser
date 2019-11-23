@@ -102,12 +102,12 @@ class HlsPlaylistParser {
   static final String
       REGEX_AUTOSELECT = // ignore: non_constant_identifier_names
       _compileBooleanAttrPattern('AUTOSELECT');
+
   // ignore: non_constant_identifier_names
-  static final String REGEX_DEFAULT = _compileBooleanAttrPattern(
-      'DEFAULT');
+  static final String REGEX_DEFAULT = _compileBooleanAttrPattern('DEFAULT');
+
   // ignore: non_constant_identifier_names
-  static final String REGEX_FORCED = _compileBooleanAttrPattern(
-      'FORCED');
+  static final String REGEX_FORCED = _compileBooleanAttrPattern('FORCED');
   static const String REGEX_VALUE = 'VALUE="(.+?)"';
   static const String REGEX_IMPORT = 'IMPORT="(.+?)"';
   static const String REGEX_VARIABLE_REFERENCE = '\\{\\\$([a-zA-Z0-9\\-_]+)\\}';
@@ -126,17 +126,27 @@ class HlsPlaylistParser {
     List<String> extraLines =
         lineList.getRange(1, lineList.length - 1).toList();
 
-    return lineList.last.startsWith(TAG_STREAM_INF)
-        ? parseMasterPlaylist(extraLines, uri.toString())
-        : parseMediaPlaylist(masterPlaylist, extraLines, uri.toString());
+    String secondLine = extraLines[0];
+    if (secondLine.startsWith(TAG_STREAM_INF))
+      return parseMasterPlaylist(extraLines, uri.toString());
+    else if (secondLine.startsWith(TAG_TARGET_DURATION) ||
+        secondLine.startsWith(TAG_MEDIA_SEQUENCE) ||
+        secondLine.startsWith(TAG_MEDIA_DURATION) ||
+        secondLine.startsWith(TAG_KEY) ||
+        secondLine.startsWith(TAG_BYTERANGE) ||
+        secondLine == TAG_DISCONTINUITY ||
+        secondLine == TAG_DISCONTINUITY_SEQUENCE ||
+        secondLine == TAG_ENDLIST)
+      return parseMediaPlaylist(masterPlaylist, extraLines, uri.toString());
+    else
+      throw FormatException("$secondLine doesn't have valid tag");
   }
 
   static String _compileBooleanAttrPattern(String attribute) =>
       '$attribute=($BOOLEAN_FALSE|$BOOLEAN_TRUE)';
 
   static bool checkPlaylistHeader(String string) {
-    List<int> codeUnits =
-        Util.excludeWhiteSpace(string: string, skipLinebreaks: true).codeUnits;
+    List<int> codeUnits = Util.excludeWhiteSpace(string).codeUnits;
 
     if (codeUnits[0] == 0xEF) {
       if (Util.startsWith(
@@ -149,7 +159,7 @@ class HlsPlaylistParser {
     if (!Util.startsWith(codeUnits, PLAYLIST_HEADER.runes.toList()))
       return false;
 
-    return Util.isLineBreak(codeUnits[PLAYLIST_HEADER.length]);
+    return true;
   }
 
   HlsMasterPlaylist parseMasterPlaylist(
@@ -198,7 +208,7 @@ class HlsPlaylistParser {
         hasIndependentSegmentsTag = true;
       } else if (line.startsWith(TAG_MEDIA)) {
         mediaTags.add(line);
-      } else if (line.startsWith(TAG_STREAM_INF)) {
+      } else if (line.startsWith(TAG_SESSION_KEY)) {
         String keyFormat = parseStringAttr(
             source: line,
             pattern: REGEX_KEYFORMAT,

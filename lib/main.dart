@@ -93,7 +93,7 @@ class HlsPlaylistParser {
   static const String REGEX_URI = 'URI="(.+?)"';
   static const String REGEX_IV = 'IV=([^,.*]+)';
   static const String REGEX_TYPE =
-      'TYPE=($TYPE_AUDIO)|$TYPE_VIDEO|$TYPE_SUBTITLES|$TYPE_CLOSED_CAPTIONS)';
+      'TYPE=($TYPE_AUDIO|$TYPE_VIDEO|$TYPE_SUBTITLES|$TYPE_CLOSED_CAPTIONS)';
   static const String REGEX_LANGUAGE = 'LANGUAGE="(.+?)"';
   static const String REGEX_NAME = 'NAME="(.+?)"';
   static const String REGEX_GROUP_ID = 'GROUP-ID="(.+?)"';
@@ -123,23 +123,30 @@ class HlsPlaylistParser {
       throw UnrecognizedInputFormatException(
           'Input does not start with the #EXTM3U header.', uri);
 
-    List<String> extraLines =
-        lineList.getRange(1, lineList.length).toList();
+    List<String> extraLines = lineList.getRange(1, lineList.length).toList();
 
-    String secondLine = extraLines[0];
-    if (secondLine.startsWith(TAG_STREAM_INF))
-      return parseMasterPlaylist(extraLines.iterator, uri.toString());
-    else if (secondLine.startsWith(TAG_TARGET_DURATION) ||
-        secondLine.startsWith(TAG_MEDIA_SEQUENCE) ||
-        secondLine.startsWith(TAG_MEDIA_DURATION) ||
-        secondLine.startsWith(TAG_KEY) ||
-        secondLine.startsWith(TAG_BYTERANGE) ||
-        secondLine == TAG_DISCONTINUITY ||
-        secondLine == TAG_DISCONTINUITY_SEQUENCE ||
-        secondLine == TAG_ENDLIST)
-      return parseMediaPlaylist(masterPlaylist, extraLines, uri.toString());
-    else
-      throw FormatException("$secondLine doesn't have valid tag");
+    bool isMasterPlayList;
+    for (final line in extraLines) {
+      if (line.startsWith(TAG_STREAM_INF)) {
+        isMasterPlayList = true;
+        break;
+      } else if (line.startsWith(TAG_TARGET_DURATION) ||
+          line.startsWith(TAG_MEDIA_SEQUENCE) ||
+          line.startsWith(TAG_MEDIA_DURATION) ||
+          line.startsWith(TAG_KEY) ||
+          line.startsWith(TAG_BYTERANGE) ||
+          line == TAG_DISCONTINUITY ||
+          line == TAG_DISCONTINUITY_SEQUENCE ||
+          line == TAG_ENDLIST) {
+        isMasterPlayList = false;
+      }
+    }
+    if (isMasterPlayList == null)
+      throw const FormatException("extraLines doesn't have valid tag");
+
+    return isMasterPlayList
+        ? parseMasterPlaylist(extraLines.iterator, uri.toString())
+        : parseMediaPlaylist(masterPlaylist, extraLines, uri.toString());
   }
 
   static String _compileBooleanAttrPattern(String attribute) =>
@@ -182,7 +189,6 @@ class HlsPlaylistParser {
 
     Map<String, String> variableDefinitions =
         {}; // ignore: always_specify_types
-
 
     while (extraLines.moveNext()) {
       String line = extraLines.current;
@@ -352,7 +358,10 @@ class HlsPlaylistParser {
           source: line,
           pattern: REGEX_URI,
           variableDefinitions: variableDefinitions);
-      Uri uri = Uri.parse(baseUri).resolve(referenceUri);
+
+      Uri uri = Uri.parse(baseUri);
+      if (referenceUri != null) uri = uri.resolve(referenceUri);
+
       String language = parseStringAttr(
           source: line,
           pattern: REGEX_LANGUAGE,
@@ -460,6 +469,34 @@ class HlsPlaylistParser {
               format: format,
               groupId: groupId,
               name: name,
+            ));
+            break;
+          }
+        case TYPE_CLOSED_CAPTIONS:
+          {
+            String instreamId = parseStringAttr(
+                source: line,
+                pattern: REGEX_INSTREAM_ID,
+                variableDefinitions: variableDefinitions);
+            String mimeType;
+            int accessibilityChannel;
+            if (instreamId.startsWith('CC')) {
+              mimeType = MimeTypes.APPLICATION_CEA608;
+              accessibilityChannel = int.parse(instreamId.substring(2));
+            } else
+            /* starts with SERVICE */ {
+              mimeType = MimeTypes.APPLICATION_CEA708;
+              accessibilityChannel = int.parse(instreamId.substring(7));
+            }
+            muxedCaptionFormats ??= []; // ignore: always_specify_types
+            muxedCaptionFormats.add(Format(
+              id: formatId,
+              label: name,
+              sampleMimeType: mimeType,
+              selectionFlags: selectionFlags,
+              roleFlags: roleFlags,
+              language: language,
+              accessibilityChannel: accessibilityChannel,
             ));
             break;
           }
@@ -572,7 +609,7 @@ class HlsPlaylistParser {
         source: line,
         pattern: REGEX_CHARACTERISTICS,
         variableDefinitions: variableDefinitions);
-    if (concatenatedCharacteristics?.isNotEmpty == false) return 0;
+    if (concatenatedCharacteristics?.isEmpty != false) return 0;
     List<String> characteristics = concatenatedCharacteristics.split(',');
     int roleFlags = 0;
     if (characteristics.contains('public.accessibility.describes-video'))

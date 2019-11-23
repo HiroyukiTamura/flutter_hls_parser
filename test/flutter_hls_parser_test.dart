@@ -1,13 +1,15 @@
+import 'dart:io';
+
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_hls_parser/flutter_hls_parser.dart';
-import 'package:flutter_hls_parser/main.dart';
 import 'package:flutter_hls_parser/hls_master_playlist.dart';
 import 'package:flutter_hls_parser/variant.dart';
-import 'package:flutter_test/flutter_test.dart' as prefix0;
 import 'main_test.dart';
+import 'package:flutter_hls_parser/exception.dart';
+import 'package:flutter_hls_parser/mime_types.dart';
 import 'package:flutter_hls_parser/format.dart';
-import 'package:quiver/check.dart' as check;
+import 'package:flutter_hls_parser/rendition.dart';
 
 void main() {
   const MethodChannel channel = MethodChannel('flutter_hls_parser');
@@ -51,64 +53,73 @@ http://example.com/spaces_in_codecs.m3u8
 ''';
 
 
+  const String PLAYLIST_WITH_INVALID_HEADER =
+'''
+#EXTMU3
+#EXT-X-STREAM-INF:BANDWIDTH=1280000,CODECS="mp4a.40.2,avc1.66.30",RESOLUTION=304x128
+http://example.com/low.m3u8
+''';
 
-//  const String PLAYLIST_WITH_INVALID_HEADER =
-//      "#EXTMU3\n"
-//          + "#EXT-X-STREAM-INF:BANDWIDTH=1280000,"
-//          + "CODECS=\"mp4a.40.2,avc1.66.30\",RESOLUTION=304x128\n"
-//          + "http://example.com/low.m3u8\n";
-//
-//  const String PLAYLIST_WITH_CC =
+
+  const String PLAYLIST_WITH_CC =
+'''
+ #EXTM3U 
+#EXT-X-MEDIA:TYPE=CLOSED-CAPTIONS,GROUP-ID="cc1","LANGUAGE="es",NAME="Eng",INSTREAM-ID="SERVICE4"
+#EXT-X-STREAM-INF:BANDWIDTH=1280000, CODECS="mp4a.40.2,avc1.66.30",RESOLUTION=304x128
+http://example.com/low.m3u8
+''';
+
+
+  const String PLAYLIST_WITH_CHANNELS_ATTRIBUTE =
+'''
+ #EXTM3U 
+#EXT-X-MEDIA:TYPE=AUDIO,GROUP-ID="audio",CHANNELS="6",NAME="Eng6",URI="something.m3u8"
+#EXT-X-MEDIA:TYPE=AUDIO,GROUP-ID="audio",CHANNELS="2/6",NAME="Eng26",URI="something2.m3u8"
+#EXT-X-MEDIA:TYPE=AUDIO,GROUP-ID="audio",NAME="Eng",URI="something3.m3u8"
+#EXT-X-STREAM-INF:BANDWIDTH=1280000,
+#EXT-X-MEDIA:TYPE=AUDIO,GROUP-ID="audio",NAME="Eng",CODECS="mp4a.40.2,avc1.66.30",AUDIO="audio",RESOLUTION=304x128,URI="something3.m3u8"
+#EXT-X-STREAM-INF:BANDWIDTH=1280000,CODECS="mp4a.40.2,avc1.66.30",AUDIO="audio",RESOLUTION=304x128
+http://example.com/low.m3u8
+''';
+
+
+  const String PLAYLIST_WITHOUT_CC =
+'''
+ #EXTM3U 
+#EXT-X-MEDIA:TYPE=CLOSED-CAPTIONS,GROUP-ID="cc1",LANGUAGE="es",NAME="Eng",INSTREAM-ID="SERVICE4"
+#EXT-X-STREAM-INF:BANDWIDTH=1280000,CODECS="mp4a.40.2,avc1.66.30",RESOLUTION=304x128,CLOSED-CAPTIONS=NONE
+http://example.com/low.m3u8
+''';
 //      " #EXTM3U \n"
-//          + "#EXT-X-MEDIA:TYPE=CLOSED-CAPTIONS,GROUP-ID=\"cc1\","
-//          + "LANGUAGE=\"es\",NAME=\"Eng\",INSTREAM-ID=\"SERVICE4\"\n"
+//          + "#EXT-X-MEDIA:TYPE=CLOSED-CAPTIONS,GROUP-ID="cc1","
+//          + "LANGUAGE="es",NAME="Eng",INSTREAM-ID="SERVICE4"\n"
 //          + "#EXT-X-STREAM-INF:BANDWIDTH=1280000,"
-//          + "CODECS=\"mp4a.40.2,avc1.66.30\",RESOLUTION=304x128\n"
-//          + "http://example.com/low.m3u8\n";
-//
-//  const String PLAYLIST_WITH_CHANNELS_ATTRIBUTE =
-//      " #EXTM3U \n"
-//          + "#EXT-X-MEDIA:TYPE=AUDIO,GROUP-ID=\"audio\",CHANNELS=\"6\",NAME=\"Eng6\","
-//          + "URI=\"something.m3u8\"\n"
-//          + "#EXT-X-MEDIA:TYPE=AUDIO,GROUP-ID=\"audio\",CHANNELS=\"2/6\",NAME=\"Eng26\","
-//          + "URI=\"something2.m3u8\"\n"
-//          + "#EXT-X-MEDIA:TYPE=AUDIO,GROUP-ID=\"audio\",NAME=\"Eng\","
-//          + "URI=\"something3.m3u8\"\n"
-//          + "#EXT-X-STREAM-INF:BANDWIDTH=1280000,"
-//          + "CODECS=\"mp4a.40.2,avc1.66.30\",AUDIO=\"audio\",RESOLUTION=304x128\n"
-//          + "http://example.com/low.m3u8\n";
-//
-//  const String PLAYLIST_WITHOUT_CC =
-//      " #EXTM3U \n"
-//          + "#EXT-X-MEDIA:TYPE=CLOSED-CAPTIONS,GROUP-ID=\"cc1\","
-//          + "LANGUAGE=\"es\",NAME=\"Eng\",INSTREAM-ID=\"SERVICE4\"\n"
-//          + "#EXT-X-STREAM-INF:BANDWIDTH=1280000,"
-//          + "CODECS=\"mp4a.40.2,avc1.66.30\",RESOLUTION=304x128,"
+//          + "CODECS="mp4a.40.2,avc1.66.30",RESOLUTION=304x128,"
 //          + "CLOSED-CAPTIONS=NONE\n"
 //          + "http://example.com/low.m3u8\n";
 //
 //  const String PLAYLIST_WITH_SUBTITLES =
 //      " #EXTM3U \n"
-//          + "#EXT-X-MEDIA:TYPE=SUBTITLES,GROUP-ID=\"sub1\","
-//          + "LANGUAGE=\"es\",NAME=\"Eng\"\n"
+//          + "#EXT-X-MEDIA:TYPE=SUBTITLES,GROUP-ID="sub1","
+//          + "LANGUAGE="es",NAME="Eng"\n"
 //          + "#EXT-X-STREAM-INF:BANDWIDTH=1280000,"
-//          + "CODECS=\"mp4a.40.2,avc1.66.30\",RESOLUTION=304x128\n"
+//          + "CODECS="mp4a.40.2,avc1.66.30",RESOLUTION=304x128\n"
 //          + "http://example.com/low.m3u8\n";
 //
 //  const String PLAYLIST_WITH_AUDIO_MEDIA_TAG =
 //      "#EXTM3U\n"
-//          + "#EXT-X-STREAM-INF:BANDWIDTH=2227464,CODECS=\"avc1.640020,mp4a.40.2\",AUDIO=\"aud1\"\n"
+//          + "#EXT-X-STREAM-INF:BANDWIDTH=2227464,CODECS="avc1.640020,mp4a.40.2",AUDIO="aud1"\n"
 //          + "uri1.m3u8\n"
-//          + "#EXT-X-STREAM-INF:BANDWIDTH=8178040,CODECS=\"avc1.64002a,mp4a.40.2\",AUDIO=\"aud1\"\n"
+//          + "#EXT-X-STREAM-INF:BANDWIDTH=8178040,CODECS="avc1.64002a,mp4a.40.2",AUDIO="aud1"\n"
 //          + "uri2.m3u8\n"
-//          + "#EXT-X-STREAM-INF:BANDWIDTH=2448841,CODECS=\"avc1.640020,ac-3\",AUDIO=\"aud2\"\n"
+//          + "#EXT-X-STREAM-INF:BANDWIDTH=2448841,CODECS="avc1.640020,ac-3",AUDIO="aud2"\n"
 //          + "uri1.m3u8\n"
-//          + "#EXT-X-STREAM-INF:BANDWIDTH=8399417,CODECS=\"avc1.64002a,ac-3\",AUDIO=\"aud2\"\n"
+//          + "#EXT-X-STREAM-INF:BANDWIDTH=8399417,CODECS="avc1.64002a,ac-3",AUDIO="aud2"\n"
 //          + "uri2.m3u8\n"
-//          + "#EXT-X-MEDIA:TYPE=AUDIO,GROUP-ID=\"aud1\",LANGUAGE=\"en\",NAME=\"English\","
-//          + "AUTOSELECT=YES,DEFAULT=YES,CHANNELS=\"2\",URI=\"a1/prog_index.m3u8\"\n"
-//          + "#EXT-X-MEDIA:TYPE=AUDIO,GROUP-ID=\"aud2\",LANGUAGE=\"en\",NAME=\"English\","
-//          + "AUTOSELECT=YES,DEFAULT=YES,CHANNELS=\"6\",URI=\"a2/prog_index.m3u8\"\n";
+//          + "#EXT-X-MEDIA:TYPE=AUDIO,GROUP-ID="aud1",LANGUAGE="en",NAME="English","
+//          + "AUTOSELECT=YES,DEFAULT=YES,CHANNELS="2",URI="a1/prog_index.m3u8"\n"
+//          + "#EXT-X-MEDIA:TYPE=AUDIO,GROUP-ID="aud2",LANGUAGE="en",NAME="English","
+//          + "AUTOSELECT=YES,DEFAULT=YES,CHANNELS="6",URI="a2/prog_index.m3u8"\n";
 //
 //  const String PLAYLIST_WITH_INDEPENDENT_SEGMENTS =
 //      " #EXTM3U\n"
@@ -116,19 +127,19 @@ http://example.com/spaces_in_codecs.m3u8
 //          + "#EXT-X-INDEPENDENT-SEGMENTS\n"
 //          + "\n"
 //          + "#EXT-X-STREAM-INF:BANDWIDTH=1280000,"
-//          + "CODECS=\"mp4a.40.2,avc1.66.30\",RESOLUTION=304x128\n"
+//          + "CODECS="mp4a.40.2,avc1.66.30",RESOLUTION=304x128\n"
 //          + "http://example.com/low.m3u8\n"
 //          + "\n"
-//          + "#EXT-X-STREAM-INF:BANDWIDTH=1280000,CODECS=\"mp4a.40.2 , avc1.66.30 \"\n"
+//          + "#EXT-X-STREAM-INF:BANDWIDTH=1280000,CODECS="mp4a.40.2 , avc1.66.30 "\n"
 //          + "http://example.com/spaces_in_codecs.m3u8\n";
 //
 //  const String PLAYLIST_WITH_VARIABLE_SUBSTITUTION =
 //      " #EXTM3U \n"
 //          + "\n"
-//          + "#EXT-X-DEFINE:NAME=\"codecs\",VALUE=\"mp4a.40.5\"\n"
-//          + "#EXT-X-DEFINE:NAME=\"tricky\",VALUE=\"This/{$nested}/reference/shouldnt/work\"\n"
-//          + "#EXT-X-DEFINE:NAME=\"nested\",VALUE=\"This should not be inserted\"\n"
-//          + "#EXT-X-STREAM-INF:BANDWIDTH=65000,CODECS=\"{$codecs}\"\n"
+//          + "#EXT-X-DEFINE:NAME="codecs",VALUE="mp4a.40.5"\n"
+//          + "#EXT-X-DEFINE:NAME="tricky",VALUE="This/{$nested}/reference/shouldnt/work"\n"
+//          + "#EXT-X-DEFINE:NAME="nested",VALUE="This should not be inserted"\n"
+//          + "#EXT-X-STREAM-INF:BANDWIDTH=65000,CODECS="{$codecs}"\n"
 //          + "http://example.com/{$tricky}\n";
 //
 //  const String PLAYLIST_WITH_MATCHING_STREAM_INF_URLS =
@@ -136,44 +147,44 @@ http://example.com/spaces_in_codecs.m3u8
 //          + "#EXT-X-VERSION:6\n"
 //          + "\n"
 //          + "#EXT-X-STREAM-INF:BANDWIDTH=2227464,"
-//          + "CLOSED-CAPTIONS=\"cc1\",AUDIO=\"aud1\",SUBTITLES=\"sub1\"\n"
+//          + "CLOSED-CAPTIONS="cc1",AUDIO="aud1",SUBTITLES="sub1"\n"
 //          + "v5/prog_index.m3u8\n"
 //          + "#EXT-X-STREAM-INF:BANDWIDTH=6453202,"
-//          + "CLOSED-CAPTIONS=\"cc1\",AUDIO=\"aud1\",SUBTITLES=\"sub1\"\n"
+//          + "CLOSED-CAPTIONS="cc1",AUDIO="aud1",SUBTITLES="sub1"\n"
 //          + "v8/prog_index.m3u8\n"
 //          + "#EXT-X-STREAM-INF:BANDWIDTH=5054232,"
-//          + "CLOSED-CAPTIONS=\"cc1\",AUDIO=\"aud1\",SUBTITLES=\"sub1\"\n"
+//          + "CLOSED-CAPTIONS="cc1",AUDIO="aud1",SUBTITLES="sub1"\n"
 //          + "v7/prog_index.m3u8\n"
 //          + "\n"
 //          + "#EXT-X-STREAM-INF:BANDWIDTH=2448841,"
-//          + "CLOSED-CAPTIONS=\"cc1\",AUDIO=\"aud2\",SUBTITLES=\"sub1\"\n"
+//          + "CLOSED-CAPTIONS="cc1",AUDIO="aud2",SUBTITLES="sub1"\n"
 //          + "v5/prog_index.m3u8\n"
 //          + "#EXT-X-STREAM-INF:BANDWIDTH=8399417,"
-//          + "CLOSED-CAPTIONS=\"cc1\",AUDIO=\"aud2\",SUBTITLES=\"sub1\"\n"
+//          + "CLOSED-CAPTIONS="cc1",AUDIO="aud2",SUBTITLES="sub1"\n"
 //          + "v9/prog_index.m3u8\n"
 //          + "#EXT-X-STREAM-INF:BANDWIDTH=5275609,"
-//          + "CLOSED-CAPTIONS=\"cc1\",AUDIO=\"aud2\",SUBTITLES=\"sub1\"\n"
+//          + "CLOSED-CAPTIONS="cc1",AUDIO="aud2",SUBTITLES="sub1"\n"
 //          + "v7/prog_index.m3u8\n"
 //          + "\n"
 //          + "#EXT-X-STREAM-INF:BANDWIDTH=2256841,"
-//          + "CLOSED-CAPTIONS=\"cc1\",AUDIO=\"aud3\",SUBTITLES=\"sub1\"\n"
+//          + "CLOSED-CAPTIONS="cc1",AUDIO="aud3",SUBTITLES="sub1"\n"
 //          + "v5/prog_index.m3u8\n"
 //          + "#EXT-X-STREAM-INF:BANDWIDTH=8207417,"
-//          + "CLOSED-CAPTIONS=\"cc1\",AUDIO=\"aud3\",SUBTITLES=\"sub1\"\n"
+//          + "CLOSED-CAPTIONS="cc1",AUDIO="aud3",SUBTITLES="sub1"\n"
 //          + "v9/prog_index.m3u8\n"
 //          + "#EXT-X-STREAM-INF:BANDWIDTH=6482579,"
-//          + "CLOSED-CAPTIONS=\"cc1\",AUDIO=\"aud3\",SUBTITLES=\"sub1\"\n"
+//          + "CLOSED-CAPTIONS="cc1",AUDIO="aud3",SUBTITLES="sub1"\n"
 //          + "v8/prog_index.m3u8\n"
 //          + "\n"
-//          + "#EXT-X-MEDIA:TYPE=AUDIO,GROUP-ID=\"aud1\",NAME=\"English\",URI=\"a1/index.m3u8\"\n"
-//          + "#EXT-X-MEDIA:TYPE=AUDIO,GROUP-ID=\"aud2\",NAME=\"English\",URI=\"a2/index.m3u8\"\n"
-//          + "#EXT-X-MEDIA:TYPE=AUDIO,GROUP-ID=\"aud3\",NAME=\"English\",URI=\"a3/index.m3u8\"\n"
+//          + "#EXT-X-MEDIA:TYPE=AUDIO,GROUP-ID="aud1",NAME="English",URI="a1/index.m3u8"\n"
+//          + "#EXT-X-MEDIA:TYPE=AUDIO,GROUP-ID="aud2",NAME="English",URI="a2/index.m3u8"\n"
+//          + "#EXT-X-MEDIA:TYPE=AUDIO,GROUP-ID="aud3",NAME="English",URI="a3/index.m3u8"\n"
 //          + "\n"
 //          + "#EXT-X-MEDIA:TYPE=CLOSED-CAPTIONS,"
-//          + "GROUP-ID=\"cc1\",NAME=\"English\",INSTREAM-ID=\"CC1\"\n"
+//          + "GROUP-ID="cc1",NAME="English",INSTREAM-ID="CC1"\n"
 //          + "\n"
 //          + "#EXT-X-MEDIA:TYPE=SUBTITLES,"
-//          + "GROUP-ID=\"sub1\",NAME=\"English\",URI=\"s1/en/prog_index.m3u8\"\n";
+//          + "GROUP-ID="sub1",NAME="English",URI="s1/en/prog_index.m3u8"\n";
 
   setUp(() {
     channel.setMockMethodCallHandler((MethodCall methodCall) async {
@@ -189,7 +200,7 @@ http://example.com/spaces_in_codecs.m3u8
     expect(await FlutterHlsParser.platformVersion, '42');
   });
 
-  test('parseHls1st', () async {
+  test('testParseMasterPlaylist', () async {
     HlsMasterPlaylist masterPlaylist;
     masterPlaylist = await HlsPlaylistParserTest.parseMasterPlaylist(PLAYLIST_SIMPLE.split('\n'), PLAYLIST_URI);
 
@@ -240,7 +251,7 @@ http://example.com/spaces_in_codecs.m3u8
     }
   });
 
-  test('parseHls2nd', () async {
+  test('testMasterPlaylistWithBandwdithAverage', () async {
     HlsMasterPlaylist masterPlaylist = await HlsPlaylistParserTest.parseMasterPlaylist(PLAYLIST_WITH_AVG_BANDWIDTH.split('\n'), PLAYLIST_URI);
 
     List<Variant> variants = masterPlaylist.variants;
@@ -248,4 +259,44 @@ http://example.com/spaces_in_codecs.m3u8
     expect(variants[0].format.bitrate, 1280000);
     expect(variants[1].format.bitrate, 1270000);
   });
+
+  test('testPlaylistWithInvalidHeader', () async {
+    try {
+      await HlsPlaylistParserTest.parseMasterPlaylist(PLAYLIST_WITH_INVALID_HEADER.split('\n'), PLAYLIST_URI);
+      fail('Expected exception not thrown.');
+    } on ParserException catch (_) {
+    // Expected due to invalid header.
+    }
+  });
+
+  test('testPlaylistWithClosedCaption', () async {
+    HlsMasterPlaylist masterPlaylist = await HlsPlaylistParserTest.parseMasterPlaylist(PLAYLIST_WITH_CC.split('\n'), PLAYLIST_URI);
+    expect(masterPlaylist.muxedCaptionFormats.length, 1);
+    expect(masterPlaylist.muxedCaptionFormats[0].sampleMimeType, MimeTypes.APPLICATION_CEA708);
+    expect(masterPlaylist.muxedCaptionFormats[0].accessibilityChannel, 4);
+    expect(masterPlaylist.muxedCaptionFormats[0].language, 'es');
+  });
+
+  test('testPlaylistWithChannelsAttribute', () async {
+    HlsMasterPlaylist masterPlaylist = await HlsPlaylistParserTest.parseMasterPlaylist(PLAYLIST_WITH_CHANNELS_ATTRIBUTE.split('\n'), PLAYLIST_URI);
+    List<Rendition> audios = masterPlaylist.audios;
+    expect(audios.length, 3);
+    expect(audios[0].format.channelCount, 6);
+    expect(audios[1].format.channelCount, 2);
+    expect(audios[2].format.channelCount, isNull);
+//    expect(masterPlaylist.audios[0].format.codecs, 'mp4a.40.2');
+//    expect(masterPlaylist.audios[0].format.sampleMimeType, MimeTypes.AUDIO_AAC);
+//    expect(masterPlaylist.audios[1].format.codecs, 'ac-3');
+//    expect(masterPlaylist.audios[1].format.sampleMimeType, MimeTypes.AUDIO_AC3);
+  });
+
+  test('testPlaylistWithoutClosedCaptions', () async {
+    HlsMasterPlaylist masterPlaylist = await HlsPlaylistParserTest.parseMasterPlaylist(PLAYLIST_WITHOUT_CC.split('\n'), PLAYLIST_URI);
+    expect(masterPlaylist.muxedCaptionFormats, isEmpty);
+//    expect(masterPlaylist.muxedCaptionFormats.length, 1);
+//    expect(masterPlaylist.muxedCaptionFormats[0].sampleMimeType, MimeTypes.APPLICATION_CEA708);
+//    expect(masterPlaylist.muxedCaptionFormats[0].accessibilityChannel, 4);
+//    expect(masterPlaylist.muxedCaptionFormats[0].language, 'spa');
+  });
+
 }

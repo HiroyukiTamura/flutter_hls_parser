@@ -124,11 +124,11 @@ class HlsPlaylistParser {
           'Input does not start with the #EXTM3U header.', uri);
 
     List<String> extraLines =
-        lineList.getRange(1, lineList.length - 1).toList();
+        lineList.getRange(1, lineList.length).toList();
 
     String secondLine = extraLines[0];
     if (secondLine.startsWith(TAG_STREAM_INF))
-      return parseMasterPlaylist(extraLines, uri.toString());
+      return parseMasterPlaylist(extraLines.iterator, uri.toString());
     else if (secondLine.startsWith(TAG_TARGET_DURATION) ||
         secondLine.startsWith(TAG_MEDIA_SEQUENCE) ||
         secondLine.startsWith(TAG_MEDIA_DURATION) ||
@@ -163,7 +163,7 @@ class HlsPlaylistParser {
   }
 
   HlsMasterPlaylist parseMasterPlaylist(
-      List<String> extraLines, String baseUri) {
+      Iterator<String> extraLines, String baseUri) {
     List<String> tags = []; // ignore: always_specify_types
     List<String> mediaTags = []; // ignore: always_specify_types
     List<DrmInitData> sessionKeyDrmInitData =
@@ -182,11 +182,10 @@ class HlsPlaylistParser {
 
     Map<String, String> variableDefinitions =
         {}; // ignore: always_specify_types
-    for (final String line in extraLines) {
-      if (line.startsWith(TAG_PREFIX)) {
-        // We expose all tags through the playlist.
-        tags.add(line);
-      }
+
+
+    while (extraLines.moveNext()) {
+      String line = extraLines.current;
 
       if (line.startsWith(TAG_DEFINE)) {
         String key = parseStringAttr(
@@ -286,14 +285,10 @@ class HlsPlaylistParser {
             pattern: REGEX_CLOSED_CAPTIONS,
             variableDefinitions: variableDefinitions);
 
-        String parsedLine = parseStringAttr(
-            source: line,
-            pattern: REGEX_VARIABLE_REFERENCE,
-            variableDefinitions:
-                variableDefinitions); // #EXT-X-STREAM-INF's URI.
+        extraLines.moveNext();
+        line = extraLines.current;
 
-//        Uri uri = UriUtil.resolveToUri(baseUri, parsedLine);//todo 実装
-        Uri uri;
+        Uri uri = Uri.parse(baseUri).resolve(line);
 
         Format format = Format.createVideoContainerFormat(
             id: variants.length.toString(),
@@ -357,8 +352,7 @@ class HlsPlaylistParser {
           source: line,
           pattern: REGEX_URI,
           variableDefinitions: variableDefinitions);
-      Uri uri; //todo 実装
-//      Uri uri = referenceUri == null ? null : UriUtil.resolveToUri(baseUri, referenceUri);
+      Uri uri = Uri.parse(baseUri).resolve(referenceUri);
       String language = parseStringAttr(
           source: line,
           pattern: REGEX_LANGUAGE,
@@ -628,12 +622,14 @@ class HlsPlaylistParser {
     return const Base64Decoder().convert(uriPre);
   }
 
-  static int parseIntAttr(String line, String pattern) =>
-      int.parse(parseStringAttr(
-        source: line,
-        pattern: pattern,
-        variableDefinitions: {}, // ignore: always_specify_types
-      ));
+  static int parseIntAttr(String line, String pattern) {
+    String data = parseStringAttr(
+      source: line,
+      pattern: pattern,
+      variableDefinitions: {}, // ignore: always_specify_types
+    );
+    return int.parse(data);
+  }
 
   static HlsMediaPlaylist parseMediaPlaylist(HlsMasterPlaylist masterPlaylist,
       List<String> extraLines, String baseUri) {

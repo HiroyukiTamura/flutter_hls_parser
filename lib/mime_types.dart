@@ -248,7 +248,9 @@ class MimeTypes {
   static bool isText(String mimeType) =>
       BASE_TYPE_TEXT == getTopLevelType(mimeType);
 
-  static int getTrackTypeOfCodec(String codec) => getTrackType(getMediaMimeType(codec));
+  static int getTrackTypeOfCodec(String codec) {
+    return getTrackType(getMediaMimeType(codec));
+  }
 }
 
 class CustomMimeType {

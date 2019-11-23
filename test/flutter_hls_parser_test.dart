@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_hls_parser/flutter_hls_parser.dart';
@@ -8,7 +6,6 @@ import 'package:flutter_hls_parser/variant.dart';
 import 'main_test.dart';
 import 'package:flutter_hls_parser/exception.dart';
 import 'package:flutter_hls_parser/mime_types.dart';
-import 'package:flutter_hls_parser/format.dart';
 import 'package:flutter_hls_parser/rendition.dart';
 
 void main() {
@@ -90,14 +87,8 @@ http://example.com/low.m3u8
 #EXT-X-STREAM-INF:BANDWIDTH=1280000,CODECS="mp4a.40.2,avc1.66.30",RESOLUTION=304x128,CLOSED-CAPTIONS=NONE
 http://example.com/low.m3u8
 ''';
-//      " #EXTM3U \n"
-//          + "#EXT-X-MEDIA:TYPE=CLOSED-CAPTIONS,GROUP-ID="cc1","
-//          + "LANGUAGE="es",NAME="Eng",INSTREAM-ID="SERVICE4"\n"
-//          + "#EXT-X-STREAM-INF:BANDWIDTH=1280000,"
-//          + "CODECS="mp4a.40.2,avc1.66.30",RESOLUTION=304x128,"
-//          + "CLOSED-CAPTIONS=NONE\n"
-//          + "http://example.com/low.m3u8\n";
-//
+
+
 //  const String PLAYLIST_WITH_SUBTITLES =
 //      " #EXTM3U \n"
 //          + "#EXT-X-MEDIA:TYPE=SUBTITLES,GROUP-ID="sub1","
@@ -106,20 +97,21 @@ http://example.com/low.m3u8
 //          + "CODECS="mp4a.40.2,avc1.66.30",RESOLUTION=304x128\n"
 //          + "http://example.com/low.m3u8\n";
 //
-//  const String PLAYLIST_WITH_AUDIO_MEDIA_TAG =
-//      "#EXTM3U\n"
-//          + "#EXT-X-STREAM-INF:BANDWIDTH=2227464,CODECS="avc1.640020,mp4a.40.2",AUDIO="aud1"\n"
-//          + "uri1.m3u8\n"
-//          + "#EXT-X-STREAM-INF:BANDWIDTH=8178040,CODECS="avc1.64002a,mp4a.40.2",AUDIO="aud1"\n"
-//          + "uri2.m3u8\n"
-//          + "#EXT-X-STREAM-INF:BANDWIDTH=2448841,CODECS="avc1.640020,ac-3",AUDIO="aud2"\n"
-//          + "uri1.m3u8\n"
-//          + "#EXT-X-STREAM-INF:BANDWIDTH=8399417,CODECS="avc1.64002a,ac-3",AUDIO="aud2"\n"
-//          + "uri2.m3u8\n"
-//          + "#EXT-X-MEDIA:TYPE=AUDIO,GROUP-ID="aud1",LANGUAGE="en",NAME="English","
-//          + "AUTOSELECT=YES,DEFAULT=YES,CHANNELS="2",URI="a1/prog_index.m3u8"\n"
-//          + "#EXT-X-MEDIA:TYPE=AUDIO,GROUP-ID="aud2",LANGUAGE="en",NAME="English","
-//          + "AUTOSELECT=YES,DEFAULT=YES,CHANNELS="6",URI="a2/prog_index.m3u8"\n";
+  const String PLAYLIST_WITH_AUDIO_MEDIA_TAG =
+'''
+#EXTM3U
+#EXT-X-STREAM-INF:BANDWIDTH=2227464,CODECS="avc1.640020,mp4a.40.2",AUDIO="aud1"
+uri1.m3u8
+#EXT-X-STREAM-INF:BANDWIDTH=8178040,CODECS="avc1.64002a,mp4a.40.2",AUDIO="aud1"
+uri2.m3u8
+#EXT-X-STREAM-INF:BANDWIDTH=2448841,CODECS="avc1.640020,ac-3",AUDIO="aud2"
+uri1.m3u8
+#EXT-X-STREAM-INF:BANDWIDTH=8399417,CODECS="avc1.64002a,ac-3",AUDIO="aud2"
+uri2.m3u8
+#EXT-X-MEDIA:TYPE=AUDIO,GROUP-ID="aud1",LANGUAGE="en",NAME="English",AUTOSELECT=YES,DEFAULT=YES,CHANNELS="2",URI="a1/prog_index.m3u8
+#EXT-X-MEDIA:TYPE=AUDIO,GROUP-ID="aud2",LANGUAGE="en",NAME="English",AUTOSELECT=YES,DEFAULT=YES,CHANNELS="6",URI="a2/prog_index.m3u8
+''';
+
 //
 //  const String PLAYLIST_WITH_INDEPENDENT_SEGMENTS =
 //      " #EXTM3U\n"
@@ -284,10 +276,6 @@ http://example.com/low.m3u8
     expect(audios[0].format.channelCount, 6);
     expect(audios[1].format.channelCount, 2);
     expect(audios[2].format.channelCount, isNull);
-//    expect(masterPlaylist.audios[0].format.codecs, 'mp4a.40.2');
-//    expect(masterPlaylist.audios[0].format.sampleMimeType, MimeTypes.AUDIO_AAC);
-//    expect(masterPlaylist.audios[1].format.codecs, 'ac-3');
-//    expect(masterPlaylist.audios[1].format.sampleMimeType, MimeTypes.AUDIO_AC3);
   });
 
   test('testPlaylistWithoutClosedCaptions', () async {
@@ -299,4 +287,15 @@ http://example.com/low.m3u8
 //    expect(masterPlaylist.muxedCaptionFormats[0].language, 'spa');
   });
 
+  test('testCodecPropagation', () async {
+    HlsMasterPlaylist masterPlaylist = await HlsPlaylistParserTest.parseMasterPlaylist(PLAYLIST_WITH_AUDIO_MEDIA_TAG.split('\n'), PLAYLIST_URI);
+    expect(masterPlaylist.audios[0].format.codecs, 'mp4a.40.2');
+    expect(masterPlaylist.audios[0].format.sampleMimeType, MimeTypes.AUDIO_AAC);
+    expect(masterPlaylist.audios[1].format.codecs, 'ac-3');
+    expect(masterPlaylist.audios[1].format.sampleMimeType, MimeTypes.AUDIO_AC3);
+//    expect(masterPlaylist.muxedCaptionFormats.length, 1);
+//    expect(masterPlaylist.muxedCaptionFormats[0].sampleMimeType, MimeTypes.APPLICATION_CEA708);
+//    expect(masterPlaylist.muxedCaptionFormats[0].accessibilityChannel, 4);
+//    expect(masterPlaylist.muxedCaptionFormats[0].language, 'spa');
+  });
 }

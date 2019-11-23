@@ -58,7 +58,11 @@ class Util {
       (codeUnit == '\n'.codeUnitAt(0)) || (codeUnit == '\r'.codeUnitAt(0));
 
   static String getCodecsOfType(String codecs, int trackType) {
-    String output = splitCodecs(codecs).where((codec) => trackType == MimeTypes.getTrackTypeOfCodec(codec)).join(',');
+    var s = splitCodecs(codecs);
+    String output = s.where((codec) {
+      final e = MimeTypes.getTrackTypeOfCodec(codec);
+      return trackType == e;
+    }).join(',');
     return output.isEmpty ? null : output;
   }
 

@@ -525,12 +525,18 @@ class HlsPlaylistParser {
 
   static String parseStringAttr({
     @required String source,
-    @required String pattern,
+    String pattern,
     String defaultValue,
     Map<String, String> variableDefinitions,
   }) {
-    String value = RegExp(pattern).firstMatch(source)?.group(1);
-    value ??= defaultValue;
+    String value;
+    if (pattern == null) {
+      value = source;
+    } else {
+      value = RegExp(pattern).firstMatch(source)?.group(1);
+      value ??= defaultValue;
+    }
+
     return value?.replaceAllMapped(REGEX_VARIABLE_REFERENCE, (Match match) {
       String key = match.group(1);
       return variableDefinitions[key] ??= key;
@@ -754,8 +760,7 @@ class HlsPlaylistParser {
         segmentByteRangeLength = Util.LENGTH_UNSET;
       } else if (line.startsWith(TAG_TARGET_DURATION)) {
         targetDurationUs = int.parse(
-            parseStringAttr(source: line, pattern: REGEX_TARGET_DURATION) *
-                100000);
+            parseStringAttr(source: line, pattern: REGEX_TARGET_DURATION)) * 100000;
       } else if (line.startsWith(TAG_MEDIA_SEQUENCE)) {
         mediaSequence = int.parse(
             parseStringAttr(source: line, pattern: REGEX_MEDIA_SEQUENCE));
@@ -786,9 +791,8 @@ class HlsPlaylistParser {
           variableDefinitions[key] = value;
         }
       } else if (line.startsWith(TAG_MEDIA_DURATION)) {
-        segmentDurationUs = int.parse(
-            parseStringAttr(source: line, pattern: REGEX_MEDIA_DURATION) *
-                100000);
+        String string = parseStringAttr(source: line, pattern: REGEX_MEDIA_DURATION);
+        segmentDurationUs = (double.parse(string) * 1000000).toInt();
         segmentTitle = parseStringAttr(
             source: line,
             pattern: REGEX_MEDIA_TITLE,
@@ -890,11 +894,11 @@ class HlsPlaylistParser {
           }
         }
 
+        String url = parseStringAttr(
+            source: line,
+            variableDefinitions: variableDefinitions);
         segments.add(Segment(
-            url: parseStringAttr(
-                source: line,
-                pattern: REGEX_VARIABLE_REFERENCE,
-                variableDefinitions: variableDefinitions),
+            url: url,
             initializationSegment: initializationSegment,
             title: segmentTitle,
             durationUs: segmentDurationUs,
@@ -902,7 +906,7 @@ class HlsPlaylistParser {
             relativeStartTimeUs: segmentStartTimeUs,
             drmInitData: cachedDrmInitData,
             fullSegmentEncryptionKeyUri: fullSegmentEncryptionKeyUri,
-            encryptionIV: fullSegmentEncryptionIV,
+            encryptionIV: segmentEncryptionIV,
             byterangeOffset: segmentByteRangeOffset,
             byterangeLength: segmentByteRangeLength,
             hasGapTag: hasGapTag));

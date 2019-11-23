@@ -675,18 +675,18 @@ class HlsPlaylistParser {
   static HlsMediaPlaylist parseMediaPlaylist(HlsMasterPlaylist masterPlaylist,
       List<String> extraLines, String baseUri) {
     int playlistType = HlsMediaPlaylist.PLAYLIST_TYPE_UNKNOWN;
-    int startOffsetUs = Util.TIME_UNSET;
+    int startOffsetUs;
     int mediaSequence = 0;
     int version = 1; // Default version == 1.
-    int targetDurationUs = Util.TIME_UNSET;
+    int targetDurationUs;
     bool hasIndependentSegmentsTag = masterPlaylist.hasIndependentSegments;
     bool hasEndTag = false;
-    int segmentByteRangeOffset = 0;
+    int segmentByteRangeOffset;
     Segment initializationSegment;
     Map<String, String> variableDefinitions = {};
     List<Segment> segments = [];
     List<String> tags = []; // ignore: always_specify_types
-    int segmentByteRangeLength = Util.LENGTH_UNSET;
+    int segmentByteRangeLength;
     int segmentMediaSequence = 0;
     int segmentDurationUs = 0;
     String segmentTitle = '';
@@ -756,8 +756,8 @@ class HlsPlaylistParser {
             byterangeLength: segmentByteRangeLength,
             fullSegmentEncryptionKeyUri: fullSegmentEncryptionKeyUri,
             encryptionIV: fullSegmentEncryptionIV);
-        segmentByteRangeOffset = 0;
-        segmentByteRangeLength = Util.LENGTH_UNSET;
+        segmentByteRangeOffset = null;
+        segmentByteRangeLength = null;
       } else if (line.startsWith(TAG_TARGET_DURATION)) {
         targetDurationUs = int.parse(
             parseStringAttr(source: line, pattern: REGEX_TARGET_DURATION)) * 100000;
@@ -879,8 +879,8 @@ class HlsPlaylistParser {
           segmentEncryptionIV = segmentMediaSequence.toRadixString(16);
 
         segmentMediaSequence++;
-        if (segmentByteRangeLength == Util.LENGTH_UNSET)
-          segmentByteRangeOffset = 0;
+        if (segmentByteRangeLength == null)
+          segmentByteRangeOffset = null;
 
         if (cachedDrmInitData == null && currentSchemeDatas.isNotEmpty) {
           List<SchemeData> schemeDatas = currentSchemeDatas.values.toList();
@@ -914,9 +914,12 @@ class HlsPlaylistParser {
         segmentStartTimeUs += segmentDurationUs;
         segmentDurationUs = 0;
         segmentTitle = '';
-        if (segmentByteRangeLength != Util.LENGTH_UNSET)
+        if (segmentByteRangeLength != null) {
+          segmentByteRangeOffset ??= 0;
           segmentByteRangeOffset += segmentByteRangeLength;
-        segmentByteRangeLength = Util.LENGTH_UNSET;
+        }
+
+        segmentByteRangeLength = null;
         hasGapTag = false;
       }
     }

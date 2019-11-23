@@ -49,7 +49,7 @@ class HlsMediaPlaylist extends HlsPlaylist {
         ? segments.last.relativeStartTimeUs + segments.last.durationUs
         : 0;
 
-    if (startOffsetUs != Util.TIME_UNSET && startOffsetUs < 0)
+    if (startOffsetUs != null && startOffsetUs < 0)
       startOffsetUs = durationUs + startOffsetUs;
 
     return HlsMediaPlaylist(

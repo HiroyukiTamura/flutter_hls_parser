@@ -68,5 +68,40 @@ https://priv.example.com/fileSequence2683.ts
     expect(playlist.segments[0].byterangeLength, 51370);
     expect(playlist.segments[0].byterangeOffset, 0);
     expect(playlist.segments[0].url, 'https://priv.example.com/fileSequence2679.ts');
+
+    expect(playlist.segments[1].relativeDiscontinuitySequence, 0);
+    expect(playlist.segments[1].durationUs, 7975000);
+    expect(playlist.segments[1].title, 'segment title');
+    expect(playlist.segments[1].fullSegmentEncryptionKeyUri, 'https://priv.example.com/key.php?r=2680');
+    expect(playlist.segments[1].encryptionIV, '0x1566B');
+    expect(playlist.segments[1].byterangeLength, 51501);
+    expect(playlist.segments[1].byterangeOffset, 2147483648);
+    expect(playlist.segments[1].url, 'https://priv.example.com/fileSequence2680.ts');
+
+    expect(playlist.segments[2].relativeDiscontinuitySequence, 0);
+    expect(playlist.segments[2].durationUs, 7941000);
+    expect(playlist.segments[2].title, 'segment title .,:/# with interesting chars');
+    expect(playlist.segments[2].fullSegmentEncryptionKeyUri, null);
+    expect(playlist.segments[2].encryptionIV, null);
+    expect(playlist.segments[2].byterangeLength, 51501);
+    expect(playlist.segments[2].byterangeOffset, 2147535149);
+    expect(playlist.segments[2].url, 'https://priv.example.com/fileSequence2681.ts');
+
+    expect(playlist.segments[3].relativeDiscontinuitySequence, 1);
+    expect(playlist.segments[3].durationUs, 7975000);
+    expect(playlist.segments[3].title, isEmpty);
+    expect(playlist.segments[3].fullSegmentEncryptionKeyUri, 'https://priv.example.com/key.php?r=2682');
+    expect(playlist.segments[3].encryptionIV, 'A7A'.toLowerCase());
+    expect(playlist.segments[3].byterangeLength, 51740);
+    expect(playlist.segments[3].byterangeOffset, 2147586650);
+    expect(playlist.segments[3].url, 'https://priv.example.com/fileSequence2682.ts');
+
+    expect(playlist.segments[4].relativeDiscontinuitySequence, 1);
+    expect(playlist.segments[4].durationUs, 7975000);
+    expect(playlist.segments[4].fullSegmentEncryptionKeyUri, 'https://priv.example.com/key.php?r=2682');
+    expect(playlist.segments[4].encryptionIV, 'A7B'.toLowerCase());
+    expect(playlist.segments[4].byterangeLength, null);
+    expect(playlist.segments[4].byterangeOffset, null);
+    expect(playlist.segments[4].url, 'https://priv.example.com/fileSequence2683.ts');
   });
 }

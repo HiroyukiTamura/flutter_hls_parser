@@ -37,10 +37,7 @@ class Util {
   /// A type constant for a dummy or empty track.
   static const int TRACK_TYPE_NONE = 6;
 
-  static const int TIME_UNSET = -1;
   static const int TIME_END_OF_SOURCE = 0;
-
-  static const int LENGTH_UNSET = -1;
 
   static bool startsWith(List<int> source, List<int> checker) {
     for (int i = 0; i < checker.length; i++) {
@@ -102,7 +99,7 @@ class Util {
     return time;
   }
 
-  static int msToUs(int timeMs) => (timeMs == TIME_UNSET || timeMs == TIME_END_OF_SOURCE) ? timeMs : (timeMs * 1000);
+  static int msToUs(int timeMs) => (timeMs == null || timeMs == TIME_END_OF_SOURCE) ? timeMs : (timeMs * 1000);
 }
 
 class CencType {

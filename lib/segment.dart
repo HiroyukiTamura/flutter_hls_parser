@@ -10,7 +10,7 @@ class Segment {
     this.durationUs = 0,
     this.title = '',
     this.relativeDiscontinuitySequence = -1,
-    this.relativeStartTimeUs = Util.TIME_UNSET,
+    this.relativeStartTimeUs,
     this.drmInitData,
     @required this.fullSegmentEncryptionKeyUri,
     @required this.encryptionIV,

@@ -248,7 +248,7 @@ segment{\$underscore_1}\$name_1}
   }
 
   test('testParseMediaPlaylist', () async {
-    var playlist = await _parseMediaPlaylist(PLAYLIST_STRING.split('\n'), 'https://example.com/test.m3u8');
+    var playlist = await _parseMediaPlaylist(PLAYLIST_STRING.split('\n'), PLAYLIST_URL);
     expect(playlist.playlistType, HlsMediaPlaylist.PLAYLIST_TYPE_VOD);
     expect(playlist.startOffsetUs, playlist.durationUs - 25000000);
 
@@ -305,54 +305,54 @@ segment{\$underscore_1}\$name_1}
   });
 
   test('testParseSampleAesMethod', () async {
-    var playlist = await _parseMediaPlaylist(PLAYLIST_STRING_AES.split('\n'), 'https://example.com/test.m3u8');
+    var playlist = await _parseMediaPlaylist(PLAYLIST_STRING_AES.split('\n'), PLAYLIST_URL);
     expect(playlist.protectionSchemes.schemeType, CencType.CBCS);
-//    expect(playlist.protectionSchemes.schemeData[0].uuid, true);//todo これ実装
+//    expect(playlist.protectionSchemes.schemeData[0].uuid, true);
     expect(playlist.protectionSchemes.schemeData[0].data?.isNotEmpty != true, true);
     expect(playlist.segments[0].drmInitData, null);
-//    expect(playlist.segments[1].drmInitData.schemeData[0].uuid, true);//todo これ実装
+//    expect(playlist.segments[1].drmInitData.schemeData[0].uuid, true);
     expect(playlist.segments[1].drmInitData.schemeData[0].data?.isNotEmpty != false, true);
   });
 
   test('testParseSampleAesCtrMethod', () async {
-    var playlist = await _parseMediaPlaylist(PLAYLIST_STRING_AES_CTR.split('\n'), 'https://example.com/test.m3u8');
+    var playlist = await _parseMediaPlaylist(PLAYLIST_STRING_AES_CTR.split('\n'), PLAYLIST_URL);
 
     expect(playlist.protectionSchemes.schemeType, CencType.CENC);
-//    expect(playlist.protectionSchemes.schemeData[0].uuid, true);//todo これ実装
+//    expect(playlist.protectionSchemes.schemeData[0].uuid, true);
     expect(playlist.protectionSchemes.schemeData[0].data?.isNotEmpty != true, true);
   });
 
   test('testParseSampleAesCencMethod', () async {
-    var playlist = await _parseMediaPlaylist(PLAYLIST_STRING_AES_CENC.split('\n'), 'https://example.com/test.m3u8');
+    var playlist = await _parseMediaPlaylist(PLAYLIST_STRING_AES_CENC.split('\n'), PLAYLIST_URL);
 
     expect(playlist.protectionSchemes.schemeType, CencType.CENC);
-//    expect(playlist.protectionSchemes.schemeData[0].uuid, true);//todo これ実装
+//    expect(playlist.protectionSchemes.schemeData[0].uuid, true);
     expect(playlist.protectionSchemes.schemeData[0].data?.isNotEmpty != true, true);
   });
 
   test('testMultipleExtXKeysForSingleSegment', () async {
-    var playlist = await _parseMediaPlaylist(PLAYLIST_STRING_MULTI_EXT.split('\n'), 'https://example.com/test.m3u8');
+    var playlist = await _parseMediaPlaylist(PLAYLIST_STRING_MULTI_EXT.split('\n'), PLAYLIST_URL);
 
     expect(playlist.protectionSchemes?.schemeType, CencType.CBCS);
     expect(playlist.protectionSchemes?.schemeData?.length, 2);
-//    expect(playlist.protectionSchemes.schemeData[0].uuid, true);//todo これ実装
+//    expect(playlist.protectionSchemes.schemeData[0].uuid, true);
     expect(playlist.protectionSchemes.schemeData[0].data?.isNotEmpty != true, true);
-    //    expect(playlist.protectionSchemes.schemeData[0].uuid, true);//todo これ実装
+    //    expect(playlist.protectionSchemes.schemeData[0].uuid, true);
     expect(playlist.protectionSchemes.schemeData[1].data?.isNotEmpty != true, true);
 
     expect(playlist.segments[0].drmInitData, null);
 
-//    expect(playlist.segments[0].drmInitData.schemeData[0].uuid, true);//todo これ実装
+//    expect(playlist.segments[0].drmInitData.schemeData[0].uuid, true);
     expect(playlist.segments[1].drmInitData.schemeData[0].data?.isNotEmpty != false, true);
-    //    expect(playlist.segments[0].drmInitData.schemeData[0].uuid, true);//todo これ実装
+    //    expect(playlist.segments[0].drmInitData.schemeData[0].uuid, true);
     expect(playlist.segments[1].drmInitData.schemeData[1].data?.isNotEmpty != false, true);
 
     expect(playlist.segments[1].drmInitData, playlist.segments[2].drmInitData);
     expect(playlist.segments[2].drmInitData == playlist.segments[3].drmInitData, false);
 
-//    expect(playlist.segments[3].drmInitData.schemeData[0].uuid, true);//todo これ実装
+//    expect(playlist.segments[3].drmInitData.schemeData[0].uuid, true);
     expect(playlist.segments[3].drmInitData.schemeData[0].data?.isNotEmpty != false, true);
-    //    expect(playlist.segments[3].drmInitData.schemeData[1].uuid, true);//todo これ実装
+    //    expect(playlist.segments[3].drmInitData.schemeData[1].uuid, true);
     expect(playlist.segments[3].drmInitData.schemeData[1].data?.isNotEmpty != false, true);
 
     expect(playlist.segments[3].drmInitData, playlist.segments[4].drmInitData);
@@ -362,7 +362,7 @@ segment{\$underscore_1}\$name_1}
 
 
   test('testGapTag', () async {
-    var playlist = await _parseMediaPlaylist(PLAYLIST_STRING_GAP_TAG.split('\n'), 'https://example.com/test.m3u8');
+    var playlist = await _parseMediaPlaylist(PLAYLIST_STRING_GAP_TAG.split('\n'), PLAYLIST_URL);
     expect(playlist.hasEndTag, false);
     expect(playlist.segments[1].hasGapTag, false);
     expect(playlist.segments[2].hasGapTag, true);
@@ -371,7 +371,7 @@ segment{\$underscore_1}\$name_1}
 
 
   test('testMapTag', () async {
-    var playlist = await _parseMediaPlaylist(PLAYLIST_STRING_MAP_TAG.split('\n'), 'https://example.com/test.m3u8');
+    var playlist = await _parseMediaPlaylist(PLAYLIST_STRING_MAP_TAG.split('\n'), PLAYLIST_URL);
 
     var segments = playlist.segments;
     expect(segments[0].initializationSegment, null);
@@ -381,7 +381,7 @@ segment{\$underscore_1}\$name_1}
   });
 
   test('testEncryptedMapTag', () async {
-    var playlist = await _parseMediaPlaylist(PLAYLIST_STRING_ENCRYPTED_MAP.split('\n'), 'https://example.com/test.m3u8');
+    var playlist = await _parseMediaPlaylist(PLAYLIST_STRING_ENCRYPTED_MAP.split('\n'), PLAYLIST_URL);
 
     var segments = playlist.segments;
 
@@ -393,7 +393,7 @@ segment{\$underscore_1}\$name_1}
 
   test('testEncryptedMapTagWithNoIvFailure', () async {
     try {
-      await _parseMediaPlaylist(PLAYLIST_STRING_WRONG_ENCRYPTED_MAP.split('\n'), 'https://example.com/test.m3u8');
+      await _parseMediaPlaylist(PLAYLIST_STRING_WRONG_ENCRYPTED_MAP.split('\n'), PLAYLIST_URL);
       fail('forced failure');
     } on ParserException catch (_) {
 

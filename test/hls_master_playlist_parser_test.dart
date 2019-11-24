@@ -201,7 +201,7 @@ http://example.com/{\$tricky}
           captionGroupId: 'cc1');
 
   ///@[HlsPlaylistParser.parseMasterPlaylist(extraLines, baseUri)]
-  Future<HlsMasterPlaylist> parseMasterPlaylist(List<String> extraLines, String uri) async {
+  Future<HlsMasterPlaylist> parseMasterPlaylist(String uri, List<String> extraLines) async {
     Uri playlistUri = Uri.parse(uri);
     HlsPlaylistParser parser = HlsPlaylistParser.create();
     HlsPlaylist playList = await parser.parse(playlistUri, extraLines);
@@ -210,7 +210,7 @@ http://example.com/{\$tricky}
 
   test('testParseMasterPlaylist', () async {
     HlsMasterPlaylist masterPlaylist;
-    masterPlaylist = await parseMasterPlaylist(PLAYLIST_SIMPLE.split('\n'), PLAYLIST_URI);
+    masterPlaylist = await parseMasterPlaylist(PLAYLIST_URI, PLAYLIST_SIMPLE.split('\n'));
 
     List<Variant> variants = masterPlaylist.variants;
 
@@ -260,7 +260,7 @@ http://example.com/{\$tricky}
   });
 
   test('testMasterPlaylistWithBandwdithAverage', () async {
-    HlsMasterPlaylist masterPlaylist = await parseMasterPlaylist(PLAYLIST_WITH_AVG_BANDWIDTH.split('\n'), PLAYLIST_URI);
+    HlsMasterPlaylist masterPlaylist = await parseMasterPlaylist(PLAYLIST_URI, PLAYLIST_WITH_AVG_BANDWIDTH.split('\n'));
 
     List<Variant> variants = masterPlaylist.variants;
 
@@ -270,7 +270,7 @@ http://example.com/{\$tricky}
 
   test('testPlaylistWithInvalidHeader', () async {
     try {
-      await parseMasterPlaylist(PLAYLIST_WITH_INVALID_HEADER.split('\n'), PLAYLIST_URI);
+      await parseMasterPlaylist(PLAYLIST_URI, PLAYLIST_WITH_INVALID_HEADER.split('\n'));
       fail('Expected exception not thrown.');
     } on ParserException catch (_) {
     // Expected due to invalid header.
@@ -278,7 +278,7 @@ http://example.com/{\$tricky}
   });
 
   test('testPlaylistWithClosedCaption', () async {
-    HlsMasterPlaylist masterPlaylist = await parseMasterPlaylist(PLAYLIST_WITH_CC.split('\n'), PLAYLIST_URI);
+    HlsMasterPlaylist masterPlaylist = await parseMasterPlaylist(PLAYLIST_URI, PLAYLIST_WITH_CC.split('\n'), );
     expect(masterPlaylist.muxedCaptionFormats.length, 1);
     expect(masterPlaylist.muxedCaptionFormats[0].sampleMimeType, MimeTypes.APPLICATION_CEA708);
     expect(masterPlaylist.muxedCaptionFormats[0].accessibilityChannel, 4);
@@ -286,7 +286,7 @@ http://example.com/{\$tricky}
   });
 
   test('testPlaylistWithChannelsAttribute', () async {
-    HlsMasterPlaylist masterPlaylist = await parseMasterPlaylist(PLAYLIST_WITH_CHANNELS_ATTRIBUTE.split('\n'), PLAYLIST_URI);
+    HlsMasterPlaylist masterPlaylist = await parseMasterPlaylist(PLAYLIST_URI, PLAYLIST_WITH_CHANNELS_ATTRIBUTE.split('\n'));
     List<Rendition> audios = masterPlaylist.audios;
     expect(audios.length, 3);
     expect(audios[0].format.channelCount, 6);
@@ -295,12 +295,12 @@ http://example.com/{\$tricky}
   });
 
   test('testPlaylistWithoutClosedCaptions', () async {
-    HlsMasterPlaylist masterPlaylist = await parseMasterPlaylist(PLAYLIST_WITHOUT_CC.split('\n'), PLAYLIST_URI);
+    HlsMasterPlaylist masterPlaylist = await parseMasterPlaylist(PLAYLIST_URI, PLAYLIST_WITHOUT_CC.split('\n'), );
     expect(masterPlaylist.muxedCaptionFormats, isEmpty);
   });
 
   test('testCodecPropagation', () async {
-    HlsMasterPlaylist masterPlaylist = await parseMasterPlaylist(PLAYLIST_WITH_AUDIO_MEDIA_TAG.split('\n'), PLAYLIST_URI);
+    HlsMasterPlaylist masterPlaylist = await parseMasterPlaylist(PLAYLIST_URI, PLAYLIST_WITH_AUDIO_MEDIA_TAG.split('\n'), );
     expect(masterPlaylist.audios[0].format.codecs, 'mp4a.40.2');
     expect(masterPlaylist.audios[0].format.sampleMimeType, MimeTypes.AUDIO_AAC);
     expect(masterPlaylist.audios[1].format.codecs, 'ac-3');
@@ -308,37 +308,37 @@ http://example.com/{\$tricky}
   });
 
   test('testAudioIdPropagation', () async {
-    HlsMasterPlaylist playlist = await parseMasterPlaylist(PLAYLIST_WITH_AUDIO_MEDIA_TAG.split('\n'), PLAYLIST_URI);
+    HlsMasterPlaylist playlist = await parseMasterPlaylist(PLAYLIST_URI, PLAYLIST_WITH_AUDIO_MEDIA_TAG.split('\n'), );
     expect(playlist.audios[0].format.id, 'aud1:English');
     expect(playlist.audios[1].format.id, 'aud2:English');
   });
 
   test('testCCIdPropagation', () async {
-    HlsMasterPlaylist playlist = await parseMasterPlaylist(PLAYLIST_WITH_CC.split('\n'), PLAYLIST_URI);
+    HlsMasterPlaylist playlist = await parseMasterPlaylist(PLAYLIST_URI, PLAYLIST_WITH_CC.split('\n'), );
     expect(playlist.muxedCaptionFormats[0].id, 'cc1:Eng');
   });
 
   test('testSubtitleIdPropagation', () async {
-    HlsMasterPlaylist playlist = await parseMasterPlaylist(PLAYLIST_WITH_SUBTITLES.split('\n'), PLAYLIST_URI);
+    HlsMasterPlaylist playlist = await parseMasterPlaylist(PLAYLIST_URI, PLAYLIST_WITH_SUBTITLES.split('\n'), );
     expect(playlist.subtitles[0].format.id, 'sub1:Eng');
   });
 
   test('testIndependentSegments', () async {
-    HlsMasterPlaylist playlistWithIndependentSegments = await parseMasterPlaylist(PLAYLIST_WITH_INDEPENDENT_SEGMENTS.split('\n'), PLAYLIST_URI);
+    HlsMasterPlaylist playlistWithIndependentSegments = await parseMasterPlaylist(PLAYLIST_URI, PLAYLIST_WITH_INDEPENDENT_SEGMENTS.split('\n'));
     expect(playlistWithIndependentSegments.hasIndependentSegments, true);
-    HlsMasterPlaylist playlistWithoutIndependentSegments = await parseMasterPlaylist(PLAYLIST_SIMPLE.split('\n'), PLAYLIST_URI);
+    HlsMasterPlaylist playlistWithoutIndependentSegments = await parseMasterPlaylist(PLAYLIST_URI, PLAYLIST_SIMPLE.split('\n'));
     expect(playlistWithoutIndependentSegments.hasIndependentSegments, false);
   });
 
   test('testVariableSubstitution', () async {
-    HlsMasterPlaylist playlistWithSubstitutions = await parseMasterPlaylist(PLAYLIST_WITH_VARIABLE_SUBSTITUTION.split('\n'), PLAYLIST_URI);
+    HlsMasterPlaylist playlistWithSubstitutions = await parseMasterPlaylist(PLAYLIST_URI, PLAYLIST_WITH_VARIABLE_SUBSTITUTION.split('\n'));
     Variant variant = playlistWithSubstitutions.variants[0];
     expect(variant.format.codecs, 'mp4a.40.5');
     expect(variant.url, Uri.parse('http://example.com/This/{\$nested}/reference/shouldnt/work'));
   });
 
   test('testHlsMetadata', () async {
-    HlsMasterPlaylist playlist = await parseMasterPlaylist(PLAYLIST_WITH_MATCHING_STREAM_INF_URLS.split('\n'), PLAYLIST_URI);
+    HlsMasterPlaylist playlist = await parseMasterPlaylist(PLAYLIST_URI, PLAYLIST_WITH_MATCHING_STREAM_INF_URLS.split('\n'));
 
     expect(playlist.variants.length, 4);
 

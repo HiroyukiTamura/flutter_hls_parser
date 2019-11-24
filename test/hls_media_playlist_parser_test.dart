@@ -222,6 +222,23 @@ segment1.ts
 segment{\$underscore_1}\$name_1}
 ''';
   
+  const PLAYLIST_STRING_INHERITED_VS = 
+''' 
+#EXTM3U
+#EXT-X-VERSION:8
+#EXT-X-TARGETDURATION:5
+#EXT-X-MEDIA-SEQUENCE:10
+#EXT-X-DEFINE:IMPORT="imported_base"
+#EXTINF:5.005,
+{\$imported_base}1.ts
+#EXTINF:5.005,
+{\$imported_base}2.ts
+#EXTINF:5.005,
+{\$imported_base}3.ts
+#EXTINF:5.005,
+{\$imported_base}4.ts
+''';
+  
 
   Future<HlsMediaPlaylist> _parseMediaPlaylist(List<String> extraLines, String uri) async {
     var playlistUri = Uri.parse(uri);
@@ -416,15 +433,26 @@ segment{\$underscore_1}\$name_1}
   });
 
 
+  test('testInheritedVariableSubstitution', () async {
+    Map<String, String> variableDefinitions = {};
+    variableDefinitions['imported_base'] = 'long_path';
+    HlsMasterPlaylist masterPlaylist = HlsMasterPlaylist(
+        baseUri: '',
+        tags: [],
+        variants: [],
+        videos: [],
+        audios: [],
+        subtitles: [],
+        closedCaptions: [],
+        muxedAudioFormat: null,
+        muxedCaptionFormats: [],
+        hasIndependentSegments: false,
+        variableDefinitions: variableDefinitions,
+        sessionKeyDrmInitData: []);
 
-
-
-
-
-
-
-
-
-
-
+    HlsPlaylist hlsMediaPlaylist = await HlsPlaylistParser(masterPlaylist).parse(Uri.parse(PLAYLIST_URL), PLAYLIST_STRING_INHERITED_VS.split('\n'));//todo 引数そろえるべき
+    var segments = (hlsMediaPlaylist as HlsMediaPlaylist).segments;
+    for (int i = 1; i < 4; i++)
+      expect(segments[i-1].url, 'long_path$i.ts');
+  });
 }

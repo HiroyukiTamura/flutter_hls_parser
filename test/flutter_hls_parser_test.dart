@@ -340,7 +340,7 @@ http://example.com/{\$tricky}
   test('testHlsMetadata', () async {
     HlsMasterPlaylist playlist = await parseMasterPlaylist(PLAYLIST_WITH_MATCHING_STREAM_INF_URLS.split('\n'), PLAYLIST_URI);
 
-    expect(playlist.variants, 4);
+    expect(playlist.variants.length, 4);
 
     // ignore: always_specify_types
     expect(playlist.variants[0].format.metadata, _createExtXStreamInfMetadata([

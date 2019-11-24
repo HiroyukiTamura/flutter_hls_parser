@@ -334,16 +334,17 @@ class HlsPlaylistParser {
 
     // TODO: Don't deduplicate variants by URL.
     List<Variant> deduplicatedVariants = []; // ignore: always_specify_types
-    List<Uri> urlsInDeduplicatedVariants = []; // ignore: always_specify_types
+    Set<Uri> urlsInDeduplicatedVariants = {}; // ignore: always_specify_types
     for (int i = 0; i < variants.length; i++) {
       Variant variant = variants[i];
-      urlsInDeduplicatedVariants.add(variant.url);
-      assert(variant.format.metadata == null);
-      HlsTrackMetadataEntry hlsMetadataEntry =
-          HlsTrackMetadataEntry(variantInfos: urlToVariantInfos[variant.url]);
-      Metadata metadata = Metadata(<dynamic>[hlsMetadataEntry]);
-      deduplicatedVariants.add(
-          variant.copyWithFormat(variant.format.copyWithMetadata(metadata)));
+      if (urlsInDeduplicatedVariants.add(variant.url)) {
+        assert(variant.format.metadata == null);
+        HlsTrackMetadataEntry hlsMetadataEntry =
+        HlsTrackMetadataEntry(variantInfos: urlToVariantInfos[variant.url]);
+        Metadata metadata = Metadata(<dynamic>[hlsMetadataEntry]);
+        deduplicatedVariants.add(
+            variant.copyWithFormat(variant.format.copyWithMetadata(metadata)));
+      }
     }
 
     // ignore: always_specify_types

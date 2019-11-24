@@ -69,8 +69,8 @@ class Util {
           '(\\s*,\\s*)');
 
   static int parseXsDateTime(String value) {
-    Pattern pattern = '(\\d\\d\\d\\d)\\-(\\d\\d)\\-(\\d\\d)[Tt](\\d\\d):(\\d\\d):(\\d\\d)([\\.,](\\d+))?([Zz]|((\\+|\\-)(\\d?\\d):?(\\d\\d)))?';
-    List<Match> matchList = pattern.allMatches(value).toList();
+    String pattern = '(\\d\\d\\d\\d)\\-(\\d\\d)\\-(\\d\\d)[Tt](\\d\\d):(\\d\\d):(\\d\\d)([\\.,](\\d+))?([Zz]|((\\+|\\-)(\\d?\\d):?(\\d\\d)))?';
+    List<Match> matchList = RegExp(pattern).allMatches(value).toList();
     if (matchList.isEmpty)
       throw ParserException('Invalid date/time format: $value');
     Match match = matchList[0];

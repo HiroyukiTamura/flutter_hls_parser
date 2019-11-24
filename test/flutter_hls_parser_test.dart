@@ -140,7 +140,7 @@ http://example.com/spaces_in_codecs.m3u8
 v5/prog_index.m3u8
 #EXT-X-STREAM-INF:BANDWIDTH=6453202,CLOSED-CAPTIONS="cc1",AUDIO="aud1",SUBTITLES="sub1"
 v8/prog_index.m3u8
-CLOSED-CAPTIONS="cc1",AUDIO="aud1",SUBTITLES="sub1"
+#EXT-X-STREAM-INF:BANDWIDTH=5054232,CLOSED-CAPTIONS="cc1",AUDIO="aud1",SUBTITLES="sub1"
 v7/prog_index.m3u8
 
 #EXT-X-STREAM-INF:BANDWIDTH=2448841,CLOSED-CAPTIONS="cc1",AUDIO="aud2",SUBTITLES="sub1"
@@ -188,10 +188,10 @@ http://example.com/{\$tricky}
   });
 
   Metadata _createExtXStreamInfMetadata(List<VariantInfo> infos) =>
-      Metadata(<dynamic>[HlsTrackMetadataEntry(variantInfos: infos)]);
+      Metadata([HlsTrackMetadataEntry(variantInfos: infos)]);
 
   Metadata _createExtXMediaMetadata(String groupId, String name) =>
-      Metadata(<dynamic>[HlsTrackMetadataEntry(variantInfos: [])]);// ignore: always_specify_types
+      Metadata([HlsTrackMetadataEntry(groupId: groupId, name: name, variantInfos: [])]);// ignore: always_specify_types
 
   VariantInfo _createVariantInfo(int bitrate, String audioGroupId) =>
       VariantInfo(

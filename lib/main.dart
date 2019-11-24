@@ -339,9 +339,8 @@ class HlsPlaylistParser {
       Variant variant = variants[i];
       if (urlsInDeduplicatedVariants.add(variant.url)) {
         assert(variant.format.metadata == null);
-        HlsTrackMetadataEntry hlsMetadataEntry =
-        HlsTrackMetadataEntry(variantInfos: urlToVariantInfos[variant.url]);
-        Metadata metadata = Metadata(<dynamic>[hlsMetadataEntry]);
+        HlsTrackMetadataEntry hlsMetadataEntry = HlsTrackMetadataEntry(variantInfos: urlToVariantInfos[variant.url]);
+        Metadata metadata = Metadata([hlsMetadataEntry]);
         deduplicatedVariants.add(
             variant.copyWithFormat(variant.format.copyWithMetadata(metadata)));
       }
@@ -375,7 +374,7 @@ class HlsPlaylistParser {
       Format format;
       HlsTrackMetadataEntry entry = HlsTrackMetadataEntry(
           groupId: groupId, name: name, variantInfos: <VariantInfo>[]);
-      Metadata metadata = Metadata(<dynamic>[entry]);
+      Metadata metadata = Metadata([entry]);
 
       switch (parseStringAttr(
           source: line,

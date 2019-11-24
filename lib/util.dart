@@ -54,6 +54,7 @@ class Util {
   static bool isLineBreak(int codeUnit) =>
       (codeUnit == '\n'.codeUnitAt(0)) || (codeUnit == '\r'.codeUnitAt(0));
 
+  //todo 直すこと
   static String getCodecsOfType(String codecs, int trackType) {
     var s = splitCodecs(codecs);
     String output = s.where((codec) {

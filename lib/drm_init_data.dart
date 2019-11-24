@@ -6,8 +6,8 @@ import 'package:collection/collection.dart';
 class DrmInitData {
   DrmInitData({this.schemeType, this.schemeData = const []});
 
-  List<SchemeData> schemeData;
-  String schemeType;
+  final List<SchemeData> schemeData;
+  final String schemeType;
 
   @override
   bool operator == (dynamic other) {

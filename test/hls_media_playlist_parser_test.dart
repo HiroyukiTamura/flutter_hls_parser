@@ -1,6 +1,6 @@
-import 'package:flutter_hls_parser/main.dart';
+import 'package:flutter_hls_parser/hls_playlist_parser.dart';
 import 'package:flutter_hls_parser/hls_media_playlist.dart';
-import 'package:flutter_hls_parser/play_list.dart';
+import 'package:flutter_hls_parser/playlist.dart';
 import 'package:flutter_hls_parser/util.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_hls_parser/flutter_hls_parser.dart';

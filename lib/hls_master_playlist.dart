@@ -2,7 +2,7 @@ import 'format.dart';
 import 'drm_init_data.dart';
 import 'variant.dart';
 import 'rendition.dart';
-import 'play_list.dart';
+import 'playlist.dart';
 import 'package:quiver/iterables.dart';
 
 class HlsMasterPlaylist extends HlsPlaylist {

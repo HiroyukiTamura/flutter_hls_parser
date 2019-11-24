@@ -5,7 +5,7 @@ import 'drm_init_data.dart';
 import 'exception.dart';
 import 'dart:convert';
 import 'util.dart';
-import 'play_list.dart';
+import 'playlist.dart';
 import 'mime_types.dart';
 import 'scheme_data.dart';
 import 'format.dart';

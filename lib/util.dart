@@ -66,7 +66,7 @@ class Util {
 
   static List<String> splitCodecs(String codecs) =>
       codecs?.isNotEmpty != true ? <String>[] : codecs.trim().split(
-          '(\\s*,\\s*)');
+          RegExp('(\\s*,\\s*)'));
 
   static int parseXsDateTime(String value) {
     String pattern = '(\\d\\d\\d\\d)\\-(\\d\\d)\\-(\\d\\d)[Tt](\\d\\d):(\\d\\d):(\\d\\d)([\\.,](\\d+))?([Zz]|((\\+|\\-)(\\d?\\d):?(\\d\\d)))?';

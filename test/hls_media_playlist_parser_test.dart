@@ -207,6 +207,21 @@ s000026.mp4;
 02/00/47.ts;
 ''';
   
+  const PLAYLIST_STRING_VARIABLE_SUBSITUATION =
+'''
+#EXTM3U
+#EXT-X-VERSION:8
+#EXT-X-DEFINE:NAME="underscore_1",VALUE="{"
+#EXT-X-DEFINE:NAME="dash-1",VALUE="replaced_value.ts"
+#EXT-X-TARGETDURATION:5
+#EXT-X-MEDIA-SEQUENCE:10
+#EXTINF:5.005,
+segment1.ts
+#EXT-X-MAP:URI="{\$dash-1}"
+#EXTINF:5.005
+segment{\$underscore_1}\$name_1}
+''';
+  
 
   Future<HlsMediaPlaylist> _parseMediaPlaylist(List<String> extraLines, String uri) async {
     var playlistUri = Uri.parse(uri);
@@ -393,9 +408,12 @@ s000026.mp4;
   });
 
 
+  test('testVariableSubstitution', () async {
+    var playlist = await _parseMediaPlaylist(PLAYLIST_STRING_VARIABLE_SUBSITUATION.split('\n'), PLAYLIST_URL);//todoいい加減このURL共通化する
 
-
-
+    expect(playlist.segments[1].initializationSegment.url, 'replaced_value.ts');
+    expect(playlist.segments[1].url, 'segment{\$name_1}');
+  });
 
 
 

@@ -154,6 +154,24 @@ s000026.mp4;
 02/00/47.ts;
 ''';
 
+  const PLAYLIST_STRING_ENCRPTED_MAP = 
+'''
+#EXTM3U
+#EXT-X-VERSION:3
+#EXT-X-TARGETDURATION:5
+#EXT-X-MEDIA-SEQUENCE:10
+#EXT-X-KEY:METHOD=AES-128,URI="https://priv.example.com/key.php?r=2680",IV=0x1566B
+#EXT-X-MAP:URI="init1.ts"
+#EXTINF:5.005,
+02/00/32.ts
+#EXT-X-KEY:METHOD=NONE
+#EXT-X-MAP:URI="init2.ts"
+#EXTINF:5.005,
+02/00/47.ts
+''';
+    
+
+
   Future<HlsMediaPlaylist> _parseMediaPlaylist(List<String> extraLines, String uri) async {
     var playlistUri = Uri.parse(uri);
     var parser = HlsPlaylistParser.create();
@@ -283,6 +301,7 @@ s000026.mp4;
     expect(playlist.segments[3].hasGapTag, false);
   });
 
+
   test('testMapTag', () async {
     var playlist = await _parseMediaPlaylist(PLAYLIST_STRING_MAP_TAG.split('\n'), 'https://example.com/test.m3u8');
 
@@ -293,7 +312,16 @@ s000026.mp4;
     expect(segments[3].initializationSegment.url, 'init2.ts');
   });
 
+  test('testEncryptedMapTag', () async {
+    var playlist = await _parseMediaPlaylist(PLAYLIST_STRING_ENCRPTED_MAP.split('\n'), 'https://example.com/test.m3u8');
 
+    var segments = playlist.segments;
+
+    expect(segments[0].initializationSegment.fullSegmentEncryptionKeyUri, 'https://priv.example.com/key.php?r=2680');
+    expect(segments[0].encryptionIV, '0x1566B');
+    expect(segments[1].initializationSegment.fullSegmentEncryptionKeyUri, null);
+    expect(segments[1].encryptionIV, null);
+  });
 
 
 

@@ -127,7 +127,7 @@ s000026.mp4;
 02/00/32.ts
 #EXT-X-KEY:METHOD=NONE
 #EXTINF:5.005,
-#EXT-X-GAP 
+#EXT-X-GAP
 ../dummy.ts
 #EXT-X-KEY:METHOD=AES-128,URI="https://key-service.bamgrid.com/1.0/key?hex-value=9FB8989D15EEAAF8B21B860D7ED3072A",IV=0x410C8AC18AA42EFA18B5155484F5FC34
 #EXTINF:5.005,
@@ -135,16 +135,34 @@ s000026.mp4;
 #EXTINF:5.005,
 02/00/47.ts
 ''';
+  
+  const PLAYLIST_STRING_MAP_TAG =
+'''
+#EXTM3U
+#EXT-X-VERSION:3
+#EXT-X-TARGETDURATION:5
+#EXT-X-MEDIA-SEQUENCE:10
+#EXTINF:5.005,
+02/00/27.ts
+#EXT-X-MAP:URI="init1.ts"
+#EXTINF:5.005,
+02/00/32.ts
+#EXTINF:5.005,
+02/00/42.ts
+#EXT-X-MAP:URI="init2.ts"
+#EXTINF:5.005,
+02/00/47.ts;
+''';
 
   Future<HlsMediaPlaylist> _parseMediaPlaylist(List<String> extraLines, String uri) async {
-    Uri playlistUri = Uri.parse(uri);
+    var playlistUri = Uri.parse(uri);
     var parser = HlsPlaylistParser.create();
     var playList = await parser.parse(playlistUri, extraLines);
     return playList as HlsMediaPlaylist;
   }
 
   test('testParseMediaPlaylist', () async {
-    HlsMediaPlaylist playlist = await _parseMediaPlaylist(PLAYLIST_STRING.split('\n'), 'https://example.com/test.m3u8');
+    var playlist = await _parseMediaPlaylist(PLAYLIST_STRING.split('\n'), 'https://example.com/test.m3u8');
     expect(playlist.playlistType, HlsMediaPlaylist.PLAYLIST_TYPE_VOD);
     expect(playlist.startOffsetUs, playlist.durationUs - 25000000);
 
@@ -201,7 +219,7 @@ s000026.mp4;
   });
 
   test('testParseSampleAesMethod', () async {
-    HlsMediaPlaylist playlist = await _parseMediaPlaylist(PLAYLIST_STRING_AES.split('\n'), 'https://example.com/test.m3u8');
+    var playlist = await _parseMediaPlaylist(PLAYLIST_STRING_AES.split('\n'), 'https://example.com/test.m3u8');
     expect(playlist.protectionSchemes.schemeType, CencType.CBCS);
 //    expect(playlist.protectionSchemes.schemeData[0].uuid, true);//todo これ実装
     expect(playlist.protectionSchemes.schemeData[0].data?.isNotEmpty != true, true);
@@ -211,7 +229,7 @@ s000026.mp4;
   });
 
   test('testParseSampleAesCtrMethod', () async {
-    HlsMediaPlaylist playlist = await _parseMediaPlaylist(PLAYLIST_STRING_AES_CTR.split('\n'), 'https://example.com/test.m3u8');
+    var playlist = await _parseMediaPlaylist(PLAYLIST_STRING_AES_CTR.split('\n'), 'https://example.com/test.m3u8');
 
     expect(playlist.protectionSchemes.schemeType, CencType.CENC);
 //    expect(playlist.protectionSchemes.schemeData[0].uuid, true);//todo これ実装
@@ -219,7 +237,7 @@ s000026.mp4;
   });
 
   test('testParseSampleAesCencMethod', () async {
-    HlsMediaPlaylist playlist = await _parseMediaPlaylist(PLAYLIST_STRING_AES_CENC.split('\n'), 'https://example.com/test.m3u8');
+    var playlist = await _parseMediaPlaylist(PLAYLIST_STRING_AES_CENC.split('\n'), 'https://example.com/test.m3u8');
 
     expect(playlist.protectionSchemes.schemeType, CencType.CENC);
 //    expect(playlist.protectionSchemes.schemeData[0].uuid, true);//todo これ実装
@@ -227,7 +245,7 @@ s000026.mp4;
   });
 
   test('testMultipleExtXKeysForSingleSegment', () async {
-    HlsMediaPlaylist playlist = await _parseMediaPlaylist(PLAYLIST_STRING_MULTI_EXT.split('\n'), 'https://example.com/test.m3u8');
+    var playlist = await _parseMediaPlaylist(PLAYLIST_STRING_MULTI_EXT.split('\n'), 'https://example.com/test.m3u8');
 
     expect(playlist.protectionSchemes?.schemeType, CencType.CBCS);
     expect(playlist.protectionSchemes?.schemeData?.length, 2);
@@ -258,11 +276,21 @@ s000026.mp4;
 
 
   test('testGapTag', () async {
-    HlsMediaPlaylist playlist = await _parseMediaPlaylist(PLAYLIST_STRING_GAP_TAG.split('\n'), 'https://example.com/test.m3u8');
+    var playlist = await _parseMediaPlaylist(PLAYLIST_STRING_GAP_TAG.split('\n'), 'https://example.com/test.m3u8');
     expect(playlist.hasEndTag, false);
     expect(playlist.segments[1].hasGapTag, false);
     expect(playlist.segments[2].hasGapTag, true);
     expect(playlist.segments[3].hasGapTag, false);
+  });
+
+  test('testMapTag', () async {
+    var playlist = await _parseMediaPlaylist(PLAYLIST_STRING_MAP_TAG.split('\n'), 'https://example.com/test.m3u8');
+
+    var segments = playlist.segments;
+    expect(segments[0].initializationSegment, null);
+    expect(identical(segments[1].initializationSegment, segments[2].initializationSegment), true);
+    expect(segments[1].initializationSegment.url, 'init1.ts');
+    expect(segments[3].initializationSegment.url, 'init2.ts');
   });
 
 

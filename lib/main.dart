@@ -661,7 +661,7 @@ class HlsPlaylistParser {
           : CencType.CBCS;
 
   static Uint8List getBase64FromUri(String uriString) {
-    String uriPre = uriString.substring(uriString.indexOf(','));
+    String uriPre = uriString.substring(uriString.indexOf(',')+1);
     return const Base64Decoder().convert(uriPre);
   }
 

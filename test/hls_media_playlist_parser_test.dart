@@ -239,17 +239,17 @@ s000026.mp4;
     expect(playlist.segments[0].drmInitData, null);
 
 //    expect(playlist.segments[0].drmInitData.schemeData[0].uuid, true);//todo これ実装
-    expect(playlist.segments[1].drmInitData.schemeData[0].data?.isNotEmpty != true, true);
+    expect(playlist.segments[1].drmInitData.schemeData[0].data?.isNotEmpty != false, true);
     //    expect(playlist.segments[0].drmInitData.schemeData[0].uuid, true);//todo これ実装
-    expect(playlist.segments[1].drmInitData.schemeData[1].data?.isNotEmpty != true, true);
+    expect(playlist.segments[1].drmInitData.schemeData[1].data?.isNotEmpty != false, true);
 
     expect(playlist.segments[1].drmInitData, playlist.segments[2].drmInitData);
-    expect(playlist.segments[2].drmInitData, playlist.segments[3].drmInitData);
+    expect(playlist.segments[2].drmInitData == playlist.segments[3].drmInitData, false);
 
 //    expect(playlist.segments[3].drmInitData.schemeData[0].uuid, true);//todo これ実装
-    expect(playlist.segments[3].drmInitData.schemeData[0].data?.isNotEmpty != true, true);
+    expect(playlist.segments[3].drmInitData.schemeData[0].data?.isNotEmpty != false, true);
     //    expect(playlist.segments[3].drmInitData.schemeData[1].uuid, true);//todo これ実装
-    expect(playlist.segments[3].drmInitData.schemeData[1].data?.isNotEmpty != true, true);
+    expect(playlist.segments[3].drmInitData.schemeData[1].data?.isNotEmpty != false, true);
 
     expect(playlist.segments[3].drmInitData, playlist.segments[4].drmInitData);
     expect(playlist.segments[5].drmInitData, null);

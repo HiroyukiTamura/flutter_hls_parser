@@ -2,7 +2,6 @@ import 'package:meta/meta.dart';
 import 'segment.dart';
 import 'drm_init_data.dart';
 import 'play_list.dart';
-import 'util.dart';
 
 class HlsMediaPlaylist extends HlsPlaylist {
   HlsMediaPlaylist({

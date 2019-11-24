@@ -885,7 +885,7 @@ class HlsPlaylistParser {
         segmentMediaSequence++;
         if (segmentByteRangeLength == null) segmentByteRangeOffset = null;
 
-        if (cachedDrmInitData?.schemeData?.isNotEmpty != false) {
+        if (cachedDrmInitData?.schemeData?.isNotEmpty != true && currentSchemeDatas.isNotEmpty) {
           List<SchemeData> schemeDatas = currentSchemeDatas.values.toList();
           cachedDrmInitData = DrmInitData(
               schemeType: encryptionScheme, schemeData: schemeDatas);

@@ -49,8 +49,7 @@ https://priv.example.com/fileSequence2683.ts
 #EXTINF:8,
 https://priv.example.com/1.ts
 
-#EXT-X-KEY:METHOD=SAMPLE-AES,URI="
-"data:text/plain;base64,VGhpcyBpcyBhbiBlYXN0ZXIgZWdn","IV=0x9358382AEB449EE23C3D809DA0B9CCD3,KEYFORMATVERSIONS="1","KEYFORMAT="com.widevine",IV=0x1566B
+#EXT-X-KEY:METHOD=SAMPLE-AES,URI="data:text/plain;base64,VGhpcyBpcyBhbiBlYXN0ZXIgZWdn",IV=0x9358382AEB449EE23C3D809DA0B9CCD3,KEYFORMATVERSIONS="1",KEYFORMAT="com.widevine",IV=0x1566B
 #EXTINF:8,
 https://priv.example.com/2.ts
 #EXT-X-ENDLIST;
@@ -76,8 +75,7 @@ https://priv.example.com/2.ts
 #EXTINF:8,
 https://priv.example.com/1.ts
 
-#EXT-X-KEY:METHOD=SAMPLE-AES-CTR,URI="
-"data:text/plain;base64,VGhpcyBpcyBhbiBlYXN0ZXIgZWdn",IV=0x9358382AEB449EE23C3D809DA0B9CCD3,KEYFORMATVERSIONS="1",KEYFORMAT="com.widevine",IV=0x1566B
+#EXT-X-KEY:METHOD=SAMPLE-AES-CTR,URI="data:text/plain;base64,VGhpcyBpcyBhbiBlYXN0ZXIgZWdn",IV=0x9358382AEB449EE23C3D809DA0B9CCD3,KEYFORMATVERSIONS="1",KEYFORMAT="com.widevine",IV=0x1566B
 #EXTINF:8,
 https://priv.example.com/2.ts
 #EXT-X-ENDLIST;
@@ -209,10 +207,10 @@ s000026.mp4;
     expect(playlist.protectionSchemes.schemeData[0].data?.isNotEmpty != true, true);
     expect(playlist.segments[0].drmInitData, null);
 //    expect(playlist.segments[1].drmInitData.schemeData[0].uuid, true);//todo これ実装
-    expect(playlist.segments[1].drmInitData.schemeData[0].data?.isNotEmpty != true, true);
+    expect(playlist.segments[1].drmInitData.schemeData[0].data?.isNotEmpty != false, true);
   });
 
-  test('testParseSampleAesCencMethod', () async {
+  test('testParseSampleAesCtrMethod', () async {
     HlsMediaPlaylist playlist = await _parseMediaPlaylist(PLAYLIST_STRING_AES_CTR.split('\n'), 'https://example.com/test.m3u8');
 
     expect(playlist.protectionSchemes.schemeType, CencType.CENC);
@@ -220,7 +218,7 @@ s000026.mp4;
     expect(playlist.protectionSchemes.schemeData[0].data?.isNotEmpty != true, true);
   });
 
-  test('testParseSampleAesCtrMethod', () async {
+  test('testParseSampleAesCencMethod', () async {
     HlsMediaPlaylist playlist = await _parseMediaPlaylist(PLAYLIST_STRING_AES_CENC.split('\n'), 'https://example.com/test.m3u8');
 
     expect(playlist.protectionSchemes.schemeType, CencType.CENC);

@@ -165,6 +165,18 @@ v8/prog_index.m3u8
 #EXT-X-MEDIA:TYPE=SUBTITLES,GROUP-ID="sub1",NAME="English",URI="s1/en/prog_index.m3u8"
 ''';
 
+
+  const String PLAYLIST_WITH_VARIABLE_SUBSTITUTION =
+'''
+ #EXTM3U 
+
+#EXT-X-DEFINE:NAME="codecs",VALUE="mp4a.40.5"
+#EXT-X-DEFINE:NAME="tricky",VALUE="This/{\$nested}/reference/shouldnt/work"
+#EXT-X-DEFINE:NAME="nested",VALUE="This should not be inserted"
+#EXT-X-STREAM-INF:BANDWIDTH=65000,CODECS="{\$codecs}"
+http://example.com/{\$tricky}
+''';
+
   setUp(() {
     channel.setMockMethodCallHandler((MethodCall methodCall) async {
       return '42';
@@ -195,10 +207,6 @@ v8/prog_index.m3u8
     var playList = await parser.parse(playlistUri, extraLines);
     return playList as HlsMasterPlaylist;
   }
-
-  test('getPlatformVersion', () async {
-    expect(await FlutterHlsParser.platformVersion, '42');
-  });
 
   test('testParseMasterPlaylist', () async {
     HlsMasterPlaylist masterPlaylist;
@@ -323,9 +331,9 @@ v8/prog_index.m3u8
   });
 
   test('testVariableSubstitution', () async {
-    HlsMasterPlaylist playlistWithSubstitutions = await parseMasterPlaylist(PLAYLIST_WITH_SUBTITLES.split('\n'), PLAYLIST_URI);
+    HlsMasterPlaylist playlistWithSubstitutions = await parseMasterPlaylist(PLAYLIST_WITH_VARIABLE_SUBSTITUTION.split('\n'), PLAYLIST_URI);
     Variant variant = playlistWithSubstitutions.variants[0];
-    expect(playlistWithSubstitutions.variants[0].format.codecs, 'mp4a.40.5');
+    expect(variant.format.codecs, 'mp4a.40.5');
     expect(variant.url, Uri.parse('http://example.com/This/{\$nested}/reference/shouldnt/work'));
   });
 

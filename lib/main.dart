@@ -292,9 +292,11 @@ class HlsPlaylistParser {
             variableDefinitions: variableDefinitions);
 
         extraLines.moveNext();
-        line = extraLines.current;
 
-        Uri uri = Uri.parse(baseUri).resolve(line);
+        String referenceUri = parseStringAttr(
+            source: extraLines.current,
+            variableDefinitions: variableDefinitions);
+        Uri uri = Uri.parse(baseUri).resolve(referenceUri);
 
         Format format = Format.createVideoContainerFormat(
             id: variants.length.toString(),
@@ -530,17 +532,17 @@ class HlsPlaylistParser {
     Map<String, String> variableDefinitions,
   }) {
     String value;
-    if (pattern == null) {
+    if (pattern == null)
       value = source;
-    } else {
+    else {
       value = RegExp(pattern).firstMatch(source)?.group(1);
       value ??= defaultValue;
     }
 
-    return value?.replaceAllMapped(REGEX_VARIABLE_REFERENCE, (Match match) {
-      String key = match.group(1);
-      return variableDefinitions[key] ??= key;
-    });
+    return value?.replaceAllMapped(
+        RegExp(REGEX_VARIABLE_REFERENCE),
+        (Match match) => variableDefinitions[match.group(1)] ??=
+            value.substring(match.start, match.end));
   }
 
   static SchemeData parseDrmSchemeData(
@@ -760,7 +762,8 @@ class HlsPlaylistParser {
         segmentByteRangeLength = null;
       } else if (line.startsWith(TAG_TARGET_DURATION)) {
         targetDurationUs = int.parse(
-            parseStringAttr(source: line, pattern: REGEX_TARGET_DURATION)) * 100000;
+                parseStringAttr(source: line, pattern: REGEX_TARGET_DURATION)) *
+            100000;
       } else if (line.startsWith(TAG_MEDIA_SEQUENCE)) {
         mediaSequence = int.parse(
             parseStringAttr(source: line, pattern: REGEX_MEDIA_SEQUENCE));
@@ -791,7 +794,8 @@ class HlsPlaylistParser {
           variableDefinitions[key] = value;
         }
       } else if (line.startsWith(TAG_MEDIA_DURATION)) {
-        String string = parseStringAttr(source: line, pattern: REGEX_MEDIA_DURATION);
+        String string =
+            parseStringAttr(source: line, pattern: REGEX_MEDIA_DURATION);
         segmentDurationUs = (double.parse(string) * 1000000).toInt();
         segmentTitle = parseStringAttr(
             source: line,
@@ -879,8 +883,7 @@ class HlsPlaylistParser {
           segmentEncryptionIV = segmentMediaSequence.toRadixString(16);
 
         segmentMediaSequence++;
-        if (segmentByteRangeLength == null)
-          segmentByteRangeOffset = null;
+        if (segmentByteRangeLength == null) segmentByteRangeOffset = null;
 
         if (cachedDrmInitData?.schemeData?.isNotEmpty != false) {
           List<SchemeData> schemeDatas = currentSchemeDatas.values.toList();
@@ -895,8 +898,7 @@ class HlsPlaylistParser {
         }
 
         String url = parseStringAttr(
-            source: line,
-            variableDefinitions: variableDefinitions);
+            source: line, variableDefinitions: variableDefinitions);
         segments.add(Segment(
             url: url,
             initializationSegment: initializationSegment,

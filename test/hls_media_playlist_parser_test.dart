@@ -1,13 +1,19 @@
 import 'package:flutter_hls_parser/main.dart';
 import 'package:flutter_hls_parser/hls_media_playlist.dart';
+import 'package:flutter_hls_parser/play_list.dart';
 import 'package:flutter_hls_parser/util.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_hls_parser/flutter_hls_parser.dart';
 import 'package:flutter_hls_parser/exception.dart';
+import 'package:flutter_hls_parser/hls_master_playlist.dart';
+import 'package:flutter_hls_parser/flutter_hls_parser.dart';
+
 
 void main() {
 
-  const String PLAYLIST_STRING =
+  const PLAYLIST_URL = 'https://example.com/test.m3u8';
+
+  const PLAYLIST_STRING =
   '''
 #EXTM3U
 #EXT-X-VERSION:3
@@ -182,6 +188,25 @@ s000026.mp4;
 #EXTINF:5.005,
 02/00/32.ts
 ''';
+  
+  const PLAYLIST_STRING_PLANE =
+'''
+#EXTM3U
+#EXT-X-VERSION:3
+#EXT-X-TARGETDURATION:5
+#EXT-X-MEDIA-SEQUENCE:10
+#EXTINF:5.005,
+02/00/27.ts
+#EXT-X-MAP:URI="init1.ts"
+#EXTINF:5.005,
+02/00/32.ts
+#EXTINF:5.005,
+02/00/42.ts
+#EXT-X-MAP:URI="init2.ts"
+#EXTINF:5.005,
+02/00/47.ts;
+''';
+  
 
   Future<HlsMediaPlaylist> _parseMediaPlaylist(List<String> extraLines, String uri) async {
     var playlistUri = Uri.parse(uri);
@@ -341,6 +366,30 @@ s000026.mp4;
     } on ParserException catch (_) {
 
     }
+  });
+
+  test('testMasterPlaylistAttributeInheritance', () async {
+    var playlist = await _parseMediaPlaylist(PLAYLIST_STRING_PLANE.split('\n'), PLAYLIST_URL);//todoいい加減このURL共通化する
+    
+    expect(playlist.hasIndependentSegments, false);
+
+    HlsMasterPlaylist masterPlaylist = HlsMasterPlaylist(
+      baseUri: 'https://example.com/',
+        tags: [],
+        variants: [],
+        videos: [],
+        audios: [],
+        subtitles: [],
+        closedCaptions: [],
+        muxedAudioFormat: null,
+        muxedCaptionFormats: null,
+        hasIndependentSegments: true,
+        variableDefinitions: {},
+        sessionKeyDrmInitData: []);
+    HlsPlaylist h = await HlsPlaylistParser.create(masterPlaylist: masterPlaylist).parse(Uri.parse(PLAYLIST_URL), PLAYLIST_STRING_PLANE.split('\n'));
+    HlsMediaPlaylist hlsMediaPlaylist = h as HlsMediaPlaylist;
+
+    expect(hlsMediaPlaylist.hasIndependentSegments, true);
   });
 
 

@@ -1,6 +1,4 @@
-import 'dart:io';
-
-class ParserException implements IOException {
+class ParserException implements Exception {
   ParserException(this.message): super();
 
   final String message;

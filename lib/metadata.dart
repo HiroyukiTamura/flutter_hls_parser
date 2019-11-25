@@ -1,7 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_hls_parser/hls_track_metadata_entry.dart';
 import 'package:collection/collection.dart';
-import 'package:quiver/core.dart';
 
 class Metadata {
   Metadata(this.list);

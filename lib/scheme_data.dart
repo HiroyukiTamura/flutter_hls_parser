@@ -12,10 +12,19 @@ class SchemeData {
     this.requiresSecureDecryption,
   });
 
+  /// The uuid of the DRM scheme, or null if the data is universal (i.e. applies to all schemes).
   final String uuid;
+
+  /// The URL of the server to which license requests should be made. May be null if unknown.
   final String licenseServerUrl;
+
+  /// The mimeType of [data].
   final String mimeType;
+
+  /// The initialization data. May be null for scheme support checks only.
   final Uint8List data;
+
+  /// Whether secure decryption is required.
   final bool requiresSecureDecryption;
 
   SchemeData copyWithData(Uint8List data) =>

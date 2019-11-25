@@ -7,7 +7,7 @@ import 'package:quiver/iterables.dart';
 
 class HlsMasterPlaylist extends HlsPlaylist {
   HlsMasterPlaylist({
-    String baseUri = '',
+    String baseUri,
     List<String> tags = const [], // ignore: always_specify_types
     this.variants = const [], // ignore: always_specify_types
     this.videos = const [], // ignore: always_specify_types

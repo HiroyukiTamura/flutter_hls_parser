@@ -1,15 +1,15 @@
 import 'package:flutter/services.dart';
-import 'package:flutter_hls_parser/metadata.dart';
+import 'package:flutter_hls_parser/src/metadata.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter_hls_parser/hls_master_playlist.dart';
-import 'package:flutter_hls_parser/variant.dart';
-import 'package:flutter_hls_parser/exception.dart';
-import 'package:flutter_hls_parser/mime_types.dart';
-import 'package:flutter_hls_parser/rendition.dart';
-import 'package:flutter_hls_parser/variant_info.dart';
-import 'package:flutter_hls_parser/hls_track_metadata_entry.dart';
-import 'package:flutter_hls_parser/hls_playlist_parser.dart';
-import 'package:flutter_hls_parser/playlist.dart';
+import 'package:flutter_hls_parser/src/hls_master_playlist.dart';
+import 'package:flutter_hls_parser/src/variant.dart';
+import 'package:flutter_hls_parser/src/exception.dart';
+import 'package:flutter_hls_parser/src/mime_types.dart';
+import 'package:flutter_hls_parser/src/rendition.dart';
+import 'package:flutter_hls_parser/src/variant_info.dart';
+import 'package:flutter_hls_parser/src/hls_track_metadata_entry.dart';
+import 'package:flutter_hls_parser/src/hls_playlist_parser.dart';
+import 'package:flutter_hls_parser/src/playlist.dart';
 import 'mime_types_test.dart';
 
 void main() {

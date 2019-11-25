@@ -1,4 +1,4 @@
-import 'package:flutter_hls_parser/hls_track_metadata_entry.dart';
+import 'hls_track_metadata_entry.dart';
 import 'package:collection/collection.dart';
 
 class Metadata {

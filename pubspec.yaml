@@ -1,8 +1,8 @@
 name: flutter_hls_parser
 description: plugin for parse m3u8 file
 version: 0.0.1
-author:
-homepage:
+author: Hiroyuki Tamura <hiroyuktamura@gmail.com>
+homepage: https://github.com/HiroyukTamura
 
 environment:
   sdk: ">=2.2.2 <3.0.0"
@@ -10,6 +10,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  collection: ^1.14.11
+  meta: ^1.1.7
+  quiver: ^2.0.5
 
 dev_dependencies:
   flutter_test:

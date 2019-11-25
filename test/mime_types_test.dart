@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter_hls_parser/mime_types.dart';
+import 'package:flutter_hls_parser/src/mime_types.dart';
 
 /// test for [MimeTypes]
 class MimeTypesTest {

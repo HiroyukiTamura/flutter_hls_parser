@@ -1,42 +1,8 @@
 import 'mime_types.dart';
-import 'package:meta/meta.dart';
 import 'package:quiver/strings.dart';
 import 'exception.dart';
 
-class Util {
-  static const int SELECTION_FLAG_DEFAULT = 1;
-  static const int SELECTION_FLAG_FORCED = 1 << 1; // 2
-  static const int SELECTION_FLAG_AUTOSELECT = 1 << 2; // 4
-  static const int ROLE_FLAG_DESCRIBES_VIDEO = 1 << 9;
-  static const int ROLE_FLAG_DESCRIBES_MUSIC_AND_SOUND = 1 << 10;
-  static const int ROLE_FLAG_TRANSCRIBES_DIALOG = 1 << 12;
-  static const int ROLE_FLAG_EASY_TO_READ = 1 << 13;
-
-  /// A type constant for tracks of unknown type.
-  static const int TRACK_TYPE_UNKNOWN = -1;
-
-  /// A type constant for tracks of some default type, where the type itself is unknown.
-  static const int TRACK_TYPE_DEFAULT = 0;
-
-  /// A type constant for audio tracks.
-  static const int TRACK_TYPE_AUDIO = 1;
-
-  /// A type constant for video tracks.
-  static const int TRACK_TYPE_VIDEO = 2;
-
-  /// A type constant for text tracks.
-  static const int TRACK_TYPE_TEXT = 3;
-
-  /// A type constant for metadata tracks.
-  static const int TRACK_TYPE_METADATA = 4;
-
-  /// A type constant for camera motion tracks.
-  static const int TRACK_TYPE_CAMERA_MOTION = 5;
-
-  /// A type constant for a dummy or empty track.
-  static const int TRACK_TYPE_NONE = 6;
-
-  static const int TIME_END_OF_SOURCE = 0;
+class LibUtil {
 
   static bool startsWith(List<int> source, List<int> checker) {
     for (int i = 0; i < checker.length; i++)
@@ -53,15 +19,11 @@ class Util {
       (codeUnit == '\n'.codeUnitAt(0)) || (codeUnit == '\r'.codeUnitAt(0));
 
   static String getCodecsOfType(String codecs, int trackType) {
-    var output = splitCodecs(codecs)
+    var output = Util.splitCodecs(codecs)
         .where((codec) => trackType == MimeTypes.getTrackTypeOfCodec(codec))
         .join(',');
     return output.isEmpty ? null : output;
   }
-
-  static List<String> splitCodecs(String codecs) => codecs?.isNotEmpty != true
-      ? <String>[]
-      : codecs.trim().split(RegExp('(\\s*,\\s*)'));
 
   static int parseXsDateTime(String value) {
     String pattern =
@@ -103,9 +65,49 @@ class Util {
   }
 
   static int msToUs(int timeMs) =>
-      (timeMs == null || timeMs == TIME_END_OF_SOURCE)
+      (timeMs == null || timeMs == Util.TIME_END_OF_SOURCE)
           ? timeMs
           : (timeMs * 1000);
+}
+
+class Util {
+  static const int SELECTION_FLAG_DEFAULT = 1;
+  static const int SELECTION_FLAG_FORCED = 1 << 1; // 2
+  static const int SELECTION_FLAG_AUTOSELECT = 1 << 2; // 4
+  static const int ROLE_FLAG_DESCRIBES_VIDEO = 1 << 9;
+  static const int ROLE_FLAG_DESCRIBES_MUSIC_AND_SOUND = 1 << 10;
+  static const int ROLE_FLAG_TRANSCRIBES_DIALOG = 1 << 12;
+  static const int ROLE_FLAG_EASY_TO_READ = 1 << 13;
+
+  /// A type constant for tracks of unknown type.
+  static const int TRACK_TYPE_UNKNOWN = -1;
+
+  /// A type constant for tracks of some default type, where the type itself is unknown.
+  static const int TRACK_TYPE_DEFAULT = 0;
+
+  /// A type constant for audio tracks.
+  static const int TRACK_TYPE_AUDIO = 1;
+
+  /// A type constant for video tracks.
+  static const int TRACK_TYPE_VIDEO = 2;
+
+  /// A type constant for text tracks.
+  static const int TRACK_TYPE_TEXT = 3;
+
+  /// A type constant for metadata tracks.
+  static const int TRACK_TYPE_METADATA = 4;
+
+  /// A type constant for camera motion tracks.
+  static const int TRACK_TYPE_CAMERA_MOTION = 5;
+
+  /// A type constant for a dummy or empty track.
+  static const int TRACK_TYPE_NONE = 6;
+
+  static const int TIME_END_OF_SOURCE = 0;
+
+  static List<String> splitCodecs(String codecs) => codecs?.isNotEmpty != true
+      ? <String>[]
+      : codecs.trim().split(RegExp('(\\s*,\\s*)'));
 }
 
 class CencType {

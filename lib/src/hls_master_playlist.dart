@@ -1,9 +1,9 @@
+import 'package:quiver/iterables.dart';
 import 'format.dart';
 import 'drm_init_data.dart';
 import 'variant.dart';
 import 'rendition.dart';
 import 'playlist.dart';
-import 'package:quiver/iterables.dart';
 
 class HlsMasterPlaylist extends HlsPlaylist {
   HlsMasterPlaylist({
@@ -19,7 +19,7 @@ class HlsMasterPlaylist extends HlsPlaylist {
     bool hasIndependentSegments = false,
     this.variableDefinitions = const {}, // ignore: always_specify_types
     this.sessionKeyDrmInitData = const [], // ignore: always_specify_types
-  })  : mediaPlaylistUrls = getMediaPlaylistUrls(
+  })  : mediaPlaylistUrls = _getMediaPlaylistUrls(
             variants, [videos, audios, subtitles, closedCaptions]), // ignore: always_specify_types
         super(
             baseUri: baseUri,
@@ -58,11 +58,5 @@ class HlsMasterPlaylist extends HlsPlaylist {
   /// DRM initialization data derived from #EXT-X-SESSION-KEY tags.
   final List<DrmInitData> sessionKeyDrmInitData;
 
-  static List<Uri> getMediaPlaylistUrls(List<Variant> variants, List<List<Rendition>> renditionList) => {...variants.map((it) => it.url), ...concat(renditionList).map((it) => it.url)}.toList(); // ignore: always_specify_types
-
-  static void addMediaPlaylistUrls(List<Rendition> renditions, List<Uri> out) {
-    for (final rendition in renditions) // ignore: always_specify_types
-      if (rendition.url != null && !out.contains(rendition.url))
-        out.add(rendition.url);
-  }
+  static List<Uri> _getMediaPlaylistUrls(List<Variant> variants, List<List<Rendition>> renditionList) => {...variants.map((it) => it.url), ...concat(renditionList).map((it) => it.url)}.toList(); // ignore: always_specify_types
 }

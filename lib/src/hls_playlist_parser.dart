@@ -153,17 +153,17 @@ class HlsPlaylistParser {
       '$attribute=($BOOLEAN_FALSE|$BOOLEAN_TRUE)';
 
   static bool _checkPlaylistHeader(String string) {
-    List<int> codeUnits = Util.excludeWhiteSpace(string).codeUnits;
+    List<int> codeUnits = LibUtil.excludeWhiteSpace(string).codeUnits;
 
     if (codeUnits[0] == 0xEF) {
-      if (Util.startsWith(
+      if (LibUtil.startsWith(
           codeUnits, [0xEF, 0xBB, 0xBF])) // ignore: always_specify_types
         return false;
       codeUnits =
           codeUnits.getRange(5, codeUnits.length - 1).toList(); //不要な文字が含まれている
     }
 
-    if (!Util.startsWith(codeUnits, PLAYLIST_HEADER.runes.toList()))
+    if (!LibUtil.startsWith(codeUnits, PLAYLIST_HEADER.runes.toList()))
       return false;
 
     return true;
@@ -391,7 +391,7 @@ class HlsPlaylistParser {
             double frameRate;
             if (variant != null) {
               Format variantFormat = variant.format;
-              codecs = Util.getCodecsOfType(
+              codecs = LibUtil.getCodecsOfType(
                   variantFormat.codecs, Util.TRACK_TYPE_VIDEO);
               width = variantFormat.width;
               height = variantFormat.height;
@@ -425,7 +425,7 @@ class HlsPlaylistParser {
           {
             Variant variant = _getVariantWithAudioGroup(variants, groupId);
             String codecs = variant != null
-                ? Util.getCodecsOfType(
+                ? LibUtil.getCodecsOfType(
                     variant.format.codecs, Util.TRACK_TYPE_AUDIO)
                 : null;
             int channelCount =
@@ -855,8 +855,7 @@ class HlsPlaylistParser {
         relativeDiscontinuitySequence++;
       } else if (line.startsWith(TAG_PROGRAM_DATE_TIME)) {
         if (playlistStartTimeUs == null) {
-          int programDatetimeUs =
-              Util.parseXsDateTime(line.substring(line.indexOf(':') + 1));
+          int programDatetimeUs = LibUtil.parseXsDateTime(line.substring(line.indexOf(':') + 1));
           playlistStartTimeUs = programDatetimeUs - (segmentStartTimeUs ?? 0);
         }
       } else if (line == TAG_GAP) {

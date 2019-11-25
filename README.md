@@ -10,7 +10,7 @@ both of master and media file is supported.
 Uri playlistUri;
 List<String> lines;
 try {
-  playList = await HlsPlaylistParser.parse(playlistUri, lines);
+  playList = await HlsPlaylistParser.create().parse(playlistUri, lines);
 } on ParserException catch (e) {
   print(e);
 }

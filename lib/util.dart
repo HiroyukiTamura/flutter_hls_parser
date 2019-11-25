@@ -4,7 +4,6 @@ import 'package:quiver/strings.dart';
 import 'exception.dart';
 
 class Util {
-
   static const int SELECTION_FLAG_DEFAULT = 1;
   static const int SELECTION_FLAG_FORCED = 1 << 1; // 2
   static const int SELECTION_FLAG_AUTOSELECT = 1 << 2; // 4
@@ -13,7 +12,7 @@ class Util {
   static const int ROLE_FLAG_TRANSCRIBES_DIALOG = 1 << 12;
   static const int ROLE_FLAG_EASY_TO_READ = 1 << 13;
 
-  /// A type constant for tracks of unknown type. 
+  /// A type constant for tracks of unknown type.
   static const int TRACK_TYPE_UNKNOWN = -1;
 
   /// A type constant for tracks of some default type, where the type itself is unknown.
@@ -40,11 +39,10 @@ class Util {
   static const int TIME_END_OF_SOURCE = 0;
 
   static bool startsWith(List<int> source, List<int> checker) {
-    for (int i = 0; i < checker.length; i++) {
-      if (source[i] != checker[i]) {
+    for (int i = 0; i < checker.length; i++)
+      if (source[i] != checker[i])
         return false;
-      }
-    }
+
     return true;
   }
 
@@ -54,22 +52,20 @@ class Util {
   static bool isLineBreak(int codeUnit) =>
       (codeUnit == '\n'.codeUnitAt(0)) || (codeUnit == '\r'.codeUnitAt(0));
 
-  //todo 直すこと
   static String getCodecsOfType(String codecs, int trackType) {
-    var s = splitCodecs(codecs);
-    String output = s.where((codec) {
-      final e = MimeTypes.getTrackTypeOfCodec(codec);
-      return trackType == e;
-    }).join(',');
+    var output = splitCodecs(codecs)
+        .where((codec) => trackType == MimeTypes.getTrackTypeOfCodec(codec))
+        .join(',');
     return output.isEmpty ? null : output;
   }
 
-  static List<String> splitCodecs(String codecs) =>
-      codecs?.isNotEmpty != true ? <String>[] : codecs.trim().split(
-          RegExp('(\\s*,\\s*)'));
+  static List<String> splitCodecs(String codecs) => codecs?.isNotEmpty != true
+      ? <String>[]
+      : codecs.trim().split(RegExp('(\\s*,\\s*)'));
 
   static int parseXsDateTime(String value) {
-    String pattern = '(\\d\\d\\d\\d)\\-(\\d\\d)\\-(\\d\\d)[Tt](\\d\\d):(\\d\\d):(\\d\\d)([\\.,](\\d+))?([Zz]|((\\+|\\-)(\\d?\\d):?(\\d\\d)))?';
+    String pattern =
+        '(\\d\\d\\d\\d)\\-(\\d\\d)\\-(\\d\\d)[Tt](\\d\\d):(\\d\\d):(\\d\\d)([\\.,](\\d+))?([Zz]|((\\+|\\-)(\\d?\\d):?(\\d\\d)))?';
     List<Match> matchList = RegExp(pattern).allMatches(value).toList();
     if (matchList.isEmpty)
       throw ParserException('Invalid date/time format: $value');
@@ -81,15 +77,21 @@ class Util {
     } else if (match.group(9) == 'Z' || match.group(9) == 'z') {
       timezoneShift = 0;
     } else {
-      timezoneShift = int.parse(match.group(12)) * 60 + int.parse(match.group(13));
-      if ('-' == match.group(11))
-        timezoneShift *= -1;
+      timezoneShift =
+          int.parse(match.group(12)) * 60 + int.parse(match.group(13));
+      if ('-' == match.group(11)) timezoneShift *= -1;
     }
 
     //todo UTCではなくGMT?
-    DateTime dateTime = DateTime.utc(int.parse(match.group(1)), int.parse(match.group(2)), int.parse(match.group(3)), int.parse(match.group(4)), int.parse(match.group(5)), int.parse(match.group(6)));
+    DateTime dateTime = DateTime.utc(
+        int.parse(match.group(1)),
+        int.parse(match.group(2)),
+        int.parse(match.group(3)),
+        int.parse(match.group(4)),
+        int.parse(match.group(5)),
+        int.parse(match.group(6)));
     if (match.group(8)?.isNotEmpty == true) {
-      //todo ここ実装不明
+      //todo ここ実装再検討
     }
 
     int time = dateTime.millisecondsSinceEpoch;
@@ -100,7 +102,10 @@ class Util {
     return time;
   }
 
-  static int msToUs(int timeMs) => (timeMs == null || timeMs == TIME_END_OF_SOURCE) ? timeMs : (timeMs * 1000);
+  static int msToUs(int timeMs) =>
+      (timeMs == null || timeMs == TIME_END_OF_SOURCE)
+          ? timeMs
+          : (timeMs * 1000);
 }
 
 class CencType {

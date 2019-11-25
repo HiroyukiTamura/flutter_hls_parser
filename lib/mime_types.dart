@@ -53,30 +53,25 @@ class MimeTypes {
   static const String APPLICATION_WEBM = '$BASE_TYPE_APPLICATION/webm';
   static const String APPLICATION_MPD = '$BASE_TYPE_APPLICATION/dash+xml';
   static const String APPLICATION_M3U8 = '$BASE_TYPE_APPLICATION/x-mpegURL';
-  static const String APPLICATION_SS =
-      '$BASE_TYPE_APPLICATION/vnd.ms-sstr+xml';
+  static const String APPLICATION_SS = '$BASE_TYPE_APPLICATION/vnd.ms-sstr+xml';
   static const String APPLICATION_ID3 = '$BASE_TYPE_APPLICATION/id3';
   static const String APPLICATION_CEA608 = '$BASE_TYPE_APPLICATION/cea-608';
   static const String APPLICATION_CEA708 = '$BASE_TYPE_APPLICATION/cea-708';
-  static const String APPLICATION_SUBRIP =
-      '$BASE_TYPE_APPLICATION/x-subrip';
+  static const String APPLICATION_SUBRIP = '$BASE_TYPE_APPLICATION/x-subrip';
   static const String APPLICATION_TTML = '$BASE_TYPE_APPLICATION/ttml+xml';
   static const String APPLICATION_TX3G =
       '$BASE_TYPE_APPLICATION/x-quicktime-tx3g';
-  static const String APPLICATION_MP4VTT =
-      '$BASE_TYPE_APPLICATION/x-mp4-vtt';
+  static const String APPLICATION_MP4VTT = '$BASE_TYPE_APPLICATION/x-mp4-vtt';
   static const String APPLICATION_MP4CEA608 =
       '$BASE_TYPE_APPLICATION/x-mp4-cea-608';
   static const String APPLICATION_RAWCC = '$BASE_TYPE_APPLICATION/x-rawcc';
   static const String APPLICATION_VOBSUB = '$BASE_TYPE_APPLICATION/vobsub';
   static const String APPLICATION_PGS = '$BASE_TYPE_APPLICATION/pgs';
-  static const String APPLICATION_SCTE35 =
-      '$BASE_TYPE_APPLICATION/x-scte35';
+  static const String APPLICATION_SCTE35 = '$BASE_TYPE_APPLICATION/x-scte35';
   static const String APPLICATION_CAMERA_MOTION =
       '$BASE_TYPE_APPLICATION/x-camera-motion';
   static const String APPLICATION_EMSG = '$BASE_TYPE_APPLICATION/x-emsg';
-  static const String APPLICATION_DVBSUBS =
-      '$BASE_TYPE_APPLICATION/dvbsubs';
+  static const String APPLICATION_DVBSUBS = '$BASE_TYPE_APPLICATION/dvbsubs';
   static const String APPLICATION_EXIF = '$BASE_TYPE_APPLICATION/x-exif';
   static const String APPLICATION_ICY = '$BASE_TYPE_APPLICATION/x-icy';
 
@@ -84,7 +79,7 @@ class MimeTypes {
 
   static final List<CustomMimeType> _customMimeTypes = [];
 
-  static String getMimeTypeFromMp4ObjectType(int objectType) {
+  static String _getMimeTypeFromMp4ObjectType(int objectType) {
     switch (objectType) {
       case 0x20:
         return MimeTypes.VIDEO_MP4V;
@@ -162,7 +157,7 @@ class MimeTypes {
             String objectTypeHexString =
                 objectTypeString.substring(0, 2).toUpperCase();
             int objectTypeInt = int.parse(objectTypeHexString, radix: 16);
-            mimeType = getMimeTypeFromMp4ObjectType(objectTypeInt);
+            mimeType = _getMimeTypeFromMp4ObjectType(objectTypeInt);
           } on FormatException catch (ignored) {
             //do nothing
           }
@@ -257,10 +252,11 @@ class MimeTypes {
 }
 
 class CustomMimeType {
-  CustomMimeType(
-      {@required this.mimeType,
-      @required this.codecPrefix,
-      @required this.trackType});
+  CustomMimeType({
+    @required this.mimeType,
+    @required this.codecPrefix,
+    @required this.trackType,
+  });
 
   final String mimeType;
   final String codecPrefix;

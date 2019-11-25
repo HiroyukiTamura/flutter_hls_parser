@@ -1,4 +1,3 @@
-import 'dart:typed_data';
 import 'package:meta/meta.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -6,6 +5,7 @@ import 'drm_init_data.dart';
 import 'metadata.dart';
 import 'util.dart';
 
+/// Representation of a media format.
 class Format {
   Format({
     this.id,

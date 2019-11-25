@@ -690,8 +690,8 @@ class HlsPlaylistParser {
     List<String> tags = []; // ignore: always_specify_types
     int segmentByteRangeLength;
     int segmentMediaSequence = 0;
-    int segmentDurationUs = 0;
-    String segmentTitle = '';
+    int segmentDurationUs;
+    String segmentTitle;
     Map<String, SchemeData> currentSchemeDatas =
         {}; // ignore: always_specify_types
     DrmInitData cachedDrmInitData;
@@ -699,9 +699,9 @@ class HlsPlaylistParser {
     DrmInitData playlistProtectionSchemes;
     bool hasDiscontinuitySequence = false;
     int playlistDiscontinuitySequence = 0;
-    int relativeDiscontinuitySequence = 0;
+    int relativeDiscontinuitySequence;
     int playlistStartTimeUs = 0;
-    int segmentStartTimeUs = 0;
+    int segmentStartTimeUs;
     bool hasGapTag = false;
 
     String fullSegmentEncryptionKeyUri;
@@ -860,6 +860,7 @@ class HlsPlaylistParser {
         playlistDiscontinuitySequence =
             int.parse(line.substring(line.indexOf(':') + 1));
       } else if (line == TAG_DISCONTINUITY) {
+        relativeDiscontinuitySequence ??= 0;
         relativeDiscontinuitySequence++;
       } else if (line.startsWith(TAG_PROGRAM_DATE_TIME)) {
         if (playlistStartTimeUs == 0) {
@@ -913,9 +914,12 @@ class HlsPlaylistParser {
             byterangeLength: segmentByteRangeLength,
             hasGapTag: hasGapTag));
 
-        segmentStartTimeUs += segmentDurationUs;
-        segmentDurationUs = 0;
-        segmentTitle = '';
+        if (segmentDurationUs != null) {
+          segmentStartTimeUs ??= 0;
+          segmentStartTimeUs += segmentDurationUs;
+        }
+        segmentDurationUs = null;
+        segmentTitle = null;
         if (segmentByteRangeLength != null) {
           segmentByteRangeOffset ??= 0;
           segmentByteRangeOffset += segmentByteRangeLength;

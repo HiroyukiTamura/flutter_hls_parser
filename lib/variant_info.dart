@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:quiver/core.dart';
 
 class VariantInfo {
 

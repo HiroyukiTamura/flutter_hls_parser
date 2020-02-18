@@ -2,6 +2,7 @@
 
 * reformat code
 * remove verbose dependencies
+* add `parseString` method
 
 ## 0.0.1
 

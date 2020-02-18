@@ -1,5 +1,7 @@
 # flutter_hls_parser
 
+![Pub Version](https://img.shields.io/pub/v/flutter_hls_parser)
+
 dart plugin for parse m3u8 file for HLS.  
 both of master and media file is supported.
 
@@ -10,7 +12,7 @@ both of master and media file is supported.
 Uri playlistUri;
 List<String> lines;
 try {
-  playList = await HlsPlaylistParser.create().parse(playlistUri, lines);
+  playList = await HlsPlaylistParser.create().parseString(playlistUri, contentString);
 } on ParserException catch (e) {
   print(e);
 }

@@ -115,6 +115,11 @@ class HlsPlaylistParser {
 
   final HlsMasterPlaylist masterPlaylist;
 
+  Future<HlsPlaylist> parseString(Uri uri, String inputString) async {
+    List<String> lines = const LineSplitter().convert(inputString);
+    return parse(uri, lines);
+  }
+
   Future<HlsPlaylist> parse(Uri uri, List<String> inputLineList) async {
     List<String> lineList = inputLineList
         .where((line) => line.trim().isNotEmpty) // ignore: always_specify_types

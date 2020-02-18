@@ -3,11 +3,9 @@ import 'package:quiver/strings.dart';
 import 'exception.dart';
 
 class LibUtil {
-
   static bool startsWith(List<int> source, List<int> checker) {
     for (int i = 0; i < checker.length; i++)
-      if (source[i] != checker[i])
-        return false;
+      if (source[i] != checker[i]) return false;
 
     return true;
   }

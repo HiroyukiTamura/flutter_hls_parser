@@ -27,8 +27,7 @@ class SchemeData {
   /// Whether secure decryption is required.
   final bool requiresSecureDecryption;
 
-  SchemeData copyWithData(Uint8List data) =>
-      SchemeData(
+  SchemeData copyWithData(Uint8List data) => SchemeData(
 //        uuid: uuid,
         licenseServerUrl: licenseServerUrl,
         mimeType: mimeType,
@@ -50,5 +49,10 @@ class SchemeData {
   }
 
   @override
-  int get hashCode => hashValues(/*uuid, */licenseServerUrl, mimeType, data, requiresSecureDecryption);
+  int get hashCode => hashValues(
+      /*uuid, */
+      licenseServerUrl,
+      mimeType,
+      data,
+      requiresSecureDecryption);
 }

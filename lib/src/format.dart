@@ -25,21 +25,20 @@ class Format {
     this.channelCount,
     String language,
     this.accessibilityChannel,
-  }): language = language?.toLowerCase();
+  }) : language = language?.toLowerCase();
 
-  factory Format.createVideoContainerFormat({
-    String id,
-    String label,
-    String containerMimeType,
-    String sampleMimeType,
-    @required String codecs,
-    int bitrate,
-    @required int width,
-    @required int height,
-    @required double frameRate,
-    int selectionFlags = Util.SELECTION_FLAG_DEFAULT,
-    int roleFlags
-  }) =>
+  factory Format.createVideoContainerFormat(
+          {String id,
+          String label,
+          String containerMimeType,
+          String sampleMimeType,
+          @required String codecs,
+          int bitrate,
+          @required int width,
+          @required int height,
+          @required double frameRate,
+          int selectionFlags = Util.SELECTION_FLAG_DEFAULT,
+          int roleFlags}) =>
       Format(
         id: id,
         label: label,
@@ -56,6 +55,7 @@ class Format {
 
   /// An identifier for the format, or null if unknown or not applicable.
   final String id;
+
   /// The human readable label, or null if unknown or not applicable.
   final String label;
 
@@ -109,21 +109,22 @@ class Format {
   final int accessibilityChannel;
 
   Format copyWithMetadata(Metadata metadata) => Format(
-      id: id,
-      label: label,
-      selectionFlags: selectionFlags,
-      roleFlags: roleFlags,
-      bitrate: bitrate,
-      codecs: codecs,
-      metadata: metadata,
-      containerMimeType: containerMimeType,
-      sampleMimeType: sampleMimeType,
-      drmInitData: drmInitData,
-      subsampleOffsetUs: subsampleOffsetUs,
-      width: width,
-      height: height,
-      frameRate: frameRate,
-      channelCount: channelCount,
-      language: language,
-      accessibilityChannel: accessibilityChannel,);
+        id: id,
+        label: label,
+        selectionFlags: selectionFlags,
+        roleFlags: roleFlags,
+        bitrate: bitrate,
+        codecs: codecs,
+        metadata: metadata,
+        containerMimeType: containerMimeType,
+        sampleMimeType: sampleMimeType,
+        drmInitData: drmInitData,
+        subsampleOffsetUs: subsampleOffsetUs,
+        width: width,
+        height: height,
+        frameRate: frameRate,
+        channelCount: channelCount,
+        language: language,
+        accessibilityChannel: accessibilityChannel,
+      );
 }

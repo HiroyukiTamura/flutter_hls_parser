@@ -1,5 +1,5 @@
 class ParserException implements Exception {
-  ParserException(this.message): super();
+  ParserException(this.message) : super();
 
   final String message;
 
@@ -8,7 +8,7 @@ class ParserException implements Exception {
 }
 
 class UnrecognizedInputFormatException extends ParserException {
-  UnrecognizedInputFormatException(String message, this.uri): super(message);
+  UnrecognizedInputFormatException(String message, this.uri) : super(message);
 
   final Uri uri;
 }

@@ -110,7 +110,8 @@ class HlsPlaylistParser {
   static final String REGEXP_FORCED = _compileBooleanAttrPattern('FORCED');
   static const String REGEXP_VALUE = 'VALUE="(.+?)"';
   static const String REGEXP_IMPORT = 'IMPORT="(.+?)"';
-  static const String REGEXP_VARIABLE_REFERENCE = '\\{\\\$([a-zA-Z0-9\\-_]+)\\}';
+  static const String REGEXP_VARIABLE_REFERENCE =
+      '\\{\\\$([a-zA-Z0-9\\-_]+)\\}';
 
   final HlsMasterPlaylist masterPlaylist;
 
@@ -237,7 +238,8 @@ class HlsPlaylistParser {
         }
       } else if (line.startsWith(TAG_STREAM_INF)) {
         noClosedCaptions |= line.contains(ATTR_CLOSED_CAPTIONS_NONE); //todo 再検討
-        int bitrate = int.parse(_parseStringAttr(source: line, pattern: REGEXP_BANDWIDTH));
+        int bitrate = int.parse(
+            _parseStringAttr(source: line, pattern: REGEXP_BANDWIDTH));
         String averageBandwidthString = _parseStringAttr(
             source: line,
             pattern: REGEXP_AVERAGE_BANDWIDTH,
@@ -339,7 +341,8 @@ class HlsPlaylistParser {
       Variant variant = variants[i];
       if (urlsInDeduplicatedVariants.add(variant.url)) {
         assert(variant.format.metadata == null);
-        HlsTrackMetadataEntry hlsMetadataEntry = HlsTrackMetadataEntry(variantInfos: urlToVariantInfos[variant.url]);
+        HlsTrackMetadataEntry hlsMetadataEntry =
+            HlsTrackMetadataEntry(variantInfos: urlToVariantInfos[variant.url]);
         Metadata metadata = Metadata([hlsMetadataEntry]);
         deduplicatedVariants.add(
             variant.copyWithFormat(variant.format.copyWithMetadata(metadata)));
@@ -578,8 +581,7 @@ class HlsPlaylistParser {
           variableDefinitions: variableDefinitions);
       Uint8List data = _getBase64FromUri(uriString);
 //      Uint8List psshData; //todo 保留
-      return SchemeData(
-          mimeType: MimeTypes.VIDEO_MP4, data: data);
+      return SchemeData(mimeType: MimeTypes.VIDEO_MP4, data: data);
     }
 
     return null;
@@ -661,7 +663,7 @@ class HlsPlaylistParser {
           : CencType.CBCS;
 
   static Uint8List _getBase64FromUri(String uriString) {
-    String uriPre = uriString.substring(uriString.indexOf(',')+1);
+    String uriPre = uriString.substring(uriString.indexOf(',') + 1);
     return const Base64Decoder().convert(uriPre);
   }
 
@@ -752,15 +754,16 @@ class HlsPlaylistParser {
         segmentByteRangeOffset = null;
         segmentByteRangeLength = null;
       } else if (line.startsWith(TAG_TARGET_DURATION)) {
-        targetDurationUs = int.parse(
-                _parseStringAttr(source: line, pattern: REGEXP_TARGET_DURATION)) *
+        targetDurationUs = int.parse(_parseStringAttr(
+                source: line, pattern: REGEXP_TARGET_DURATION)) *
             100000;
       } else if (line.startsWith(TAG_MEDIA_SEQUENCE)) {
         mediaSequence = int.parse(
             _parseStringAttr(source: line, pattern: REGEXP_MEDIA_SEQUENCE));
         segmentMediaSequence = mediaSequence;
       } else if (line.startsWith(TAG_VERSION)) {
-        version = int.parse(_parseStringAttr(source: line, pattern: REGEXP_VERSION));
+        version =
+            int.parse(_parseStringAttr(source: line, pattern: REGEXP_VERSION));
       } else if (line.startsWith(TAG_DEFINE)) {
         String importName = _parseStringAttr(
             source: line,
@@ -855,7 +858,8 @@ class HlsPlaylistParser {
         relativeDiscontinuitySequence++;
       } else if (line.startsWith(TAG_PROGRAM_DATE_TIME)) {
         if (playlistStartTimeUs == null) {
-          int programDatetimeUs = LibUtil.parseXsDateTime(line.substring(line.indexOf(':') + 1));
+          int programDatetimeUs =
+              LibUtil.parseXsDateTime(line.substring(line.indexOf(':') + 1));
           playlistStartTimeUs = programDatetimeUs - (segmentStartTimeUs ?? 0);
         }
       } else if (line == TAG_GAP) {
@@ -876,7 +880,8 @@ class HlsPlaylistParser {
         segmentMediaSequence++;
         if (segmentByteRangeLength == null) segmentByteRangeOffset = null;
 
-        if (cachedDrmInitData?.schemeData?.isNotEmpty != true && currentSchemeDatas.isNotEmpty) {
+        if (cachedDrmInitData?.schemeData?.isNotEmpty != true &&
+            currentSchemeDatas.isNotEmpty) {
           List<SchemeData> schemeDatas = currentSchemeDatas.values.toList();
           cachedDrmInitData = DrmInitData(
               schemeType: encryptionScheme, schemeData: schemeDatas);

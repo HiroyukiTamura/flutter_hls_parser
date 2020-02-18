@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 
 class VariantInfo {
-
   VariantInfo({
     this.bitrate,
     this.videoGroupId,
@@ -32,10 +31,15 @@ class VariantInfo {
   @override
   bool operator ==(dynamic other) {
     if (other is VariantInfo)
-      return other.bitrate == bitrate && other.videoGroupId == videoGroupId && other.audioGroupId == audioGroupId && other.subtitleGroupId == subtitleGroupId && other.captionGroupId == captionGroupId;
+      return other.bitrate == bitrate &&
+          other.videoGroupId == videoGroupId &&
+          other.audioGroupId == audioGroupId &&
+          other.subtitleGroupId == subtitleGroupId &&
+          other.captionGroupId == captionGroupId;
     return false;
   }
 
   @override
-  int get hashCode => hashValues(bitrate, videoGroupId, audioGroupId, subtitleGroupId, captionGroupId);
+  int get hashCode => hashValues(
+      bitrate, videoGroupId, audioGroupId, subtitleGroupId, captionGroupId);
 }

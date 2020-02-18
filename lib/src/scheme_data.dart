@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:meta/meta.dart';
 import 'dart:typed_data';
-import 'package:quiver/core.dart';
 
 class SchemeData {
   SchemeData({

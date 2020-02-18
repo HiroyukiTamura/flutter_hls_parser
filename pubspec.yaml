@@ -1,5 +1,5 @@
 name: flutter_hls_parser
-description: plugin for parse m3u8 file
+description: dart plugin for parse m3u8 file for HLS. both of master and media file is supported.
 version: 1.0.0
 author: Hiroyuki Tamura <hiroyuktamura@gmail.com>
 homepage: https://github.com/HiroyukTamura

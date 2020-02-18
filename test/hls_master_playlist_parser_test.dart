@@ -1,6 +1,6 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_hls_parser/src/metadata.dart';
-import 'package:flutter_test/flutter_test.dart';
+import 'package:test/test.dart';
 import 'package:flutter_hls_parser/src/hls_master_playlist.dart';
 import 'package:flutter_hls_parser/src/variant.dart';
 import 'package:flutter_hls_parser/src/exception.dart';
@@ -10,7 +10,6 @@ import 'package:flutter_hls_parser/src/variant_info.dart';
 import 'package:flutter_hls_parser/src/hls_track_metadata_entry.dart';
 import 'package:flutter_hls_parser/src/hls_playlist_parser.dart';
 import 'package:flutter_hls_parser/src/playlist.dart';
-import 'mime_types_test.dart';
 
 void main() {
   const MethodChannel channel = MethodChannel('flutter_hls_parser');
@@ -368,11 +367,5 @@ http://example.com/{\$tricky}
     expect(playlist.audios[0].format.metadata, _createExtXMediaMetadata('aud1', 'English'));
     expect(playlist.audios[1].format.metadata, _createExtXMediaMetadata('aud2', 'English'));
     expect(playlist.audios[2].format.metadata, _createExtXMediaMetadata('aud3', 'English'));
-  });
-
-  test('testMimeType', () async {
-    MimeTypesTest.testGetMediaMimeType_fromValidCodecs_returnsCorrectMimeType();
-    MimeTypesTest.testGetMimeTypeFromMp4ObjectType_forValidObjectType_returnsCorrectMimeType();
-    MimeTypesTest.testGetMimeTypeFromMp4ObjectType_forInvalidObjectType_returnsNull();
   });
 }

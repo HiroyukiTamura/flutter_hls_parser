@@ -1,7 +1,7 @@
 import 'package:flutter_hls_parser/src/hls_media_playlist.dart';
 import 'package:flutter_hls_parser/src/playlist.dart';
 import 'package:flutter_hls_parser/src/util.dart';
-import 'package:flutter_test/flutter_test.dart';
+import 'package:test/test.dart';
 import 'package:flutter_hls_parser/src/exception.dart';
 import 'package:flutter_hls_parser/src/hls_master_playlist.dart';
 import 'package:flutter_hls_parser/src/hls_playlist_parser.dart';

@@ -1,4 +1,4 @@
-import 'package:flutter_test/flutter_test.dart';
+import 'package:test/test.dart';
 import 'package:flutter_hls_parser/src/util.dart';
 
 /// for [Util]
@@ -14,4 +14,10 @@ class UtilTest {
     expect(LibUtil.parseXsDateTime('2014-09-19T13:18:55.000-0800'), 1411161535000);
     expect(LibUtil.parseXsDateTime('2014-09-19T13:18:55.000-800'), 1411161535000);
   }
+}
+
+void main(){
+  test('utilTest', () {
+    UtilTest.testParseXsDateTime();
+  });
 }

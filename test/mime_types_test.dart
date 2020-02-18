@@ -1,4 +1,4 @@
-import 'package:flutter_test/flutter_test.dart';
+import 'package:test/test.dart';
 import 'package:flutter_hls_parser/src/mime_types.dart';
 
 /// test for [MimeTypes]
@@ -88,4 +88,12 @@ class MimeTypesTest {
 //    expect(MimeTypes.getMimeTypeFromMp4ObjectType(0x01), isNull);
 //    expect(MimeTypes.getMimeTypeFromMp4ObjectType(-1), isNull);
   }
+}
+
+void main(){
+  test('testMimeType', () {
+    MimeTypesTest.testGetMediaMimeType_fromValidCodecs_returnsCorrectMimeType();
+    MimeTypesTest.testGetMimeTypeFromMp4ObjectType_forValidObjectType_returnsCorrectMimeType();
+    MimeTypesTest.testGetMimeTypeFromMp4ObjectType_forInvalidObjectType_returnsNull();
+  });
 }

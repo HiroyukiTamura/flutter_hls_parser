@@ -105,7 +105,7 @@ class Util {
 
   static List<String> splitCodecs(String codecs) => codecs?.isNotEmpty != true
       ? <String>[]
-      : codecs.trim().split(RegExp('(\\s*,\\s*)'));
+      : codecs.trim().split(RegExp(r'(\s*,\s*)'));
 }
 
 class CencType {

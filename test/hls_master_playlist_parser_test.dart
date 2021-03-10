@@ -187,7 +187,7 @@ http://example.com/{$tricky}
       Metadata([HlsTrackMetadataEntry(variantInfos: infos)]);
 
   Metadata _createExtXMediaMetadata(String groupId, String name) =>
-      Metadata([HlsTrackMetadataEntry(groupId: groupId, name: name, variantInfos: [])]);// ignore: always_specify_types
+      Metadata([HlsTrackMetadataEntry(groupId: groupId, name: name, variantInfos: [])]);
 
   VariantInfo _createVariantInfo(int bitrate, String audioGroupId) =>
       VariantInfo(
@@ -338,23 +338,19 @@ http://example.com/{$tricky}
 
     expect(playlist.variants.length, 4);
 
-    // ignore: always_specify_types
     expect(playlist.variants[0].format.metadata, _createExtXStreamInfMetadata([
       _createVariantInfo(2227464, 'aud1'),
       _createVariantInfo(2448841, 'aud2'),
       _createVariantInfo(2256841, 'aud3'),
     ]));
-    // ignore: always_specify_types
     expect(playlist.variants[1].format.metadata, _createExtXStreamInfMetadata([
       _createVariantInfo(6453202, 'aud1'),
       _createVariantInfo(6482579, 'aud3'),
     ]));
-    // ignore: always_specify_types
     expect(playlist.variants[2].format.metadata, _createExtXStreamInfMetadata([
       _createVariantInfo(5054232, 'aud1'),
       _createVariantInfo(5275609, 'aud2'),
     ]));
-    // ignore: always_specify_types
     expect(playlist.variants[3].format.metadata, _createExtXStreamInfMetadata([
       _createVariantInfo(8399417, 'aud2'),
       _createVariantInfo(8207417, 'aud3'),

@@ -65,16 +65,16 @@ class HlsPlaylistParser {
   static const String BOOLEAN_TRUE = 'YES';
   static const String BOOLEAN_FALSE = 'NO';
   static const String ATTR_CLOSED_CAPTIONS_NONE = 'CLOSED-CAPTIONS=NONE';
-  static const String REGEXP_AVERAGE_BANDWIDTH = 'AVERAGE-BANDWIDTH=(\\d+)\\b';
+  static const String REGEXP_AVERAGE_BANDWIDTH = r'AVERAGE-BANDWIDTH=(\d+)\b';
   static const String REGEXP_VIDEO = 'VIDEO="(.+?)"';
   static const String REGEXP_AUDIO = 'AUDIO="(.+?)"';
   static const String REGEXP_SUBTITLES = 'SUBTITLES="(.+?)"';
   static const String REGEXP_CLOSED_CAPTIONS = 'CLOSED-CAPTIONS="(.+?)"';
-  static const String REGEXP_BANDWIDTH = '[^-]BANDWIDTH=(\\d+)\\b';
+  static const String REGEXP_BANDWIDTH = r'[^-]BANDWIDTH=(\d+)\b';
   static const String REGEXP_CHANNELS = 'CHANNELS="(.+?)"';
   static const String REGEXP_CODECS = 'CODECS="(.+?)"';
-  static const String REGEXP_RESOLUTION = 'RESOLUTION=(\\d+x\\d+)';
-  static const String REGEXP_FRAME_RATE = 'FRAME-RATE=([\\d\\.]+)\\b';
+  static const String REGEXP_RESOLUTION = r'RESOLUTION=(\d+x\d+)';
+  static const String REGEXP_FRAME_RATE = r'FRAME-RATE=([\d\.]+)\b';
   static const String REGEXP_TARGET_DURATION = '$TAG_TARGET_DURATION:(\\d+)\\b';
   static const String REGEXP_VERSION = '$TAG_VERSION:(\\d+)\\b';
   static const String REGEXP_PLAYLIST_TYPE = '$TAG_PLAYLIST_TYPE:(.+)\\b';
@@ -83,9 +83,9 @@ class HlsPlaylistParser {
       '$TAG_MEDIA_DURATION:([\\d\\.]+)\\b';
   static const String REGEXP_MEDIA_TITLE =
       '$TAG_MEDIA_DURATION:[\\d\\.]+\\b,(.+)';
-  static const String REGEXP_TIME_OFFSET = 'TIME-OFFSET=(-?[\\d\\.]+)\\b';
+  static const String REGEXP_TIME_OFFSET = r'TIME-OFFSET=(-?[\d\.]+)\b';
   static const String REGEXP_BYTERANGE = '$TAG_BYTERANGE:(\\d+(?:@\\d+)?)\\b';
-  static const String REGEXP_ATTR_BYTERANGE = 'BYTERANGE="(\\d+(?:@\\d+)?)\\b"';
+  static const String REGEXP_ATTR_BYTERANGE = r'BYTERANGE="(\d+(?:@\d+)?)\b"';
   static const String REGEXP_METHOD =
       'METHOD=($METHOD_NONE|$METHOD_AES_128|$METHOD_SAMPLE_AES|$METHOD_SAMPLE_AES_CENC|$METHOD_SAMPLE_AES_CTR)\\s*(?:,|\$)';
   static const String REGEXP_KEYFORMAT = 'KEYFORMAT="(.+?)"';
@@ -98,15 +98,13 @@ class HlsPlaylistParser {
   static const String REGEXP_NAME = 'NAME="(.+?)"';
   static const String REGEXP_GROUP_ID = 'GROUP-ID="(.+?)"';
   static const String REGEXP_CHARACTERISTICS = 'CHARACTERISTICS="(.+?)"';
-  static const String REGEXP_INSTREAM_ID = 'INSTREAM-ID="((?:CC|SERVICE)\\d+)"';
+  static const String REGEXP_INSTREAM_ID = r'INSTREAM-ID="((?:CC|SERVICE)\d+)"';
   static final String
-      REGEXP_AUTOSELECT = // ignore: non_constant_identifier_names
+      REGEXP_AUTOSELECT =
       _compileBooleanAttrPattern('AUTOSELECT');
 
-  // ignore: non_constant_identifier_names
   static final String REGEXP_DEFAULT = _compileBooleanAttrPattern('DEFAULT');
 
-  // ignore: non_constant_identifier_names
   static final String REGEXP_FORCED = _compileBooleanAttrPattern('FORCED');
   static const String REGEXP_VALUE = 'VALUE="(.+?)"';
   static const String REGEXP_IMPORT = 'IMPORT="(.+?)"';

@@ -4,11 +4,5 @@ class ParserException implements Exception {
   final String message;
 
   @override
-  String toString() => 'SignalException: $message';
-}
-
-class UnrecognizedInputFormatException extends ParserException {
-  UnrecognizedInputFormatException(String message, this.uri) : super(message);
-
-  final Uri uri;
+  String toString() => 'ParserException: $message';
 }

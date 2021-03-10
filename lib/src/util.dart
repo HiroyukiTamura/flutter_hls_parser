@@ -18,7 +18,7 @@ class LibUtil {
   static bool isLineBreak(int codeUnit) =>
       (codeUnit == '\n'.codeUnitAt(0)) || (codeUnit == '\r'.codeUnitAt(0));
 
-  static String getCodecsOfType(String codecs, int trackType) {
+  static String? getCodecsOfType(String? codecs, int trackType) {
     var output = Util.splitCodecs(codecs)
         .where((codec) => trackType == MimeTypes.getTrackTypeOfCodec(codec))
         .join(',');
@@ -40,18 +40,18 @@ class LibUtil {
       timezoneShift = 0;
     } else {
       timezoneShift =
-          int.parse(match.group(12)) * 60 + int.parse(match.group(13));
+          int.parse(match.group(12)!) * 60 + int.parse(match.group(13)!);
       if ('-' == match.group(11)) timezoneShift *= -1;
     }
 
     //todo UTCではなくGMT?
     var dateTime = DateTime.utc(
-        int.parse(match.group(1)),
-        int.parse(match.group(2)),
-        int.parse(match.group(3)),
-        int.parse(match.group(4)),
-        int.parse(match.group(5)),
-        int.parse(match.group(6)));
+        int.parse(match.group(1)!),
+        int.parse(match.group(2)!),
+        int.parse(match.group(3)!),
+        int.parse(match.group(4)!),
+        int.parse(match.group(5)!),
+        int.parse(match.group(6)!));
     if (match.group(8)?.isNotEmpty == true) {
       //todo ここ実装再検討
     }
@@ -64,10 +64,10 @@ class LibUtil {
     return time;
   }
 
-  static int msToUs(int timeMs) =>
-      (timeMs == null || timeMs == Util.TIME_END_OF_SOURCE)
-          ? timeMs
-          : (timeMs * 1000);
+  // static int msToUs(int timeMs) =>
+  //     (timeMs == null || timeMs == Util.TIME_END_OF_SOURCE)
+  //         ? timeMs
+  //         : (timeMs * 1000);
 }
 
 class Util {
@@ -107,9 +107,9 @@ class Util {
 
   static const int TIME_END_OF_SOURCE = 0;
 
-  static List<String> splitCodecs(String codecs) => codecs?.isNotEmpty != true
+  static List<String> splitCodecs(String? codecs) => codecs?.isNotEmpty != true
       ? []
-      : codecs.trim().split(RegExp(r'(\s*,\s*)'));
+      : codecs!.trim().split(RegExp(r'(\s*,\s*)'));
 }
 
 class CencType {

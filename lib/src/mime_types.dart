@@ -1,5 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'util.dart';
+import 'package:collection/collection.dart' show IterableExtension;
 
 class MimeTypes {
   const MimeTypes._();
@@ -81,7 +81,7 @@ class MimeTypes {
 
   static final List<CustomMimeType> _customMimeTypes = [];
 
-  static String _getMimeTypeFromMp4ObjectType(int objectType) {
+  static String? _getMimeTypeFromMp4ObjectType(int objectType) {
     switch (objectType) {
       case 0x20:
         return MimeTypes.VIDEO_MP4V;
@@ -129,7 +129,7 @@ class MimeTypes {
     }
   }
 
-  static String getMediaMimeType(String codec) {
+  static String? getMediaMimeType(String? codec) {
     if (codec == null) return null;
 
     codec = codec.trim().toLowerCase();
@@ -151,7 +151,7 @@ class MimeTypes {
     if (codec.startsWith('vp8') || codec.startsWith('vp08'))
       return MimeTypes.VIDEO_VP8;
     if (codec.startsWith('mp4a')) {
-      String mimeType;
+      String? mimeType;
       if (codec.startsWith('mp4a.')) {
         var objectTypeString = codec.substring(5);
         if (objectTypeString.length >= 2) {
@@ -190,15 +190,11 @@ class MimeTypes {
     return getCustomMimeTypeForCodec(codec);
   }
 
-  static String getCustomMimeTypeForCodec(String codec) {
-    for (final customMimeType in _customMimeTypes)
-      if (codec.startsWith(customMimeType.codecPrefix))
-        return customMimeType.mimeType;
+  static String? getCustomMimeTypeForCodec(String codec) => _customMimeTypes
+      .firstWhereOrNull((it) => codec.startsWith(it.codecPrefix))
+      ?.mimeType;
 
-    return null;
-  }
-
-  static int getTrackType(String mimeType) {
+  static int getTrackType(String? mimeType) {
     if (mimeType?.isNotEmpty == false) return Util.TRACK_TYPE_UNKNOWN;
 
     if (isAudio(mimeType)) return Util.TRACK_TYPE_AUDIO;
@@ -226,27 +222,26 @@ class MimeTypes {
       return getTrackTypeForCustomMimeType(mimeType);
   }
 
-  static int getTrackTypeForCustomMimeType(String mimeType) {
-    for (final it in _customMimeTypes)
-      if (it.mimeType == mimeType) return it.trackType;
+  static int getTrackTypeForCustomMimeType(String? mimeType) =>
+      _customMimeTypes
+          .firstWhereOrNull((it) => it.mimeType == mimeType)
+          ?.trackType ??
+      Util.TRACK_TYPE_UNKNOWN;
 
-    return Util.TRACK_TYPE_UNKNOWN;
-  }
-
-  static String getTopLevelType(String mimeType) {
+  static String? getTopLevelType(String? mimeType) {
     if (mimeType == null) return null;
     var indexOfSlash = mimeType.indexOf('/');
     if (indexOfSlash == -1) return null;
     return mimeType.substring(0, indexOfSlash);
   }
 
-  static bool isAudio(String mimeType) =>
+  static bool isAudio(String? mimeType) =>
       BASE_TYPE_AUDIO == getTopLevelType(mimeType);
 
-  static bool isVideo(String mimeType) =>
+  static bool isVideo(String? mimeType) =>
       BASE_TYPE_VIDEO == getTopLevelType(mimeType);
 
-  static bool isText(String mimeType) =>
+  static bool isText(String? mimeType) =>
       BASE_TYPE_TEXT == getTopLevelType(mimeType);
 
   static int getTrackTypeOfCodec(String codec) =>
@@ -255,9 +250,9 @@ class MimeTypes {
 
 class CustomMimeType {
   const CustomMimeType({
-    @required this.mimeType,
-    @required this.codecPrefix,
-    @required this.trackType,
+    required this.mimeType,
+    required this.codecPrefix,
+    required this.trackType,
   });
 
   final String mimeType;

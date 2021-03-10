@@ -4,7 +4,7 @@ class ParserException implements Exception {
   final String message;
 
   @override
-  String toString() => 'SignalException: $message';
+  String toString() => 'ParserException: $message';
 }
 
 class UnrecognizedInputFormatException extends ParserException {

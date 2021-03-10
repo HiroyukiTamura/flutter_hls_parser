@@ -1,12 +1,11 @@
 import 'package:flutter/cupertino.dart';
-import 'package:meta/meta.dart';
 import 'dart:typed_data';
 
 class SchemeData {
   const SchemeData({
 //    @required this.uuid,
     this.licenseServerUrl,
-    @required this.mimeType,
+    required this.mimeType,
     this.data,
     this.requiresSecureDecryption,
   });
@@ -15,19 +14,19 @@ class SchemeData {
 //  final String uuid;
 
   /// The URL of the server to which license requests should be made. May be null if unknown.
-  final String licenseServerUrl;
+  final String? licenseServerUrl;
 
   /// The mimeType of [data].
   final String mimeType;
 
   /// The initialization base data.
   /// you should build pssh manually for use.
-  final Uint8List data;
+  final Uint8List? data;
 
   /// Whether secure decryption is required.
-  final bool requiresSecureDecryption;
+  final bool? requiresSecureDecryption;
 
-  SchemeData copyWithData(Uint8List data) => SchemeData(
+  SchemeData copyWithData(Uint8List? data) => SchemeData(
 //        uuid: uuid,
         licenseServerUrl: licenseServerUrl,
         mimeType: mimeType,

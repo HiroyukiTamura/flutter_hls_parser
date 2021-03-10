@@ -1,13 +1,13 @@
-import 'package:quiver/iterables.dart';
-import 'format.dart';
+import '../flutter_hls_parser.dart';
 import 'drm_init_data.dart';
 import 'variant.dart';
 import 'rendition.dart';
 import 'playlist.dart';
+import 'extension.dart';
 
 class HlsMasterPlaylist extends HlsPlaylist {
   HlsMasterPlaylist({
-    String baseUri,
+    String? baseUri,
     List<String> tags = const [],
     this.variants = const [],
     this.videos = const [],
@@ -27,7 +27,7 @@ class HlsMasterPlaylist extends HlsPlaylist {
             hasIndependentSegments: hasIndependentSegments);
 
   /// All of the media playlist URLs referenced by the playlist.
-  final List<Uri> mediaPlaylistUrls;
+  final List<Uri?> mediaPlaylistUrls;
 
   /// The variants declared by the playlist.
   final List<Variant> variants;
@@ -45,7 +45,7 @@ class HlsMasterPlaylist extends HlsPlaylist {
   final List<Rendition> closedCaptions;
 
   ///The format of the audio muxed in the variants. May be null if the playlist does not declare any mixed audio.
-  final Format muxedAudioFormat;
+  final Format? muxedAudioFormat;
 
   ///The format of the closed captions declared by the playlist. May be empty if the playlist
   ///explicitly declares no captions are available, or null if the playlist does not declare any
@@ -58,10 +58,10 @@ class HlsMasterPlaylist extends HlsPlaylist {
   /// DRM initialization data derived from #EXT-X-SESSION-KEY tags.
   final List<DrmInitData> sessionKeyDrmInitData;
 
-  static List<Uri> _getMediaPlaylistUrls(
+  static List<Uri?> _getMediaPlaylistUrls(
           List<Variant> variants, List<List<Rendition>> renditionList) =>
-      {
+      [
         ...variants.map((it) => it.url),
-        ...concat(renditionList).map((it) => it.url)
-      }.toList();
+        ...renditionList.expand((it) => it).map((it) => it.url)
+      ].distinct();
 }

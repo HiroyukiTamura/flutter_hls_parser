@@ -9,16 +9,10 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  collection: ^1.14.11
-  meta: ^1.1.8
   quiver: ^2.0.5
 
 dev_dependencies:
   test: any
   flutter_test:
     sdk: flutter
-
-flutter:
-  plugin:
-    androidPackage: com.cks.flutter_hls_parser
-    pluginClass: FlutterHlsParserPlugin
+  pedantic: ^1.9.0

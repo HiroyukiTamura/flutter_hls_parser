@@ -2,7 +2,7 @@ import 'format.dart';
 import 'package:meta/meta.dart';
 
 class Variant {
-  Variant({
+  const Variant({
     @required this.url,
     @required this.format,
     @required this.videoGroupId,

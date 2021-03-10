@@ -2,7 +2,7 @@ import 'drm_init_data.dart';
 import 'package:meta/meta.dart';
 
 class Segment {
-  Segment({
+  const Segment({
     @required this.url,
     this.initializationSegment,
     this.durationUs,
@@ -29,10 +29,10 @@ class Segment {
   /// The human readable title of the segment, or null if the title is unknown.
   final String title;
 
-  /// The number of #EXT-X-DISCONTINUITY tags in the playlist before the segment, or null if the it's unknown.
-  final int relativeDiscontinuitySequence;
+  /// The number of #EXT-X-DISCONTINUITY tags in the playlist before the segment, or null if it's unknown.
+  final int relativeDiscontinuitySequence; //todo change to default 0
 
-  /// The start time of the segment in microseconds, relative to the start of the playlist, or null if the it's unknown.
+  /// The start time of the segment in microseconds, relative to the start of the playlist, or null if it's unknown.
   final int relativeStartTimeUs;
 
   /// DRM initialization data for sample decryption, or null if the segment does not use CDM-DRM protection.

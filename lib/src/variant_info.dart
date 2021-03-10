@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 
 class VariantInfo {
-  VariantInfo({
+  const VariantInfo({
     this.bitrate,
     this.videoGroupId,
     this.audioGroupId,

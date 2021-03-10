@@ -4,7 +4,7 @@ import 'drm_init_data.dart';
 import 'playlist.dart';
 
 class HlsMediaPlaylist extends HlsPlaylist {
-  HlsMediaPlaylist._({
+  const HlsMediaPlaylist._({
     @required this.playlistType,
     @required this.startOffsetUs,
     @required this.startTimeUs,
@@ -44,16 +44,18 @@ class HlsMediaPlaylist extends HlsPlaylist {
     @required List<String> tags,
     @required bool hasIndependentSegments,
   }) {
-    int durationUs = segments.isNotEmpty
-        ? segments.last.relativeStartTimeUs ?? 0 + segments.last.durationUs ?? 0
+    var durationUs = segments.isNotEmpty
+        ? (segments.last.relativeStartTimeUs ?? 0) +
+            (segments.last.durationUs ?? 0)
         : null;
 
-    if (startOffsetUs != null && startOffsetUs < 0)
-      startOffsetUs = durationUs ?? 0 + startOffsetUs;
+    var startOffsetUsFixed = startOffsetUs ?? 0;
+    if (startOffsetUsFixed < 0)
+      startOffsetUsFixed = (durationUs ?? 0) + startOffsetUs;
 
     return HlsMediaPlaylist._(
       playlistType: playlistType,
-      startOffsetUs: startOffsetUs,
+      startOffsetUs: startOffsetUsFixed,
       startTimeUs: startTimeUs,
       hasDiscontinuitySequence: hasDiscontinuitySequence,
       discontinuitySequence: discontinuitySequence,

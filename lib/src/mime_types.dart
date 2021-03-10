@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'util.dart';
 
 class MimeTypes {
+  const MimeTypes._();
+
   static const String BASE_TYPE_VIDEO = 'video';
   static const String BASE_TYPE_AUDIO = 'audio';
   static const String BASE_TYPE_TEXT = 'text';
@@ -151,12 +153,12 @@ class MimeTypes {
     if (codec.startsWith('mp4a')) {
       String mimeType;
       if (codec.startsWith('mp4a.')) {
-        String objectTypeString = codec.substring(5);
+        var objectTypeString = codec.substring(5);
         if (objectTypeString.length >= 2) {
           try {
-            String objectTypeHexString =
+            var objectTypeHexString =
                 objectTypeString.substring(0, 2).toUpperCase();
-            int objectTypeInt = int.parse(objectTypeHexString, radix: 16);
+            var objectTypeInt = int.parse(objectTypeHexString, radix: 16);
             mimeType = _getMimeTypeFromMp4ObjectType(objectTypeInt);
           } on FormatException catch (ignored) {
             //do nothing
@@ -233,7 +235,7 @@ class MimeTypes {
 
   static String getTopLevelType(String mimeType) {
     if (mimeType == null) return null;
-    int indexOfSlash = mimeType.indexOf('/');
+    var indexOfSlash = mimeType.indexOf('/');
     if (indexOfSlash == -1) return null;
     return mimeType.substring(0, indexOfSlash);
   }
@@ -247,13 +249,12 @@ class MimeTypes {
   static bool isText(String mimeType) =>
       BASE_TYPE_TEXT == getTopLevelType(mimeType);
 
-  static int getTrackTypeOfCodec(String codec) {
-    return getTrackType(getMediaMimeType(codec));
-  }
+  static int getTrackTypeOfCodec(String codec) =>
+      getTrackType(getMediaMimeType(codec));
 }
 
 class CustomMimeType {
-  CustomMimeType({
+  const CustomMimeType({
     @required this.mimeType,
     @required this.codecPrefix,
     @required this.trackType,

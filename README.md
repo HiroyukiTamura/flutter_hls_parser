@@ -1,6 +1,8 @@
 # flutter_hls_parser
 
 ![Pub Version](https://img.shields.io/pub/v/flutter_hls_parser)
+[![codecov](https://codecov.io/gh/HiroyukTamura/flutter_hls_parser/branch/master/graph/badge.svg?token=ExYmJJIAVX)](https://codecov.io/gh/HiroyukTamura/flutter_hls_parser)
+[![FlutterTest](https://github.com/HiroyukTamura/flutter_hls_parser/actions/workflows/flutter-test.yml/badge.svg)](https://github.com/HiroyukTamura/flutter_hls_parser/actions/workflows/flutter-test.yml)
 
 dart plugin for parse m3u8 file for HLS.  
 both of master and media file is supported.

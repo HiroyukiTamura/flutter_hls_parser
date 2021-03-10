@@ -10,8 +10,7 @@ import 'package:flutter_hls_parser/src/hls_playlist_parser.dart';
 void main() {
   const PLAYLIST_URI = 'https://example.com/test.m3u8';
 
-  const PLAYLIST_SIMPLE =
-'''
+  const PLAYLIST_SIMPLE = '''
 #EXTM3U
 
 #EXT-X-STREAM-INF:BANDWIDTH=1280000,CODECS="mp4a.40.2,avc1.66.30",RESOLUTION=304x128
@@ -29,10 +28,8 @@ http://example.com/hi.m3u8
 #EXT-X-STREAM-INF:BANDWIDTH=65000,CODECS="mp4a.40.5"
 http://example.com/audio-only.m3u8
 ''';
-     
 
-  const PLAYLIST_WITH_AVG_BANDWIDTH =
-'''
+  const PLAYLIST_WITH_AVG_BANDWIDTH = '''
 #EXTM3U
 
 #EXT-X-STREAM-INF:BANDWIDTH=1280000,
@@ -45,26 +42,20 @@ CODECS="mp4a.40.2 , avc1.66.30 "
 http://example.com/spaces_in_codecs.m3u8
 ''';
 
-
-  const PLAYLIST_WITH_INVALID_HEADER =
-'''
+  const PLAYLIST_WITH_INVALID_HEADER = '''
 #EXTMU3
 #EXT-X-STREAM-INF:BANDWIDTH=1280000,CODECS="mp4a.40.2,avc1.66.30",RESOLUTION=304x128
 http://example.com/low.m3u8
 ''';
 
-
-  const PLAYLIST_WITH_CC =
-'''
+  const PLAYLIST_WITH_CC = '''
  #EXTM3U 
 #EXT-X-MEDIA:TYPE=CLOSED-CAPTIONS,GROUP-ID="cc1","LANGUAGE="es",NAME="Eng",INSTREAM-ID="SERVICE4"
 #EXT-X-STREAM-INF:BANDWIDTH=1280000, CODECS="mp4a.40.2,avc1.66.30",RESOLUTION=304x128
 http://example.com/low.m3u8
 ''';
 
-
-  const PLAYLIST_WITH_CHANNELS_ATTRIBUTE =
-'''
+  const PLAYLIST_WITH_CHANNELS_ATTRIBUTE = '''
  #EXTM3U 
 #EXT-X-MEDIA:TYPE=AUDIO,GROUP-ID="audio",CHANNELS="6",NAME="Eng6",URI="something.m3u8"
 #EXT-X-MEDIA:TYPE=AUDIO,GROUP-ID="audio",CHANNELS="2/6",NAME="Eng26",URI="something2.m3u8"
@@ -75,26 +66,21 @@ http://example.com/low.m3u8
 http://example.com/low.m3u8
 ''';
 
-
-  const PLAYLIST_WITHOUT_CC =
-'''
+  const PLAYLIST_WITHOUT_CC = '''
  #EXTM3U 
 #EXT-X-MEDIA:TYPE=CLOSED-CAPTIONS,GROUP-ID="cc1",LANGUAGE="es",NAME="Eng",INSTREAM-ID="SERVICE4"
 #EXT-X-STREAM-INF:BANDWIDTH=1280000,CODECS="mp4a.40.2,avc1.66.30",RESOLUTION=304x128,CLOSED-CAPTIONS=NONE
 http://example.com/low.m3u8
 ''';
 
-
-  const PLAYLIST_WITH_SUBTITLES =
-  '''
+  const PLAYLIST_WITH_SUBTITLES = '''
  #EXTM3U 
 #EXT-X-MEDIA:TYPE=SUBTITLES,GROUP-ID="sub1",LANGUAGE="es",NAME="Eng"
 #EXT-X-STREAM-INF:BANDWIDTH=1280000,CODECS="mp4a.40.2,avc1.66.30",RESOLUTION=304x128
 http://example.com/low.m3u8
   ''';
 
-  const PLAYLIST_WITH_AUDIO_MEDIA_TAG =
-'''
+  const PLAYLIST_WITH_AUDIO_MEDIA_TAG = '''
 #EXTM3U
 #EXT-X-STREAM-INF:BANDWIDTH=2227464,CODECS="avc1.640020,mp4a.40.2",AUDIO="aud1"
 uri1.m3u8
@@ -108,9 +94,7 @@ uri2.m3u8
 #EXT-X-MEDIA:TYPE=AUDIO,GROUP-ID="aud2",LANGUAGE="en",NAME="English",AUTOSELECT=YES,DEFAULT=YES,CHANNELS="6",URI="a2/prog_index.m3u8
 ''';
 
-
-  const PLAYLIST_WITH_INDEPENDENT_SEGMENTS =
-'''
+  const PLAYLIST_WITH_INDEPENDENT_SEGMENTS = '''
  #EXTM3U 
 
 #EXT-X-INDEPENDENT-SEGMENTS
@@ -122,9 +106,7 @@ http://example.com/low.m3u8
 http://example.com/spaces_in_codecs.m3u8
 ''';
 
-
-  const PLAYLIST_WITH_MATCHING_STREAM_INF_URLS =
-'''
+  const PLAYLIST_WITH_MATCHING_STREAM_INF_URLS = '''
 #EXTM3U
 #EXT-X-VERSION:
 
@@ -157,9 +139,7 @@ v8/prog_index.m3u8
 #EXT-X-MEDIA:TYPE=SUBTITLES,GROUP-ID="sub1",NAME="English",URI="s1/en/prog_index.m3u8"
 ''';
 
-
-  const PLAYLIST_WITH_VARIABLE_SUBSTITUTION =
-r'''
+  const PLAYLIST_WITH_VARIABLE_SUBSTITUTION = r'''
  #EXTM3U 
 
 #EXT-X-DEFINE:NAME="codecs",VALUE="mp4a.40.5"
@@ -172,8 +152,8 @@ http://example.com/{$tricky}
   Metadata _createExtXStreamInfMetadata(List<VariantInfo> infos) =>
       Metadata([HlsTrackMetadataEntry(variantInfos: infos)]);
 
-  Metadata _createExtXMediaMetadata(String groupId, String name) =>
-      Metadata([HlsTrackMetadataEntry(groupId: groupId, name: name, variantInfos: [])]);
+  Metadata _createExtXMediaMetadata(String groupId, String name) => Metadata(
+      [HlsTrackMetadataEntry(groupId: groupId, name: name, variantInfos: [])]);
 
   VariantInfo _createVariantInfo(int bitrate, String audioGroupId) =>
       VariantInfo(
@@ -183,7 +163,8 @@ http://example.com/{$tricky}
           captionGroupId: 'cc1');
 
   ///@[HlsPlaylistParser.parseMasterPlaylist(extraLines, baseUri)]
-  Future<HlsMasterPlaylist> parseMasterPlaylist(String uri, List<String> extraLines) async {
+  Future<HlsMasterPlaylist> parseMasterPlaylist(
+      String uri, List<String> extraLines) async {
     var playlistUri = Uri.parse(uri);
     var parser = HlsPlaylistParser.create();
     var playList = await parser.parse(playlistUri, extraLines);
@@ -192,14 +173,15 @@ http://example.com/{$tricky}
 
   test('testParseMasterPlaylist', () async {
     HlsMasterPlaylist masterPlaylist;
-    masterPlaylist = await parseMasterPlaylist(PLAYLIST_URI, PLAYLIST_SIMPLE.split('\n'));
+    masterPlaylist =
+        await parseMasterPlaylist(PLAYLIST_URI, PLAYLIST_SIMPLE.split('\n'));
 
     var variants = masterPlaylist.variants;
 
     expect(variants.length, 5);
     expect(masterPlaylist.muxedCaptionFormats, isNull);
 
-    for (var i=0; i<variants.length; i++) {
+    for (var i = 0; i < variants.length; i++) {
       switch (i) {
         case 0:
           expect(variants[0].format.bitrate, 1280000);
@@ -211,7 +193,8 @@ http://example.com/{$tricky}
         case 1:
           expect(variants[1].format.bitrate, 1280000);
           expect(variants[1].format.codecs, 'mp4a.40.2 , avc1.66.30 ');
-          expect(variants[1].url, Uri.parse('http://example.com/spaces_in_codecs.m3u8'));
+          expect(variants[1].url,
+              Uri.parse('http://example.com/spaces_in_codecs.m3u8'));
           break;
         case 2:
           expect(variants[2].format.bitrate, 2560000);
@@ -235,14 +218,16 @@ http://example.com/{$tricky}
           expect(variants[4].format.width, isNull);
           expect(variants[4].format.height, isNull);
           expect(variants[4].format.frameRate, isNull);
-          expect(variants[4].url, Uri.parse('http://example.com/audio-only.m3u8'));
+          expect(
+              variants[4].url, Uri.parse('http://example.com/audio-only.m3u8'));
           break;
       }
     }
   });
 
   test('testMasterPlaylistWithBandwdithAverage', () async {
-    var masterPlaylist = await parseMasterPlaylist(PLAYLIST_URI, PLAYLIST_WITH_AVG_BANDWIDTH.split('\n'));
+    var masterPlaylist = await parseMasterPlaylist(
+        PLAYLIST_URI, PLAYLIST_WITH_AVG_BANDWIDTH.split('\n'));
 
     var variants = masterPlaylist.variants;
 
@@ -252,23 +237,29 @@ http://example.com/{$tricky}
 
   test('testPlaylistWithInvalidHeader', () async {
     try {
-      await parseMasterPlaylist(PLAYLIST_URI, PLAYLIST_WITH_INVALID_HEADER.split('\n'));
+      await parseMasterPlaylist(
+          PLAYLIST_URI, PLAYLIST_WITH_INVALID_HEADER.split('\n'));
       fail('Expected exception not thrown.');
     } on ParserException catch (_) {
-    // Expected due to invalid header.
+      // Expected due to invalid header.
     }
   });
 
   test('testPlaylistWithClosedCaption', () async {
-    var masterPlaylist = await parseMasterPlaylist(PLAYLIST_URI, PLAYLIST_WITH_CC.split('\n'), );
+    var masterPlaylist = await parseMasterPlaylist(
+      PLAYLIST_URI,
+      PLAYLIST_WITH_CC.split('\n'),
+    );
     expect(masterPlaylist.muxedCaptionFormats.length, 1);
-    expect(masterPlaylist.muxedCaptionFormats[0].sampleMimeType, MimeTypes.APPLICATION_CEA708);
+    expect(masterPlaylist.muxedCaptionFormats[0].sampleMimeType,
+        MimeTypes.APPLICATION_CEA708);
     expect(masterPlaylist.muxedCaptionFormats[0].accessibilityChannel, 4);
     expect(masterPlaylist.muxedCaptionFormats[0].language, 'es');
   });
 
   test('testPlaylistWithChannelsAttribute', () async {
-    var masterPlaylist = await parseMasterPlaylist(PLAYLIST_URI, PLAYLIST_WITH_CHANNELS_ATTRIBUTE.split('\n'));
+    var masterPlaylist = await parseMasterPlaylist(
+        PLAYLIST_URI, PLAYLIST_WITH_CHANNELS_ATTRIBUTE.split('\n'));
     var audios = masterPlaylist.audios;
     expect(audios.length, 3);
     expect(audios[0].format.channelCount, 6);
@@ -277,12 +268,18 @@ http://example.com/{$tricky}
   });
 
   test('testPlaylistWithoutClosedCaptions', () async {
-    var masterPlaylist = await parseMasterPlaylist(PLAYLIST_URI, PLAYLIST_WITHOUT_CC.split('\n'), );
+    var masterPlaylist = await parseMasterPlaylist(
+      PLAYLIST_URI,
+      PLAYLIST_WITHOUT_CC.split('\n'),
+    );
     expect(masterPlaylist.muxedCaptionFormats, isEmpty);
   });
 
   test('testCodecPropagation', () async {
-    var masterPlaylist = await parseMasterPlaylist(PLAYLIST_URI, PLAYLIST_WITH_AUDIO_MEDIA_TAG.split('\n'), );
+    var masterPlaylist = await parseMasterPlaylist(
+      PLAYLIST_URI,
+      PLAYLIST_WITH_AUDIO_MEDIA_TAG.split('\n'),
+    );
     expect(masterPlaylist.audios[0].format.codecs, 'mp4a.40.2');
     expect(masterPlaylist.audios[0].format.sampleMimeType, MimeTypes.AUDIO_AAC);
     expect(masterPlaylist.audios[1].format.codecs, 'ac-3');
@@ -290,61 +287,88 @@ http://example.com/{$tricky}
   });
 
   test('testAudioIdPropagation', () async {
-    var playlist = await parseMasterPlaylist(PLAYLIST_URI, PLAYLIST_WITH_AUDIO_MEDIA_TAG.split('\n'), );
+    var playlist = await parseMasterPlaylist(
+      PLAYLIST_URI,
+      PLAYLIST_WITH_AUDIO_MEDIA_TAG.split('\n'),
+    );
     expect(playlist.audios[0].format.id, 'aud1:English');
     expect(playlist.audios[1].format.id, 'aud2:English');
   });
 
   test('testCCIdPropagation', () async {
-    var playlist = await parseMasterPlaylist(PLAYLIST_URI, PLAYLIST_WITH_CC.split('\n'), );
+    var playlist = await parseMasterPlaylist(
+      PLAYLIST_URI,
+      PLAYLIST_WITH_CC.split('\n'),
+    );
     expect(playlist.muxedCaptionFormats[0].id, 'cc1:Eng');
   });
 
   test('testSubtitleIdPropagation', () async {
-    var playlist = await parseMasterPlaylist(PLAYLIST_URI, PLAYLIST_WITH_SUBTITLES.split('\n'), );
+    var playlist = await parseMasterPlaylist(
+      PLAYLIST_URI,
+      PLAYLIST_WITH_SUBTITLES.split('\n'),
+    );
     expect(playlist.subtitles[0].format.id, 'sub1:Eng');
   });
 
   test('testIndependentSegments', () async {
-    var playlistWithIndependentSegments = await parseMasterPlaylist(PLAYLIST_URI, PLAYLIST_WITH_INDEPENDENT_SEGMENTS.split('\n'));
+    var playlistWithIndependentSegments = await parseMasterPlaylist(
+        PLAYLIST_URI, PLAYLIST_WITH_INDEPENDENT_SEGMENTS.split('\n'));
     expect(playlistWithIndependentSegments.hasIndependentSegments, true);
-    var playlistWithoutIndependentSegments = await parseMasterPlaylist(PLAYLIST_URI, PLAYLIST_SIMPLE.split('\n'));
+    var playlistWithoutIndependentSegments =
+        await parseMasterPlaylist(PLAYLIST_URI, PLAYLIST_SIMPLE.split('\n'));
     expect(playlistWithoutIndependentSegments.hasIndependentSegments, false);
   });
 
   test('testVariableSubstitution', () async {
-    var playlistWithSubstitutions = await parseMasterPlaylist(PLAYLIST_URI, PLAYLIST_WITH_VARIABLE_SUBSTITUTION.split('\n'));
+    var playlistWithSubstitutions = await parseMasterPlaylist(
+        PLAYLIST_URI, PLAYLIST_WITH_VARIABLE_SUBSTITUTION.split('\n'));
     var variant = playlistWithSubstitutions.variants[0];
     expect(variant.format.codecs, 'mp4a.40.5');
-    expect(variant.url, Uri.parse(r'http://example.com/This/{$nested}/reference/shouldnt/work'));
+    expect(
+        variant.url,
+        Uri.parse(
+            r'http://example.com/This/{$nested}/reference/shouldnt/work'));
   });
 
   test('testHlsMetadata', () async {
-    var playlist = await parseMasterPlaylist(PLAYLIST_URI, PLAYLIST_WITH_MATCHING_STREAM_INF_URLS.split('\n'));
+    var playlist = await parseMasterPlaylist(
+        PLAYLIST_URI, PLAYLIST_WITH_MATCHING_STREAM_INF_URLS.split('\n'));
 
     expect(playlist.variants.length, 4);
 
-    expect(playlist.variants[0].format.metadata, _createExtXStreamInfMetadata([
-      _createVariantInfo(2227464, 'aud1'),
-      _createVariantInfo(2448841, 'aud2'),
-      _createVariantInfo(2256841, 'aud3'),
-    ]));
-    expect(playlist.variants[1].format.metadata, _createExtXStreamInfMetadata([
-      _createVariantInfo(6453202, 'aud1'),
-      _createVariantInfo(6482579, 'aud3'),
-    ]));
-    expect(playlist.variants[2].format.metadata, _createExtXStreamInfMetadata([
-      _createVariantInfo(5054232, 'aud1'),
-      _createVariantInfo(5275609, 'aud2'),
-    ]));
-    expect(playlist.variants[3].format.metadata, _createExtXStreamInfMetadata([
-      _createVariantInfo(8399417, 'aud2'),
-      _createVariantInfo(8207417, 'aud3'),
-    ]));
+    expect(
+        playlist.variants[0].format.metadata,
+        _createExtXStreamInfMetadata([
+          _createVariantInfo(2227464, 'aud1'),
+          _createVariantInfo(2448841, 'aud2'),
+          _createVariantInfo(2256841, 'aud3'),
+        ]));
+    expect(
+        playlist.variants[1].format.metadata,
+        _createExtXStreamInfMetadata([
+          _createVariantInfo(6453202, 'aud1'),
+          _createVariantInfo(6482579, 'aud3'),
+        ]));
+    expect(
+        playlist.variants[2].format.metadata,
+        _createExtXStreamInfMetadata([
+          _createVariantInfo(5054232, 'aud1'),
+          _createVariantInfo(5275609, 'aud2'),
+        ]));
+    expect(
+        playlist.variants[3].format.metadata,
+        _createExtXStreamInfMetadata([
+          _createVariantInfo(8399417, 'aud2'),
+          _createVariantInfo(8207417, 'aud3'),
+        ]));
 
     expect(playlist.audios.length, 3);
-    expect(playlist.audios[0].format.metadata, _createExtXMediaMetadata('aud1', 'English'));
-    expect(playlist.audios[1].format.metadata, _createExtXMediaMetadata('aud2', 'English'));
-    expect(playlist.audios[2].format.metadata, _createExtXMediaMetadata('aud3', 'English'));
+    expect(playlist.audios[0].format.metadata,
+        _createExtXMediaMetadata('aud1', 'English'));
+    expect(playlist.audios[1].format.metadata,
+        _createExtXMediaMetadata('aud2', 'English'));
+    expect(playlist.audios[2].format.metadata,
+        _createExtXMediaMetadata('aud3', 'English'));
   });
 }

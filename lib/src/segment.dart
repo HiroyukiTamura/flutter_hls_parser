@@ -30,7 +30,7 @@ class Segment {
   final String title;
 
   /// The number of #EXT-X-DISCONTINUITY tags in the playlist before the segment, or null if it's unknown.
-  final int relativeDiscontinuitySequence;//todo change to default 0
+  final int relativeDiscontinuitySequence; //todo change to default 0
 
   /// The start time of the segment in microseconds, relative to the start of the playlist, or null if it's unknown.
   final int relativeStartTimeUs;

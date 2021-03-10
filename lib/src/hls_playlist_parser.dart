@@ -99,8 +99,7 @@ class HlsPlaylistParser {
   static const String REGEXP_GROUP_ID = 'GROUP-ID="(.+?)"';
   static const String REGEXP_CHARACTERISTICS = 'CHARACTERISTICS="(.+?)"';
   static const String REGEXP_INSTREAM_ID = r'INSTREAM-ID="((?:CC|SERVICE)\d+)"';
-  static final String
-      REGEXP_AUTOSELECT =
+  static final String REGEXP_AUTOSELECT =
       _compileBooleanAttrPattern('AUTOSELECT');
 
   static final String REGEXP_DEFAULT = _compileBooleanAttrPattern('DEFAULT');
@@ -226,9 +225,8 @@ class HlsPlaylistParser {
               pattern: REGEXP_METHOD,
               variableDefinitions: variableDefinitions);
           var scheme = _parseEncryptionScheme(method);
-          var drmInitData = DrmInitData(
-              schemeType: scheme,
-              schemeData: [schemeData]);
+          var drmInitData =
+              DrmInitData(schemeType: scheme, schemeData: [schemeData]);
           sessionKeyDrmInitData.add(drmInitData);
         }
       } else if (line.startsWith(TAG_STREAM_INF)) {
@@ -710,9 +708,7 @@ class HlsPlaylistParser {
         }
       } else if (line.startsWith(TAG_START)) {
         var string = _parseStringAttr(
-            source: line,
-            pattern: REGEXP_TIME_OFFSET,
-            variableDefinitions: {});
+            source: line, pattern: REGEXP_TIME_OFFSET, variableDefinitions: {});
         startOffsetUs = (double.parse(string) * 1000000).toInt();
       } else if (line.startsWith(TAG_INIT_SEGMENT)) {
         var uri = _parseStringAttr(

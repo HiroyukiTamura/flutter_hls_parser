@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'util.dart';
 
 class MimeTypes {
-
   const MimeTypes._();
 
   static const String BASE_TYPE_VIDEO = 'video';

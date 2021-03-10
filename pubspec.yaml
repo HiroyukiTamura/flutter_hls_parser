@@ -1,7 +1,7 @@
 name: flutter_hls_parser
 description: dart plugin for parse m3u8 file for HLS. both of master and media file is supported.
 version: 1.0.0
-homepage: https://github.com/HiroyukTamura
+homepage: https://github.com/HiroyukTamura/double_tap_player_view
 
 environment:
   sdk: ">=2.2.2 <3.0.0"
@@ -9,16 +9,10 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  collection: ^1.14.11
-  meta: ^1.1.8
   quiver: ^2.0.5
 
 dev_dependencies:
   test: any
   flutter_test:
     sdk: flutter
-
-flutter:
-  plugin:
-    androidPackage: com.cks.flutter_hls_parser
-    pluginClass: FlutterHlsParserPlugin
+  pedantic: ^1.9.0

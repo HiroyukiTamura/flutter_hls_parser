@@ -3,8 +3,10 @@ import 'package:quiver/strings.dart';
 import 'exception.dart';
 
 class LibUtil {
+  const LibUtil._();
+
   static bool startsWith(List<int> source, List<int> checker) {
-    for (int i = 0; i < checker.length; i++)
+    for (var i = 0; i < checker.length; i++)
       if (source[i] != checker[i]) return false;
 
     return true;
@@ -24,12 +26,12 @@ class LibUtil {
   }
 
   static int parseXsDateTime(String value) {
-    String pattern =
-        '(\\d\\d\\d\\d)\\-(\\d\\d)\\-(\\d\\d)[Tt](\\d\\d):(\\d\\d):(\\d\\d)([\\.,](\\d+))?([Zz]|((\\+|\\-)(\\d?\\d):?(\\d\\d)))?';
+    var pattern =
+        r'(\d\d\d\d)\-(\d\d)\-(\d\d)[Tt](\d\d):(\d\d):(\d\d)([\\.,](\d+))?([Zz]|((\+|\-)(\d?\d):?(\d\d)))?';
     List<Match> matchList = RegExp(pattern).allMatches(value).toList();
     if (matchList.isEmpty)
       throw ParserException('Invalid date/time format: $value');
-    Match match = matchList[0];
+    var match = matchList[0];
     int timezoneShift;
     if (match.group(9) == null) {
       // No time zone specified.
@@ -43,7 +45,7 @@ class LibUtil {
     }
 
     //todo UTCではなくGMT?
-    DateTime dateTime = DateTime.utc(
+    var dateTime = DateTime.utc(
         int.parse(match.group(1)),
         int.parse(match.group(2)),
         int.parse(match.group(3)),
@@ -54,7 +56,7 @@ class LibUtil {
       //todo ここ実装再検討
     }
 
-    int time = dateTime.millisecondsSinceEpoch;
+    var time = dateTime.millisecondsSinceEpoch;
     if (timezoneShift != 0) {
       time -= timezoneShift * 60000;
     }
@@ -69,6 +71,8 @@ class LibUtil {
 }
 
 class Util {
+  const Util._();
+
   static const int SELECTION_FLAG_DEFAULT = 1;
   static const int SELECTION_FLAG_FORCED = 1 << 1; // 2
   static const int SELECTION_FLAG_AUTOSELECT = 1 << 2; // 4
@@ -104,11 +108,13 @@ class Util {
   static const int TIME_END_OF_SOURCE = 0;
 
   static List<String> splitCodecs(String codecs) => codecs?.isNotEmpty != true
-      ? <String>[]
-      : codecs.trim().split(RegExp('(\\s*,\\s*)'));
+      ? []
+      : codecs.trim().split(RegExp(r'(\s*,\s*)'));
 }
 
 class CencType {
+  const CencType._();
+
   static const String CENC = 'TYPE_CENC';
   static const String CBCS = 'TYPE_CBCS';
 }

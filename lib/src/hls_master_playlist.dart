@@ -8,20 +8,19 @@ import 'playlist.dart';
 class HlsMasterPlaylist extends HlsPlaylist {
   HlsMasterPlaylist({
     String baseUri,
-    List<String> tags = const [], // ignore: always_specify_types
-    this.variants = const [], // ignore: always_specify_types
-    this.videos = const [], // ignore: always_specify_types
-    this.audios = const [], // ignore: always_specify_types
-    this.subtitles = const [], // ignore: always_specify_types
-    this.closedCaptions = const [], // ignore: always_specify_types
+    List<String> tags = const [],
+    this.variants = const [],
+    this.videos = const [],
+    this.audios = const [],
+    this.subtitles = const [],
+    this.closedCaptions = const [],
     this.muxedAudioFormat,
-    this.muxedCaptionFormats = const [], // ignore: always_specify_types
+    this.muxedCaptionFormats = const [],
     bool hasIndependentSegments = false,
-    this.variableDefinitions = const {}, // ignore: always_specify_types
-    this.sessionKeyDrmInitData = const [], // ignore: always_specify_types
+    this.variableDefinitions = const {},
+    this.sessionKeyDrmInitData = const [],
   })  : mediaPlaylistUrls = _getMediaPlaylistUrls(
             variants, [videos, audios, subtitles, closedCaptions]),
-        // ignore: always_specify_types
         super(
             baseUri: baseUri,
             tags: tags,
@@ -64,5 +63,5 @@ class HlsMasterPlaylist extends HlsPlaylist {
       {
         ...variants.map((it) => it.url),
         ...concat(renditionList).map((it) => it.url)
-      }.toList(); // ignore: always_specify_types
+      }.toList();
 }

@@ -4,7 +4,7 @@ import 'scheme_data.dart';
 import 'package:collection/collection.dart';
 
 class DrmInitData {
-  DrmInitData({this.schemeType, this.schemeData = const []});
+  const DrmInitData({this.schemeType, this.schemeData = const []});
 
   final List<SchemeData> schemeData;
   final String schemeType;

@@ -3,11 +3,12 @@ import 'package:meta/meta.dart';
 import 'format.dart';
 
 class Rendition {
-  Rendition(
-      {this.url,
-      @required this.format,
-      @required this.groupId,
-      @required this.name});
+  const Rendition({
+    this.url,
+    @required this.format,
+    @required this.groupId,
+    @required this.name,
+  });
 
   /// The rendition's url, or null if the tag does not have a URI attribute.
   final Uri url;

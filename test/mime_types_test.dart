@@ -3,7 +3,6 @@ import 'package:flutter_hls_parser/src/mime_types.dart';
 
 /// test for [MimeTypes]
 class MimeTypesTest {
-
   /// test for [MimeTypes.getMediaMimeType(codec)]
   // ignore: non_constant_identifier_names
   static void testGetMediaMimeType_fromValidCodecs_returnsCorrectMimeType() {
@@ -59,7 +58,8 @@ class MimeTypesTest {
   /// change access modifier when you run test
   /// test for [MimeTypes.getMimeTypeFromMp4ObjectType(objectType)]
   // ignore: non_constant_identifier_names
-  static void testGetMimeTypeFromMp4ObjectType_forValidObjectType_returnsCorrectMimeType() {
+  static void
+      testGetMimeTypeFromMp4ObjectType_forValidObjectType_returnsCorrectMimeType() {
 //    expect(MimeTypes.getMimeTypeFromMp4ObjectType(0x60), MimeTypes.VIDEO_MPEG2);
 //    expect(MimeTypes.getMimeTypeFromMp4ObjectType(0x61), MimeTypes.VIDEO_MPEG2);
 //    expect(MimeTypes.getMimeTypeFromMp4ObjectType(0x20), MimeTypes.VIDEO_MP4V);
@@ -82,7 +82,8 @@ class MimeTypesTest {
   /// change access modifier when you run test
   /// test for [MimeTypes.getMimeTypeFromMp4ObjectType(objectType)]
   // ignore: non_constant_identifier_names
-  static void testGetMimeTypeFromMp4ObjectType_forInvalidObjectType_returnsNull() {
+  static void
+      testGetMimeTypeFromMp4ObjectType_forInvalidObjectType_returnsNull() {
 //    expect(MimeTypes.getMimeTypeFromMp4ObjectType(0), isNull);
 //    expect(MimeTypes.getMimeTypeFromMp4ObjectType(0x600), isNull);
 //    expect(MimeTypes.getMimeTypeFromMp4ObjectType(0x01), isNull);
@@ -90,10 +91,12 @@ class MimeTypesTest {
   }
 }
 
-void main(){
+void main() {
   test('testMimeType', () {
     MimeTypesTest.testGetMediaMimeType_fromValidCodecs_returnsCorrectMimeType();
-    MimeTypesTest.testGetMimeTypeFromMp4ObjectType_forValidObjectType_returnsCorrectMimeType();
-    MimeTypesTest.testGetMimeTypeFromMp4ObjectType_forInvalidObjectType_returnsNull();
+    MimeTypesTest
+        .testGetMimeTypeFromMp4ObjectType_forValidObjectType_returnsCorrectMimeType();
+    MimeTypesTest
+        .testGetMimeTypeFromMp4ObjectType_forInvalidObjectType_returnsNull();
   });
 }

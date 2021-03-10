@@ -121,8 +121,8 @@ class HlsPlaylistParser {
         inputLineList.where((line) => line.trim().isNotEmpty).toList();
 
     if (!_checkPlaylistHeader(lineList[0]))
-      throw UnrecognizedInputFormatException(
-          'Input does not start with the #EXTM3U header.', uri);
+      throw ParserException(
+          'Input does not start with the #EXTM3U header.');
 
     var extraLines = lineList.getRange(1, lineList.length).toList();
 

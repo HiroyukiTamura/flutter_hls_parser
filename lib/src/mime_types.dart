@@ -151,12 +151,12 @@ class MimeTypes {
     if (codec.startsWith('mp4a')) {
       String mimeType;
       if (codec.startsWith('mp4a.')) {
-        String objectTypeString = codec.substring(5);
+        var objectTypeString = codec.substring(5);
         if (objectTypeString.length >= 2) {
           try {
-            String objectTypeHexString =
+            var objectTypeHexString =
                 objectTypeString.substring(0, 2).toUpperCase();
-            int objectTypeInt = int.parse(objectTypeHexString, radix: 16);
+            var objectTypeInt = int.parse(objectTypeHexString, radix: 16);
             mimeType = _getMimeTypeFromMp4ObjectType(objectTypeInt);
           } on FormatException catch (ignored) {
             //do nothing
@@ -233,7 +233,7 @@ class MimeTypes {
 
   static String getTopLevelType(String mimeType) {
     if (mimeType == null) return null;
-    int indexOfSlash = mimeType.indexOf('/');
+    var indexOfSlash = mimeType.indexOf('/');
     if (indexOfSlash == -1) return null;
     return mimeType.substring(0, indexOfSlash);
   }

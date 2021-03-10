@@ -1,5 +1,4 @@
 import 'package:flutter_hls_parser/src/hls_media_playlist.dart';
-import 'package:flutter_hls_parser/src/playlist.dart';
 import 'package:flutter_hls_parser/src/util.dart';
 import 'package:test/test.dart';
 import 'package:flutter_hls_parser/src/exception.dart';
@@ -403,7 +402,7 @@ segment{\$underscore_1}\$name_1}
     
     expect(playlist.hasIndependentSegments, false);
 
-    HlsMasterPlaylist masterPlaylist = HlsMasterPlaylist(
+    var masterPlaylist = HlsMasterPlaylist(
       baseUri: 'https://example.com/',
         tags: [],
         variants: [],
@@ -416,8 +415,8 @@ segment{\$underscore_1}\$name_1}
         hasIndependentSegments: true,
         variableDefinitions: {},
         sessionKeyDrmInitData: []);
-    HlsPlaylist h = await HlsPlaylistParser.create(masterPlaylist: masterPlaylist).parse(Uri.parse(PLAYLIST_URL), PLAYLIST_STRING_PLANE.split('\n'));
-    HlsMediaPlaylist hlsMediaPlaylist = h as HlsMediaPlaylist;
+    var h = await HlsPlaylistParser.create(masterPlaylist: masterPlaylist).parse(Uri.parse(PLAYLIST_URL), PLAYLIST_STRING_PLANE.split('\n'));
+    var hlsMediaPlaylist = h as HlsMediaPlaylist;
 
     expect(hlsMediaPlaylist.hasIndependentSegments, true);
   });
@@ -432,9 +431,9 @@ segment{\$underscore_1}\$name_1}
 
 
   test('testInheritedVariableSubstitution', () async {
-    Map<String, String> variableDefinitions = {};
+    var variableDefinitions = <String, String>{};
     variableDefinitions['imported_base'] = 'long_path';
-    HlsMasterPlaylist masterPlaylist = HlsMasterPlaylist(
+    var masterPlaylist = HlsMasterPlaylist(
         baseUri: '',
         tags: [],
         variants: [],
@@ -448,9 +447,9 @@ segment{\$underscore_1}\$name_1}
         variableDefinitions: variableDefinitions,
         sessionKeyDrmInitData: []);
 
-    HlsPlaylist hlsMediaPlaylist = await HlsPlaylistParser(masterPlaylist).parse(Uri.parse(PLAYLIST_URL), PLAYLIST_STRING_INHERITED_VS.split('\n'));//todo 引数そろえるべき
+    var hlsMediaPlaylist = await HlsPlaylistParser(masterPlaylist).parse(Uri.parse(PLAYLIST_URL), PLAYLIST_STRING_INHERITED_VS.split('\n'));//todo 引数そろえるべき
     var segments = (hlsMediaPlaylist as HlsMediaPlaylist).segments;
-    for (int i = 1; i < 4; i++)
+    for (var i = 1; i < 4; i++)
       expect(segments[i-1].url, 'long_path$i.ts');
   });
 }

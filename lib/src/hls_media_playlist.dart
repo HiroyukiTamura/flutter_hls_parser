@@ -44,7 +44,7 @@ class HlsMediaPlaylist extends HlsPlaylist {
     @required List<String> tags,
     @required bool hasIndependentSegments,
   }) {
-    int durationUs = segments.isNotEmpty
+    var durationUs = segments.isNotEmpty
         ? segments.last.relativeStartTimeUs ?? 0 + segments.last.durationUs ?? 0
         : null;
 

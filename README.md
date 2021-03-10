@@ -24,6 +24,46 @@ if (playlist is HlsMasterPlaylist) {
 }
 ```
 
+## Supported tags
+```
+EXTM3U
+EXT-X-VERSION
+EXT-X-PLAYLIST-TYPE
+EXT-X-DEFINE
+EXT-X-STREAM-INF
+EXT-X-MEDIA
+EXT-X-TARGETDURATION
+EXT-X-DISCONTINUITY
+EXT-X-DISCONTINUITY-SEQUENCE
+EXT-X-PROGRAM-DATE-TIME
+EXT-X-MAP
+EXT-X-INDEPENDENT-SEGMENTS
+EXTINF
+EXT-X-MEDIA-SEQUENCE
+EXT-X-START
+EXT-X-ENDLIST
+EXT-X-KEY
+EXT-X-SESSION-KEY
+EXT-X-BYTERANGE
+EXT-X-GAP
+```
+
+## No Supported Tag
+```
+EXT-X-I-FRAMES-ONLY
+EXT-X-I-FRAME-STREAM-INF
+EXT-X-ALLOW-CACHE
+EXT-X-SESSION-DATA
+EXT-X-DATERANGE
+EXT-X-BITRATE
+EXT-X-SERVER-CONTROL
+EXT-X-CUE-OUT:<duration>
+EXT-X-CUE-IN
+```
+
+### Note
+all bool param is nonnull, and others are often nullable if unknown.
+
 ### MasterPlaylist example
 ```dart
 HlsMasterPlaylist playlist;
@@ -45,6 +85,3 @@ playlist.segments[0].durationUs;// => 7975000(microsec)
 playlist.segments[0].encryptionIV;// => '0x1566B'
 playlist.segments[0].drmInitData.schemeData[0].uuid;// => uuid string
 ```
-
-### Note
-all bool param is nonnull, and others are often nullable if unknown.

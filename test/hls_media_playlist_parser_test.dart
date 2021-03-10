@@ -5,13 +5,10 @@ import 'package:flutter_hls_parser/src/exception.dart';
 import 'package:flutter_hls_parser/src/hls_master_playlist.dart';
 import 'package:flutter_hls_parser/src/hls_playlist_parser.dart';
 
-
 void main() {
-
   const PLAYLIST_URL = 'https://example.com/test.m3u8';
 
-  const PLAYLIST_STRING =
-  '''
+  const PLAYLIST_STRING = '''
 #EXTM3U
 #EXT-X-VERSION:3
 #EXT-X-PLAYLIST-TYPE:VOD
@@ -45,9 +42,8 @@ https://priv.example.com/fileSequence2682.ts
 https://priv.example.com/fileSequence2683.ts
 #EXT-X-ENDLIST
 ''';
-  
-  const PLAYLIST_STRING_AES =
-'''
+
+  const PLAYLIST_STRING_AES = '''
 #EXTM3U
 #EXT-X-MEDIA-SEQUENCE:0
 #EXTINF:8,
@@ -59,8 +55,7 @@ https://priv.example.com/2.ts
 #EXT-X-ENDLIST;
 ''';
 
-  const PLAYLIST_STRING_AES_CENC =
-'''
+  const PLAYLIST_STRING_AES_CENC = '''
 #EXTM3U
 #EXT-X-MEDIA-SEQUENCE:0
 #EXTINF:8,
@@ -71,9 +66,8 @@ https://priv.example.com/1.ts
 https://priv.example.com/2.ts
 #EXT-X-ENDLIST
 ''';
-  
-  const PLAYLIST_STRING_AES_CTR =
-'''
+
+  const PLAYLIST_STRING_AES_CTR = '''
 #EXTM3U
 #EXT-X-MEDIA-SEQUENCE:0
 #EXTINF:8,
@@ -84,9 +78,8 @@ https://priv.example.com/1.ts
 https://priv.example.com/2.ts
 #EXT-X-ENDLIST;
 ''';
-  
-  const PLAYLIST_STRING_MULTI_EXT =
-'''
+
+  const PLAYLIST_STRING_MULTI_EXT = '''
 #EXTM3U
 #EXT-X-VERSION:6
 #EXT-X-TARGETDURATION:6
@@ -116,8 +109,7 @@ s000026.mp4
 s000026.mp4;
 ''';
 
-  const PLAYLIST_STRING_GAP_TAG =
-'''
+  const PLAYLIST_STRING_GAP_TAG = '''
 #EXTM3U
 #EXT-X-VERSION:3
 #EXT-X-TARGETDURATION:5
@@ -139,9 +131,8 @@ s000026.mp4;
 #EXTINF:5.005,
 02/00/47.ts
 ''';
-  
-  const PLAYLIST_STRING_MAP_TAG =
-'''
+
+  const PLAYLIST_STRING_MAP_TAG = '''
 #EXTM3U
 #EXT-X-VERSION:3
 #EXT-X-TARGETDURATION:5
@@ -158,8 +149,7 @@ s000026.mp4;
 02/00/47.ts;
 ''';
 
-  const PLAYLIST_STRING_ENCRYPTED_MAP =
-'''
+  const PLAYLIST_STRING_ENCRYPTED_MAP = '''
 #EXTM3U
 #EXT-X-VERSION:3
 #EXT-X-TARGETDURATION:5
@@ -173,9 +163,8 @@ s000026.mp4;
 #EXTINF:5.005,
 02/00/47.ts
 ''';
-    
-  const PLAYLIST_STRING_WRONG_ENCRYPTED_MAP =
-'''
+
+  const PLAYLIST_STRING_WRONG_ENCRYPTED_MAP = '''
 #EXTM3U
 #EXT-X-VERSION:3
 #EXT-X-TARGETDURATION:5
@@ -185,9 +174,8 @@ s000026.mp4;
 #EXTINF:5.005,
 02/00/32.ts
 ''';
-  
-  const PLAYLIST_STRING_PLANE =
-'''
+
+  const PLAYLIST_STRING_PLANE = '''
 #EXTM3U
 #EXT-X-VERSION:3
 #EXT-X-TARGETDURATION:5
@@ -203,9 +191,8 @@ s000026.mp4;
 #EXTINF:5.005,
 02/00/47.ts;
 ''';
-  
-  const PLAYLIST_STRING_VARIABLE_SUBSITUATION =
-r'''
+
+  const PLAYLIST_STRING_VARIABLE_SUBSITUATION = r'''
 #EXTM3U
 #EXT-X-VERSION:8
 #EXT-X-DEFINE:NAME="underscore_1",VALUE="{"
@@ -218,9 +205,8 @@ segment1.ts
 #EXTINF:5.005
 segment{$underscore_1}$name_1}
 ''';
-  
-  const PLAYLIST_STRING_INHERITED_VS = 
-r''' 
+
+  const PLAYLIST_STRING_INHERITED_VS = r''' 
 #EXTM3U
 #EXT-X-VERSION:8
 #EXT-X-TARGETDURATION:5
@@ -235,9 +221,9 @@ r'''
 #EXTINF:5.005,
 {$imported_base}4.ts
 ''';
-  
 
-  Future<HlsMediaPlaylist> _parseMediaPlaylist(List<String> extraLines, String uri) async {
+  Future<HlsMediaPlaylist> _parseMediaPlaylist(
+      List<String> extraLines, String uri) async {
     var playlistUri = Uri.parse(uri);
     var parser = HlsPlaylistParser.create();
     var playList = await parser.parse(playlistUri, extraLines);
@@ -245,7 +231,8 @@ r'''
   }
 
   test('testParseMediaPlaylist', () async {
-    var playlist = await _parseMediaPlaylist(PLAYLIST_STRING.split('\n'), PLAYLIST_URL);
+    var playlist =
+        await _parseMediaPlaylist(PLAYLIST_STRING.split('\n'), PLAYLIST_URL);
     expect(playlist.playlistType, HlsMediaPlaylist.PLAYLIST_TYPE_VOD);
     expect(playlist.startOffsetUs, playlist.durationUs - 25000000);
 
@@ -256,133 +243,175 @@ r'''
     expect(playlist.segments, isNotNull);
     expect(playlist.segments.length, 5);
 
-    expect(playlist.discontinuitySequence + playlist.segments[0].relativeDiscontinuitySequence, 4);
+    expect(
+        playlist.discontinuitySequence +
+            (playlist.segments[0].relativeDiscontinuitySequence ?? 0),
+        4);
     expect(playlist.segments[0].durationUs, 7975000);
     expect(playlist.segments[0].title, isEmpty);
     expect(playlist.segments[0].fullSegmentEncryptionKeyUri, null);
     expect(playlist.segments[0].encryptionIV, null);
     expect(playlist.segments[0].byterangeLength, 51370);
     expect(playlist.segments[0].byterangeOffset, 0);
-    expect(playlist.segments[0].url, 'https://priv.example.com/fileSequence2679.ts');
+    expect(playlist.segments[0].url,
+        'https://priv.example.com/fileSequence2679.ts');
 
-    expect(playlist.segments[1].relativeDiscontinuitySequence, 0);
+    expect(playlist.segments[1].relativeDiscontinuitySequence, null);
     expect(playlist.segments[1].durationUs, 7975000);
     expect(playlist.segments[1].title, 'segment title');
-    expect(playlist.segments[1].fullSegmentEncryptionKeyUri, 'https://priv.example.com/key.php?r=2680');
+    expect(playlist.segments[1].fullSegmentEncryptionKeyUri,
+        'https://priv.example.com/key.php?r=2680');
     expect(playlist.segments[1].encryptionIV, '0x1566B');
     expect(playlist.segments[1].byterangeLength, 51501);
     expect(playlist.segments[1].byterangeOffset, 2147483648);
-    expect(playlist.segments[1].url, 'https://priv.example.com/fileSequence2680.ts');
+    expect(playlist.segments[1].url,
+        'https://priv.example.com/fileSequence2680.ts');
 
-    expect(playlist.segments[2].relativeDiscontinuitySequence, 0);
+    expect(playlist.segments[2].relativeDiscontinuitySequence, null);
     expect(playlist.segments[2].durationUs, 7941000);
-    expect(playlist.segments[2].title, 'segment title .,:/# with interesting chars');
+    expect(playlist.segments[2].title,
+        'segment title .,:/# with interesting chars');
     expect(playlist.segments[2].fullSegmentEncryptionKeyUri, null);
     expect(playlist.segments[2].encryptionIV, null);
     expect(playlist.segments[2].byterangeLength, 51501);
     expect(playlist.segments[2].byterangeOffset, 2147535149);
-    expect(playlist.segments[2].url, 'https://priv.example.com/fileSequence2681.ts');
+    expect(playlist.segments[2].url,
+        'https://priv.example.com/fileSequence2681.ts');
 
     expect(playlist.segments[3].relativeDiscontinuitySequence, 1);
     expect(playlist.segments[3].durationUs, 7975000);
     expect(playlist.segments[3].title, isEmpty);
-    expect(playlist.segments[3].fullSegmentEncryptionKeyUri, 'https://priv.example.com/key.php?r=2682');
+    expect(playlist.segments[3].fullSegmentEncryptionKeyUri,
+        'https://priv.example.com/key.php?r=2682');
     expect(playlist.segments[3].encryptionIV, 'A7A'.toLowerCase());
     expect(playlist.segments[3].byterangeLength, 51740);
     expect(playlist.segments[3].byterangeOffset, 2147586650);
-    expect(playlist.segments[3].url, 'https://priv.example.com/fileSequence2682.ts');
+    expect(playlist.segments[3].url,
+        'https://priv.example.com/fileSequence2682.ts');
 
     expect(playlist.segments[4].relativeDiscontinuitySequence, 1);
     expect(playlist.segments[4].durationUs, 7975000);
-    expect(playlist.segments[4].fullSegmentEncryptionKeyUri, 'https://priv.example.com/key.php?r=2682');
+    expect(playlist.segments[4].fullSegmentEncryptionKeyUri,
+        'https://priv.example.com/key.php?r=2682');
     expect(playlist.segments[4].encryptionIV, 'A7B'.toLowerCase());
     expect(playlist.segments[4].byterangeLength, null);
     expect(playlist.segments[4].byterangeOffset, null);
-    expect(playlist.segments[4].url, 'https://priv.example.com/fileSequence2683.ts');
+    expect(playlist.segments[4].url,
+        'https://priv.example.com/fileSequence2683.ts');
   });
 
   test('testParseSampleAesMethod', () async {
-    var playlist = await _parseMediaPlaylist(PLAYLIST_STRING_AES.split('\n'), PLAYLIST_URL);
+    var playlist = await _parseMediaPlaylist(
+        PLAYLIST_STRING_AES.split('\n'), PLAYLIST_URL);
     expect(playlist.protectionSchemes.schemeType, CencType.CBCS);
 //    expect(playlist.protectionSchemes.schemeData[0].uuid, true);
-    expect(playlist.protectionSchemes.schemeData[0].data?.isNotEmpty != true, true);
+    expect(playlist.protectionSchemes.schemeData[0].data?.isNotEmpty != true,
+        true);
     expect(playlist.segments[0].drmInitData, null);
 //    expect(playlist.segments[1].drmInitData.schemeData[0].uuid, true);
-    expect(playlist.segments[1].drmInitData.schemeData[0].data?.isNotEmpty != false, true);
+    expect(
+        playlist.segments[1].drmInitData.schemeData[0].data?.isNotEmpty !=
+            false,
+        true);
   });
 
   test('testParseSampleAesCtrMethod', () async {
-    var playlist = await _parseMediaPlaylist(PLAYLIST_STRING_AES_CTR.split('\n'), PLAYLIST_URL);
+    var playlist = await _parseMediaPlaylist(
+        PLAYLIST_STRING_AES_CTR.split('\n'), PLAYLIST_URL);
 
     expect(playlist.protectionSchemes.schemeType, CencType.CENC);
 //    expect(playlist.protectionSchemes.schemeData[0].uuid, true);
-    expect(playlist.protectionSchemes.schemeData[0].data?.isNotEmpty != true, true);
+    expect(playlist.protectionSchemes.schemeData[0].data?.isNotEmpty != true,
+        true);
   });
 
   test('testParseSampleAesCencMethod', () async {
-    var playlist = await _parseMediaPlaylist(PLAYLIST_STRING_AES_CENC.split('\n'), PLAYLIST_URL);
+    var playlist = await _parseMediaPlaylist(
+        PLAYLIST_STRING_AES_CENC.split('\n'), PLAYLIST_URL);
 
     expect(playlist.protectionSchemes.schemeType, CencType.CENC);
 //    expect(playlist.protectionSchemes.schemeData[0].uuid, true);
-    expect(playlist.protectionSchemes.schemeData[0].data?.isNotEmpty != true, true);
+    expect(playlist.protectionSchemes.schemeData[0].data?.isNotEmpty != true,
+        true);
   });
 
   test('testMultipleExtXKeysForSingleSegment', () async {
-    var playlist = await _parseMediaPlaylist(PLAYLIST_STRING_MULTI_EXT.split('\n'), PLAYLIST_URL);
+    var playlist = await _parseMediaPlaylist(
+        PLAYLIST_STRING_MULTI_EXT.split('\n'), PLAYLIST_URL);
 
     expect(playlist.protectionSchemes?.schemeType, CencType.CBCS);
     expect(playlist.protectionSchemes?.schemeData?.length, 2);
 //    expect(playlist.protectionSchemes.schemeData[0].uuid, true);
-    expect(playlist.protectionSchemes.schemeData[0].data?.isNotEmpty != true, true);
+    expect(playlist.protectionSchemes.schemeData[0].data?.isNotEmpty != true,
+        true);
     //    expect(playlist.protectionSchemes.schemeData[0].uuid, true);
-    expect(playlist.protectionSchemes.schemeData[1].data?.isNotEmpty != true, true);
+    expect(playlist.protectionSchemes.schemeData[1].data?.isNotEmpty != true,
+        true);
 
     expect(playlist.segments[0].drmInitData, null);
 
 //    expect(playlist.segments[0].drmInitData.schemeData[0].uuid, true);
-    expect(playlist.segments[1].drmInitData.schemeData[0].data?.isNotEmpty != false, true);
+    expect(
+        playlist.segments[1].drmInitData.schemeData[0].data?.isNotEmpty !=
+            false,
+        true);
     //    expect(playlist.segments[0].drmInitData.schemeData[0].uuid, true);
-    expect(playlist.segments[1].drmInitData.schemeData[1].data?.isNotEmpty != false, true);
+    expect(
+        playlist.segments[1].drmInitData.schemeData[1].data?.isNotEmpty !=
+            false,
+        true);
 
     expect(playlist.segments[1].drmInitData, playlist.segments[2].drmInitData);
-    expect(playlist.segments[2].drmInitData == playlist.segments[3].drmInitData, false);
+    expect(playlist.segments[2].drmInitData == playlist.segments[3].drmInitData,
+        false);
 
 //    expect(playlist.segments[3].drmInitData.schemeData[0].uuid, true);
-    expect(playlist.segments[3].drmInitData.schemeData[0].data?.isNotEmpty != false, true);
+    expect(
+        playlist.segments[3].drmInitData.schemeData[0].data?.isNotEmpty !=
+            false,
+        true);
     //    expect(playlist.segments[3].drmInitData.schemeData[1].uuid, true);
-    expect(playlist.segments[3].drmInitData.schemeData[1].data?.isNotEmpty != false, true);
+    expect(
+        playlist.segments[3].drmInitData.schemeData[1].data?.isNotEmpty !=
+            false,
+        true);
 
     expect(playlist.segments[3].drmInitData, playlist.segments[4].drmInitData);
     expect(playlist.segments[5].drmInitData, null);
     expect(playlist.segments[6].drmInitData, null);
   });
 
-
   test('testGapTag', () async {
-    var playlist = await _parseMediaPlaylist(PLAYLIST_STRING_GAP_TAG.split('\n'), PLAYLIST_URL);
+    var playlist = await _parseMediaPlaylist(
+        PLAYLIST_STRING_GAP_TAG.split('\n'), PLAYLIST_URL);
     expect(playlist.hasEndTag, false);
     expect(playlist.segments[1].hasGapTag, false);
     expect(playlist.segments[2].hasGapTag, true);
     expect(playlist.segments[3].hasGapTag, false);
   });
 
-
   test('testMapTag', () async {
-    var playlist = await _parseMediaPlaylist(PLAYLIST_STRING_MAP_TAG.split('\n'), PLAYLIST_URL);
+    var playlist = await _parseMediaPlaylist(
+        PLAYLIST_STRING_MAP_TAG.split('\n'), PLAYLIST_URL);
 
     var segments = playlist.segments;
     expect(segments[0].initializationSegment, null);
-    expect(identical(segments[1].initializationSegment, segments[2].initializationSegment), true);
+    expect(
+        identical(segments[1].initializationSegment,
+            segments[2].initializationSegment),
+        true);
     expect(segments[1].initializationSegment.url, 'init1.ts');
     expect(segments[3].initializationSegment.url, 'init2.ts');
   });
 
   test('testEncryptedMapTag', () async {
-    var playlist = await _parseMediaPlaylist(PLAYLIST_STRING_ENCRYPTED_MAP.split('\n'), PLAYLIST_URL);
+    var playlist = await _parseMediaPlaylist(
+        PLAYLIST_STRING_ENCRYPTED_MAP.split('\n'), PLAYLIST_URL);
 
     var segments = playlist.segments;
 
-    expect(segments[0].initializationSegment.fullSegmentEncryptionKeyUri, 'https://priv.example.com/key.php?r=2680');
+    expect(segments[0].initializationSegment.fullSegmentEncryptionKeyUri,
+        'https://priv.example.com/key.php?r=2680');
     expect(segments[0].encryptionIV, '0x1566B');
     expect(segments[1].initializationSegment.fullSegmentEncryptionKeyUri, null);
     expect(segments[1].encryptionIV, null);
@@ -390,20 +419,20 @@ r'''
 
   test('testEncryptedMapTagWithNoIvFailure', () async {
     try {
-      await _parseMediaPlaylist(PLAYLIST_STRING_WRONG_ENCRYPTED_MAP.split('\n'), PLAYLIST_URL);
+      await _parseMediaPlaylist(
+          PLAYLIST_STRING_WRONG_ENCRYPTED_MAP.split('\n'), PLAYLIST_URL);
       fail('forced failure');
-    } on ParserException catch (_) {
-
-    }
+    } on ParserException catch (_) {}
   });
 
   test('testMasterPlaylistAttributeInheritance', () async {
-    var playlist = await _parseMediaPlaylist(PLAYLIST_STRING_PLANE.split('\n'), PLAYLIST_URL);//todoいい加減このURL共通化する
-    
+    var playlist = await _parseMediaPlaylist(
+        PLAYLIST_STRING_PLANE.split('\n'), PLAYLIST_URL); //todoいい加減このURL共通化する
+
     expect(playlist.hasIndependentSegments, false);
 
     var masterPlaylist = HlsMasterPlaylist(
-      baseUri: 'https://example.com/',
+        baseUri: 'https://example.com/',
         tags: [],
         variants: [],
         videos: [],
@@ -415,20 +444,21 @@ r'''
         hasIndependentSegments: true,
         variableDefinitions: {},
         sessionKeyDrmInitData: []);
-    var h = await HlsPlaylistParser.create(masterPlaylist: masterPlaylist).parse(Uri.parse(PLAYLIST_URL), PLAYLIST_STRING_PLANE.split('\n'));
+    var h = await HlsPlaylistParser.create(masterPlaylist: masterPlaylist)
+        .parse(Uri.parse(PLAYLIST_URL), PLAYLIST_STRING_PLANE.split('\n'));
     var hlsMediaPlaylist = h as HlsMediaPlaylist;
 
     expect(hlsMediaPlaylist.hasIndependentSegments, true);
   });
 
-
   test('testVariableSubstitution', () async {
-    var playlist = await _parseMediaPlaylist(PLAYLIST_STRING_VARIABLE_SUBSITUATION.split('\n'), PLAYLIST_URL);//todoいい加減このURL共通化する
+    var playlist = await _parseMediaPlaylist(
+        PLAYLIST_STRING_VARIABLE_SUBSITUATION.split('\n'),
+        PLAYLIST_URL); //todoいい加減このURL共通化する
 
     expect(playlist.segments[1].initializationSegment.url, 'replaced_value.ts');
     expect(playlist.segments[1].url, 'segment{\$name_1}');
   });
-
 
   test('testInheritedVariableSubstitution', () async {
     var variableDefinitions = <String, String>{};
@@ -447,9 +477,10 @@ r'''
         variableDefinitions: variableDefinitions,
         sessionKeyDrmInitData: []);
 
-    var hlsMediaPlaylist = await HlsPlaylistParser(masterPlaylist).parse(Uri.parse(PLAYLIST_URL), PLAYLIST_STRING_INHERITED_VS.split('\n'));//todo 引数そろえるべき
+    var hlsMediaPlaylist = await HlsPlaylistParser(masterPlaylist).parse(
+        Uri.parse(PLAYLIST_URL),
+        PLAYLIST_STRING_INHERITED_VS.split('\n')); //todo 引数そろえるべき
     var segments = (hlsMediaPlaylist as HlsMediaPlaylist).segments;
-    for (var i = 1; i < 4; i++)
-      expect(segments[i-1].url, 'long_path$i.ts');
+    for (var i = 1; i < 4; i++) expect(segments[i - 1].url, 'long_path$i.ts');
   });
 }

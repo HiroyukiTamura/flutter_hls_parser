@@ -2,7 +2,7 @@ import 'drm_init_data.dart';
 import 'package:meta/meta.dart';
 
 class Segment {
-  Segment({
+  const Segment({
     @required this.url,
     this.initializationSegment,
     this.durationUs,

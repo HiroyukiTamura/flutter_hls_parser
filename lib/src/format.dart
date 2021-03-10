@@ -27,18 +27,19 @@ class Format {
     this.accessibilityChannel,
   }) : language = language?.toLowerCase();
 
-  factory Format.createVideoContainerFormat(
-          {String id,
-          String label,
-          String containerMimeType,
-          String sampleMimeType,
-          @required String codecs,
-          int bitrate,
-          @required int width,
-          @required int height,
-          @required double frameRate,
-          int selectionFlags = Util.SELECTION_FLAG_DEFAULT,
-          int roleFlags}) =>
+  factory Format.createVideoContainerFormat({
+    String id,
+    String label,
+    String containerMimeType,
+    String sampleMimeType,
+    @required String codecs,
+    int bitrate,
+    @required int width,
+    @required int height,
+    @required double frameRate,
+    int selectionFlags = Util.SELECTION_FLAG_DEFAULT,
+    int roleFlags,
+  }) =>
       Format(
         id: id,
         label: label,

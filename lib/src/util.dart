@@ -3,6 +3,8 @@ import 'package:quiver/strings.dart';
 import 'exception.dart';
 
 class LibUtil {
+  const LibUtil._();
+
   static bool startsWith(List<int> source, List<int> checker) {
     for (var i = 0; i < checker.length; i++)
       if (source[i] != checker[i]) return false;
@@ -69,6 +71,8 @@ class LibUtil {
 }
 
 class Util {
+  const Util._();
+
   static const int SELECTION_FLAG_DEFAULT = 1;
   static const int SELECTION_FLAG_FORCED = 1 << 1; // 2
   static const int SELECTION_FLAG_AUTOSELECT = 1 << 2; // 4
@@ -104,11 +108,13 @@ class Util {
   static const int TIME_END_OF_SOURCE = 0;
 
   static List<String> splitCodecs(String codecs) => codecs?.isNotEmpty != true
-      ? <String>[]
+      ? []
       : codecs.trim().split(RegExp(r'(\s*,\s*)'));
 }
 
 class CencType {
+  const CencType._();
+
   static const String CENC = 'TYPE_CENC';
   static const String CBCS = 'TYPE_CBCS';
 }

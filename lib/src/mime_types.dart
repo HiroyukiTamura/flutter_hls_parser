@@ -2,6 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'util.dart';
 
 class MimeTypes {
+
+  const MimeTypes._();
+
   static const String BASE_TYPE_VIDEO = 'video';
   static const String BASE_TYPE_AUDIO = 'audio';
   static const String BASE_TYPE_TEXT = 'text';
@@ -247,13 +250,12 @@ class MimeTypes {
   static bool isText(String mimeType) =>
       BASE_TYPE_TEXT == getTopLevelType(mimeType);
 
-  static int getTrackTypeOfCodec(String codec) {
-    return getTrackType(getMediaMimeType(codec));
-  }
+  static int getTrackTypeOfCodec(String codec) =>
+      getTrackType(getMediaMimeType(codec));
 }
 
 class CustomMimeType {
-  CustomMimeType({
+  const CustomMimeType({
     @required this.mimeType,
     @required this.codecPrefix,
     @required this.trackType,

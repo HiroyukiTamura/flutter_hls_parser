@@ -1,7 +1,7 @@
 import 'package:meta/meta.dart';
 
 abstract class HlsPlaylist {
-  HlsPlaylist({
+  const HlsPlaylist({
     @required this.baseUri,
     @required this.tags,
     @required this.hasIndependentSegments,

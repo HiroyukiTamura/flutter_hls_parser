@@ -2,7 +2,7 @@ import 'hls_track_metadata_entry.dart';
 import 'package:collection/collection.dart';
 
 class Metadata {
-  Metadata(this.list);
+  const Metadata(this.list);
 
   final List<HlsTrackMetadataEntry> list;
 

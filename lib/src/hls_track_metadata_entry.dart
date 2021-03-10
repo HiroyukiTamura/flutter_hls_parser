@@ -4,7 +4,7 @@ import 'variant_info.dart';
 import 'package:collection/collection.dart';
 
 class HlsTrackMetadataEntry {
-  HlsTrackMetadataEntry({this.groupId, this.name, this.variantInfos});
+  const HlsTrackMetadataEntry({this.groupId, this.name, this.variantInfos});
 
   /// The GROUP-ID value of this track, if the track is derived from an EXT-X-MEDIA tag. Null if the
   /// track is not derived from an EXT-X-MEDIA TAG.

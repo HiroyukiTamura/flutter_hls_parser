@@ -1,4 +1,3 @@
-import 'package:flutter/services.dart';
 import 'package:flutter_hls_parser/src/metadata.dart';
 import 'package:test/test.dart';
 import 'package:flutter_hls_parser/src/hls_master_playlist.dart';
@@ -9,9 +8,6 @@ import 'package:flutter_hls_parser/src/hls_track_metadata_entry.dart';
 import 'package:flutter_hls_parser/src/hls_playlist_parser.dart';
 
 void main() {
-  const channel = MethodChannel('flutter_hls_parser');
-
-
   const PLAYLIST_URI = 'https://example.com/test.m3u8';
 
   const PLAYLIST_SIMPLE =
@@ -173,16 +169,6 @@ r'''
 http://example.com/{$tricky}
 ''';
 
-  setUp(() {
-    channel.setMockMethodCallHandler((MethodCall methodCall) async {
-      return '42';
-    });
-  });
-
-  tearDown(() {
-    channel.setMockMethodCallHandler(null);
-  });
-
   Metadata _createExtXStreamInfMetadata(List<VariantInfo> infos) =>
       Metadata([HlsTrackMetadataEntry(variantInfos: infos)]);
 
@@ -330,7 +316,7 @@ http://example.com/{$tricky}
     var playlistWithSubstitutions = await parseMasterPlaylist(PLAYLIST_URI, PLAYLIST_WITH_VARIABLE_SUBSTITUTION.split('\n'));
     var variant = playlistWithSubstitutions.variants[0];
     expect(variant.format.codecs, 'mp4a.40.5');
-    expect(variant.url, Uri.parse('http://example.com/This/{\$nested}/reference/shouldnt/work'));
+    expect(variant.url, Uri.parse(r'http://example.com/This/{$nested}/reference/shouldnt/work'));
   });
 
   test('testHlsMetadata', () async {

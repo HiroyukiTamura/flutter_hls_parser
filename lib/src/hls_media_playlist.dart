@@ -4,7 +4,7 @@ import 'drm_init_data.dart';
 import 'playlist.dart';
 
 class HlsMediaPlaylist extends HlsPlaylist {
-  HlsMediaPlaylist._({
+  const HlsMediaPlaylist._({
     @required this.playlistType,
     @required this.startOffsetUs,
     @required this.startTimeUs,

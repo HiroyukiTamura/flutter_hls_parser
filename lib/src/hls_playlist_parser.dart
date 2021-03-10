@@ -228,7 +228,7 @@ class HlsPlaylistParser {
           var scheme = _parseEncryptionScheme(method);
           var drmInitData = DrmInitData(
               schemeType: scheme,
-              schemeData: [schemeData]); // ignore: always_specify_types
+              schemeData: [schemeData]);
           sessionKeyDrmInitData.add(drmInitData);
         }
       } else if (line.startsWith(TAG_STREAM_INF)) {
@@ -315,7 +315,7 @@ class HlsPlaylistParser {
 
         var variantInfosForUrl = urlToVariantInfos[uri];
         if (variantInfosForUrl == null) {
-          variantInfosForUrl = []; // ignore: always_specify_types
+          variantInfosForUrl = [];
           urlToVariantInfos[uri] = variantInfosForUrl;
         }
 
@@ -344,7 +344,6 @@ class HlsPlaylistParser {
       }
     }
 
-    // ignore: always_specify_types
     mediaTags.forEach((line) {
       var groupId = _parseStringAttr(
           source: line,
@@ -488,7 +487,7 @@ class HlsPlaylistParser {
               mimeType = MimeTypes.APPLICATION_CEA708;
               accessibilityChannel = int.parse(instreamId.substring(7));
             }
-            muxedCaptionFormats ??= []; // ignore: always_specify_types
+            muxedCaptionFormats ??= [];
             muxedCaptionFormats.add(Format(
               id: formatId,
               label: name,

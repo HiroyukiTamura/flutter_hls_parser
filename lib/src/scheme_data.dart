@@ -3,7 +3,7 @@ import 'package:meta/meta.dart';
 import 'dart:typed_data';
 
 class SchemeData {
-  SchemeData({
+  const SchemeData({
 //    @required this.uuid,
     this.licenseServerUrl,
     @required this.mimeType,

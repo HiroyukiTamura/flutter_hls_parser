@@ -205,7 +205,7 @@ s000026.mp4;
 ''';
   
   const PLAYLIST_STRING_VARIABLE_SUBSITUATION =
-'''
+r'''
 #EXTM3U
 #EXT-X-VERSION:8
 #EXT-X-DEFINE:NAME="underscore_1",VALUE="{"
@@ -214,26 +214,26 @@ s000026.mp4;
 #EXT-X-MEDIA-SEQUENCE:10
 #EXTINF:5.005,
 segment1.ts
-#EXT-X-MAP:URI="{\$dash-1}"
+#EXT-X-MAP:URI="{$dash-1}"
 #EXTINF:5.005
-segment{\$underscore_1}\$name_1}
+segment{$underscore_1}$name_1}
 ''';
   
   const PLAYLIST_STRING_INHERITED_VS = 
-''' 
+r''' 
 #EXTM3U
 #EXT-X-VERSION:8
 #EXT-X-TARGETDURATION:5
 #EXT-X-MEDIA-SEQUENCE:10
 #EXT-X-DEFINE:IMPORT="imported_base"
 #EXTINF:5.005,
-{\$imported_base}1.ts
+{$imported_base}1.ts
 #EXTINF:5.005,
-{\$imported_base}2.ts
+{$imported_base}2.ts
 #EXTINF:5.005,
-{\$imported_base}3.ts
+{$imported_base}3.ts
 #EXTINF:5.005,
-{\$imported_base}4.ts
+{$imported_base}4.ts
 ''';
   
 

@@ -63,5 +63,5 @@ class HlsMasterPlaylist extends HlsPlaylist {
       {
         ...variants.map((it) => it.url),
         ...concat(renditionList).map((it) => it.url)
-      }.toList(); // ignore: always_specify_types
+      }.toList();
 }

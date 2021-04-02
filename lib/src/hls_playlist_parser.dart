@@ -99,12 +99,12 @@ class HlsPlaylistParser {
   static const String REGEXP_GROUP_ID = 'GROUP-ID="(.+?)"';
   static const String REGEXP_CHARACTERISTICS = 'CHARACTERISTICS="(.+?)"';
   static const String REGEXP_INSTREAM_ID = r'INSTREAM-ID="((?:CC|SERVICE)\d+)"';
-  static final String REGEXP_AUTOSELECT =
+  static final String regexpAutoselect =
       _compileBooleanAttrPattern('AUTOSELECT');
 
-  static final String REGEXP_DEFAULT = _compileBooleanAttrPattern('DEFAULT');
+  static final String regexpDefault = _compileBooleanAttrPattern('DEFAULT');
 
-  static final String REGEXP_FORCED = _compileBooleanAttrPattern('FORCED');
+  static final String regexpForced = _compileBooleanAttrPattern('FORCED');
   static const String REGEXP_VALUE = 'VALUE="(.+?)"';
   static const String REGEXP_IMPORT = 'IMPORT="(.+?)"';
   static const String REGEXP_VARIABLE_REFERENCE = r'\{\$([a-zA-Z0-9\-_]+)\}';
@@ -616,25 +616,25 @@ class HlsPlaylistParser {
 
   static int _parseSelectionFlags(String line) {
     var flags = 0;
-    if (parseOptionalBooleanAttribute(
+    if (_parseOptionalBooleanAttribute(
       line: line,
-      pattern: REGEXP_DEFAULT,
+      pattern: regexpDefault,
       defaultValue: false,
     )) flags |= Util.SELECTION_FLAG_DEFAULT;
-    if (parseOptionalBooleanAttribute(
+    if (_parseOptionalBooleanAttribute(
       line: line,
-      pattern: REGEXP_FORCED,
+      pattern: regexpForced,
       defaultValue: false,
     )) flags |= Util.SELECTION_FLAG_FORCED;
-    if (parseOptionalBooleanAttribute(
+    if (_parseOptionalBooleanAttribute(
       line: line,
-      pattern: REGEXP_AUTOSELECT,
+      pattern: regexpAutoselect,
       defaultValue: false,
     )) flags |= Util.SELECTION_FLAG_AUTOSELECT;
     return flags;
   }
 
-  static bool parseOptionalBooleanAttribute({
+  static bool _parseOptionalBooleanAttribute({
     required String line,
     required String pattern,
     required bool defaultValue,

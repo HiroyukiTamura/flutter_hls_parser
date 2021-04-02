@@ -1,3 +1,6 @@
+## 2.0.0
+* initial stable release for null-safety
+
 ## 2.0.0-nullsafety.0
 * delete UnrecognizedInputFormatException
 * initial release for null-safety

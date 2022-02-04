@@ -12,7 +12,6 @@ both of master and media file are supported.
 ```dart
 
 Uri playlistUri;
-List<String> lines;
 try {
   playList = await HlsPlaylistParser.create().parseString(playlistUri, contentString);
 } on ParserException catch (e) {
@@ -50,7 +49,7 @@ EXT-X-BYTERANGE
 EXT-X-GAP
 ```
 
-## No Supported Tag
+## Not Supported Tags
 ```
 EXT-X-I-FRAMES-ONLY
 EXT-X-I-FRAME-STREAM-INF

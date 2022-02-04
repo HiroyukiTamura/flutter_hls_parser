@@ -1,8 +1,4 @@
 import '../flutter_hls_parser.dart';
-import 'drm_init_data.dart';
-import 'variant.dart';
-import 'rendition.dart';
-import 'playlist.dart';
 import 'extension.dart';
 
 class HlsMasterPlaylist extends HlsPlaylist {

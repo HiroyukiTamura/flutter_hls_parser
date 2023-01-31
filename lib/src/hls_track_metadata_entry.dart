@@ -1,5 +1,3 @@
-import 'package:flutter/rendering.dart';
-
 import 'variant_info.dart';
 import 'package:collection/collection.dart';
 
@@ -34,5 +32,5 @@ class HlsTrackMetadataEntry {
   }
 
   @override
-  int get hashCode => hashValues(groupId, name, variantInfos);
+  int get hashCode => Object.hash(groupId, name, variantInfos);
 }

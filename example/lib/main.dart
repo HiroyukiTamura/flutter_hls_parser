@@ -199,7 +199,7 @@ class DialogHeading extends StatelessWidget {
   Widget build(BuildContext context) => Padding(
         child: Text(
           text,
-          style: Theme.of(context).textTheme.headline6,
+          style: Theme.of(context).textTheme.titleLarge,
         ),
         padding: EdgeInsets.only(top: 24, bottom: 8),
       );

@@ -1,6 +1,6 @@
 # flutter_hls_parser
 
-![Pub Version](https://img.shields.io/pub/v/flutter_hls_parser)
+[![Pub Version](https://img.shields.io/pub/v/flutter_hls_parser)](https://pub.dev/packages/flutter_hls_parser)
 [![codecov](https://codecov.io/gh/HiroyukTamura/flutter_hls_parser/branch/master/graph/badge.svg?token=ExYmJJIAVX)](https://codecov.io/gh/HiroyukTamura/flutter_hls_parser)
 [![FlutterTest](https://github.com/HiroyukTamura/flutter_hls_parser/actions/workflows/flutter-test.yml/badge.svg)](https://github.com/HiroyukTamura/flutter_hls_parser/actions/workflows/flutter-test.yml)
 

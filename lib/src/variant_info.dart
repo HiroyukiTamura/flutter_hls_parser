@@ -1,5 +1,3 @@
-import 'package:flutter/cupertino.dart';
-
 class VariantInfo {
   const VariantInfo({
     this.bitrate,
@@ -40,6 +38,6 @@ class VariantInfo {
   }
 
   @override
-  int get hashCode => hashValues(
+  int get hashCode => Object.hash(
       bitrate, videoGroupId, audioGroupId, subtitleGroupId, captionGroupId);
 }

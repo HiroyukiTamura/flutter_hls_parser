@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'dart:typed_data';
 
 class SchemeData {
@@ -48,7 +47,7 @@ class SchemeData {
   }
 
   @override
-  int get hashCode => hashValues(
+  int get hashCode => Object.hash(
       /*uuid, */
       licenseServerUrl,
       mimeType,

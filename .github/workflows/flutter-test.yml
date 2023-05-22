@@ -18,7 +18,7 @@ jobs:
           channel: 'stable'
       - run: flutter pub get
       - run: flutter test --coverage --coverage-path=~/coverage/lcov.info
-      - uses: codecov/codecov-action@v3.1.2
+      - uses: codecov/codecov-action@v3.1.4
         with:
           token: ${{secrets.CODECOV_TOKEN}}
           file: ~/coverage/lcov.info
